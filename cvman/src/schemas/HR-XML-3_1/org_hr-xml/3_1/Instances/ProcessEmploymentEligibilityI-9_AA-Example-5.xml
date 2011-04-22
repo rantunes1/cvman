@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ProcessEmploymentEligibilityI-9 
+	systemEnvironmentCode="Production" 
+	releaseID="3.0" 
+	languageCode="en-US" 
+	xsi:schemaLocation="http://www.hr-xml.org/3 ../Developer/BODs/ProcessEmploymentEligibilityI-9.xsd" 
+	xmlns="http://www.hr-xml.org/3" 
+	xmlns:oa="http://www.openapplications.org/oagis/9" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<oa:ApplicationArea>
+		<oa:CreationDateTime>2008-10-12T10:09:02.01Z</oa:CreationDateTime>
+	</oa:ApplicationArea>
+	<DataArea>
+		<oa:Process acknowledgeCode="Always">
+			<oa:ActionCriteria>
+				<oa:ActionExpression actionCode="Add">/ProcessEmploymentEligibilityI-9/DataArea/EmploymentEligibilityI-9</oa:ActionExpression>
+			</oa:ActionCriteria>
+		</oa:Process>
+		<EmploymentEligibilityI-9>
+			<DocumentID>I9_D32234902</DocumentID>
+			<I-9Form revisionDate="2009-02-01" expirationDate="2012-01-01">
+				<Section1>
+					<FamilyName>Sussa</FamilyName>
+					<oa:GivenName>Mario</oa:GivenName>
+					<MiddleName>G</MiddleName>
+					<oa:AddressLine>3990 Color Square</oa:AddressLine>
+					<oa:Unit>#22</oa:Unit>
+					<oa:CityName>Los Angeles</oa:CityName>
+					<oa:CountrySubDivisionCode>CA</oa:CountrySubDivisionCode>
+					<oa:PostalCode>90337</oa:PostalCode>
+					<BirthDate>1984-08-09</BirthDate>
+					<WorkerEligibilityType>AlienAuthorizedToWork</WorkerEligibilityType>
+					<!--The I-94 Admission number must be 11 chars in length and must be left padded with 0's if needed   -->
+					<AlienEligibility>
+						<AlienID>01236985214</AlienID>
+						<ExpirationDate>2011-04-15</ExpirationDate>
+					</AlienEligibility>
+					<ElectronicSignature>
+						<SignatureIndicator>true</SignatureIndicator>
+						<SignatureDate>2010-02-03</SignatureDate>
+					</ElectronicSignature>
+				</Section1>
+				<Section2>
+					<Section2Documentation>
+						<DocumentTitleListA>ForeignPassportWithI-94/AForm</DocumentTitleListA>
+						<IssuingAuthorityName>US State Department</IssuingAuthorityName>
+						<!--This document is not the Alien# but rather the card# or Receipt # of Registration receipt card, only valid if list A document is resident card or form I-551 -->
+						<EligibilityDocumentID>012023309</EligibilityDocumentID>
+						<ExpirationDate>2011-07-02</ExpirationDate>
+						<Attachment>
+							<oa:EmbeddedData mimeCode="image/tiff">UjBsR09EbGhjZ0dTQUxNQUFBUUNBRU1tQ1p0dU1GUXhEUzhi</oa:EmbeddedData>
+						</Attachment>
+					</Section2Documentation>
+					<EmployerCertification>
+						<FormattedName>Mary Miller</FormattedName>
+						<PositionTitle>Recruiter</PositionTitle>
+						<SubmitterAddress>
+							<oa:AddressLine>120 Michigan Ave</oa:AddressLine>
+							<oa:Unit>Suite 330</oa:Unit>
+							<oa:CityName>Chicago</oa:CityName>
+							<oa:CountrySubDivisionCode>IL</oa:CountrySubDivisionCode>
+							<oa:PostalCode>60320</oa:PostalCode>
+						</SubmitterAddress>
+						<ElectronicSignature>
+							<SignatureIndicator>true</SignatureIndicator>
+							<SignatureDate>2010-02-26</SignatureDate>
+						</ElectronicSignature>
+						<HireDate>2010-01-01</HireDate>
+					</EmployerCertification>
+				</Section2>
+			</I-9Form>
+		</EmploymentEligibilityI-9>
+	</DataArea>
+</ProcessEmploymentEligibilityI-9>
+<!--
+
+
+Copyright The HR-XML Consortium. All Rights Reserved. http://www.hr-xml.org 
+Copyright (c) 1997-2008 Open Applications Group, Inc. All Rights Reserved 
+-->

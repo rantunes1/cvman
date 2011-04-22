@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ProcessEmploymentEligibilityI-9 systemEnvironmentCode="Production" releaseID="3.0" languageCode="en-US" xsi:schemaLocation="http://www.hr-xml.org/3 ../Developer/BODs/ProcessEmploymentEligibilityI-9.xsd" xmlns="http://www.hr-xml.org/3" xmlns:oa="http://www.openapplications.org/oagis/9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<oa:ApplicationArea>
+		<oa:CreationDateTime>2008-10-12T10:09:02.01Z</oa:CreationDateTime>
+	</oa:ApplicationArea>
+	<DataArea>
+		<oa:Process acknowledgeCode="Always">
+			<oa:ActionCriteria>
+				<oa:ActionExpression actionCode="Add">/ProcessEmploymentEligibilityI-9/DataArea/EmploymentEligibilityI-9</oa:ActionExpression>
+			</oa:ActionCriteria>
+		</oa:Process>
+		<EmploymentEligibilityI-9>
+			<DocumentID>AC221</DocumentID>
+			<OrganizationID>EV556341</OrganizationID>
+			<SupplierParty>
+				<PartyName>ABC I-9 Provider Company</PartyName>
+			</SupplierParty>
+			<I-9Form revisionDate="2009-02-01" expirationDate="2012-01-01">
+				<Section1>
+					<FamilyName>Smith</FamilyName>
+					<oa:GivenName>John</oa:GivenName>
+					<MiddleName>K</MiddleName>
+					<oa:AddressLine>1000 Main Street</oa:AddressLine>
+					<oa:Unit>A1</oa:Unit>
+					<oa:CityName>Holbrook</oa:CityName>
+					<oa:CountrySubDivisionCode>NY</oa:CountrySubDivisionCode>
+					<oa:PostalCode>11742</oa:PostalCode>
+					<BirthDate>1967-08-13</BirthDate>
+					<WorkerEligibilityType>LawfulPermanentResident</WorkerEligibilityType>
+					<!-- Alien ID must be Must be 9 Chars in length, must be padded with 0's on the left if needed-->
+					<AlienID>097574137</AlienID>
+					<ElectronicSignature>
+						<SignatureIndicator>true</SignatureIndicator>
+						<SignatureDate>2009-11-09</SignatureDate>
+					</ElectronicSignature>
+				</Section1>
+				<Section2>
+					<Section2Documentation>
+						<DocumentTitleListA>PermanentResidentCard</DocumentTitleListA>
+						<IssuingAuthorityName>New York State Dept.</IssuingAuthorityName>
+						<!--This document is not the Alien# but rather the card# or Receipt # of Registration receipt card, only valid if list A document is resident card or form I-551 -->
+						<EligibilityDocumentID>EAC-123-456-7890</EligibilityDocumentID>
+						<ExpirationDate>2011-04-15</ExpirationDate>
+						<Attachment>
+							<oa:EmbeddedData mimeCode="image/tiff">UjBsR09EbGhjZ0dTQUxNQUFBUUNBRU1tQ1p0dU1GUXhEUzhi</oa:EmbeddedData>
+						</Attachment>
+					</Section2Documentation>
+					<EmployerCertification>
+						<FormattedName>Harold Sanwold</FormattedName>
+						<PositionTitle>HR Manager</PositionTitle>
+						<SubmitterAddress>
+							<oa:AddressLine>30022 Broder Street</oa:AddressLine>
+							<oa:Unit>Suite 330</oa:Unit>
+							<oa:CityName>Holbrook</oa:CityName>
+							<oa:CountrySubDivisionCode>NY</oa:CountrySubDivisionCode>
+							<oa:PostalCode>11742</oa:PostalCode>
+						</SubmitterAddress>
+						<ElectronicSignature>
+							<SignatureIndicator>true</SignatureIndicator>
+							<SignatureDate>2009-12-04</SignatureDate>
+						</ElectronicSignature>
+						<HireDate>2009-11-10</HireDate>
+					</EmployerCertification>
+				</Section2>
+			</I-9Form>
+		</EmploymentEligibilityI-9>
+	</DataArea>
+</ProcessEmploymentEligibilityI-9>
+<!--
+
+
+Copyright The HR-XML Consortium. All Rights Reserved. http://www.hr-xml.org 
+Copyright (c) 1997-2008 Open Applications Group, Inc. All Rights Reserved 
+-->

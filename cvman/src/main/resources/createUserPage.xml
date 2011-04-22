@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="1.4">
+	<body>
+		<tu tuid="CreateUserPage.UI.form.caption">
+			<tuv lang="en"> <seg>Create a new User</seg> </tuv>
+			<tuv lang="pt"> <seg>Crie um novo utilizador</seg> </tuv>
+		</tu>
+		<tu tuid="CreateUserPage.UI.form.description">
+			<tuv lang="en"> <seg>Fill the following fields to create a new user</seg> </tuv>
+			<tuv lang="pt"> <seg>Preencha os campos abaixo para criar um novo utilizador</seg> </tuv>
+		</tu>
+		<tu tuid="CreateUserPage.UI.name.caption">
+			<tuv lang="en"> <seg>Name</seg> </tuv>
+			<tuv lang="pt"> <seg>Nome</seg> </tuv>
+		</tu>
+		<tu tuid="CreateUserPage.UI.firstName.caption">
+			<tuv lang="en"> <seg>First Name</seg> </tuv>
+			<tuv lang="pt"> <seg>Nome Próprio</seg> </tuv>
+		</tu>
+		<tu tuid="CreateUserPage.UI.surname.caption">
+			<tuv lang="en"> <seg>Surname</seg> </tuv>
+			<tuv lang="pt"> <seg>Apelido</seg> </tuv>
+		</tu>
+		<tu tuid="CreateUserPage.UI.email.caption">
+			<tuv lang="en"> <seg>E-mail</seg> </tuv>
+			<tuv lang="pt"> <seg>E-mail</seg> </tuv>
+		</tu>
+		<tu tuid="CreateUserPage.UI.picture.caption">
+			<tuv lang="en"> <seg>Picture</seg> </tuv>
+			<tuv lang="pt"> <seg>Foto</seg> </tuv>
+		</tu>		
+		<tu tuid="CreateUserPage.UI.commit.caption">
+			<tuv lang="en"> <seg>Save</seg> </tuv>
+			<tuv lang="pt"> <seg>Confirmar</seg> </tuv>
+		</tu>
+		<tu tuid="CreateUserPage.UI.discard.caption">
+			<tuv lang="en"> <seg>Reset</seg> </tuv>
+			<tuv lang="pt"> <seg>Anular</seg> </tuv>
+		</tu>
+		
+		<tu tuid="CreateUserPage.Validation.generic">
+			<tuv lang="en"> <seg>Validation errors found. Please hover your mouse over marked field to see a description of the problem.</seg> </tuv>
+			<tuv lang="pt"> <seg>Foram encontrados erros de validação. Passe o rato por cima dos campos assinalados para ver o motivo.</seg> </tuv>
+		</tu>
+		<tu tuid="CreateUserPage.Validation.required">
+			<tuv lang="en"> <seg>{0} is a required field</seg> </tuv>
+			<tuv lang="pt"> <seg>O campo '{0}' é obrigatório</seg> </tuv>
+		</tu>
+		
+	</body>
+</tmx>

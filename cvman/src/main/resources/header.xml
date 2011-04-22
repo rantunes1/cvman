@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="1.4">
+	<body>
+		<tu tuid="Header.guest.caption">
+			<tuv lang="en">
+		    	<seg>HEADER for a GUEST.</seg>
+			</tuv>
+			<tuv lang="pt">
+		    	<seg>Cabeçalho para CONVIDADO.</seg>
+			</tuv>
+		</tu>
+		<tu tuid="Header.authenticated.caption">
+			<tuv lang="en">
+		    	<seg>HEADER for an AUTHENTICATED USER.</seg>
+			</tuv>
+			<tuv lang="pt">
+		    	<seg>Cabeçalho para UTILIZADOR AUTENTICADO.</seg>
+			</tuv>
+		</tu>
+		<tu tuid="Header.lang">
+			<tuv lang="en">
+		    	<seg>Set language : </seg>
+			</tuv>
+			<tuv lang="pt">
+		    	<seg>Mudar linguagem : </seg>
+			</tuv>
+		</tu>		
+	</body>
+</tmx>

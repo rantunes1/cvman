@@ -1,5 +1,6 @@
 package com.glintt.cvm;
 
+import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Locale;
@@ -65,6 +66,15 @@ public class CVApplication extends NavigableApplication {
         Person testPerson = new TestPerson();
         FacadeFactory.getFacade().store(testPerson);
 
+        try {
+            Person testPersonBD = FacadeFactory.getFacade().find(Person.class, testPerson.getId());
+            System.out.println("person retrieved : " + testPersonBD.getId());
+            new CandidateConverter().convertAndSave(testPersonBD, new FileOutputStream("candidateBDOut.xml"));
+            System.out.println("person converted");
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     @Override

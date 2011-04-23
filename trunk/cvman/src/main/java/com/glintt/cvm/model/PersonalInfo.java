@@ -1,15 +1,14 @@
 package com.glintt.cvm.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import org.hr_xml._3.ChannelCodeEnumType;
 import org.hr_xml._3.CountryCodeEnumType;
 import org.hr_xml._3.GenderCodeEnumType;
 import org.hr_xml._3.LanguageCodeEnumType;
@@ -35,6 +34,7 @@ public class PersonalInfo extends AbstractOwnedEntity<Person> {
 
     private LanguageCodeEnumType primaryLanguage;
 
+    @OneToMany(cascade = CascadeType.PERSIST)
     private List<UserProfile> profiles;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -125,6 +125,7 @@ public class PersonalInfo extends AbstractOwnedEntity<Person> {
         private static final long serialVersionUID = 8418850177040426201L;
 
         private String birthDate;
+        @OneToOne(cascade = CascadeType.ALL)
         private Location birthLocation;
 
         public String getBirthDate() {
@@ -168,144 +169,6 @@ public class PersonalInfo extends AbstractOwnedEntity<Person> {
 
     public enum UserProfileCode {
         PERSONAL, BUSINESS
-    }
-
-    public static class UserProfile implements Serializable {
-        private static final long serialVersionUID = -4260663480634580428L;
-
-        private final UserProfileCode userProfileCode;
-
-        private Address address;
-        private Email email;
-        private MobilePhone mobilePhone;
-        private Telephone telephone;
-
-        public UserProfile(UserProfileCode userProfileCode) {
-            if (userProfileCode == null) {
-                throw new IllegalArgumentException("user profile code can't be null");
-            }
-            this.userProfileCode = userProfileCode;
-        }
-
-        public UserProfileCode getProfileCode() {
-            return this.userProfileCode;
-        }
-
-        public Address getAddress() {
-            return this.address;
-        }
-
-        public void setAddress(Address address) {
-            this.address = address;
-        }
-
-        public Email getEmail() {
-            return this.email;
-        }
-
-        public void setEmail(Email email) {
-            this.email = email;
-        }
-
-        public MobilePhone getMobilePhone() {
-            return this.mobilePhone;
-        }
-
-        public void setMobilePhone(MobilePhone mobilePhone) {
-            this.mobilePhone = mobilePhone;
-        }
-
-        public Telephone getTelephone() {
-            return this.telephone;
-        }
-
-        public void setTelephone(Telephone telephone) {
-            this.telephone = telephone;
-        }
-
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + ((this.userProfileCode == null) ? 0 : this.userProfileCode.hashCode());
-            return result;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (getClass() != obj.getClass())
-                return false;
-            UserProfile other = (UserProfile) obj;
-            if (this.userProfileCode != other.userProfileCode)
-                return false;
-            return true;
-        }
-
-        private abstract static class PhoneChannel implements CommunicationChannel {
-            private static final long serialVersionUID = -1561925491294527379L;
-
-            private String countryDialing;
-            private String dialNumber;
-
-            public String getCountryDialing() {
-                return this.countryDialing;
-            }
-
-            public void setCountryDialing(String countryDialing) {
-                this.countryDialing = countryDialing;
-            }
-
-            public String getDialNumber() {
-                return this.dialNumber;
-            }
-
-            public void setDialNumber(String dialNumber) {
-                this.dialNumber = dialNumber;
-            }
-        }
-
-        public static class Email implements CommunicationChannel {
-            private static final long serialVersionUID = -6868849097595787124L;
-
-            private String emailAddress;
-
-            @Override
-            public String getChannelCode() {
-                return ChannelCodeEnumType.EMAIL.value();
-            }
-
-            public String getEmailAddress() {
-                return this.emailAddress;
-            }
-
-            public void setEmailAddress(String emailAddress) {
-                this.emailAddress = emailAddress;
-            }
-        }
-
-        public static class MobilePhone extends PhoneChannel {
-            private static final long serialVersionUID = -1982803103647078318L;
-
-            @Override
-            public String getChannelCode() {
-                return ChannelCodeEnumType.MOBILE_TELEPHONE.value();
-            }
-
-        }
-
-        public static class Telephone extends PhoneChannel {
-            private static final long serialVersionUID = 339523083834771863L;
-
-            @Override
-            public String getChannelCode() {
-                return ChannelCodeEnumType.TELEPHONE.value();
-            }
-
-        }
     }
 
 }

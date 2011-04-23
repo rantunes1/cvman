@@ -1,10 +1,12 @@
 package com.glintt.cvm.model;
 
-import java.io.Serializable;
+import javax.persistence.Entity;
 
 import org.hr_xml._3.CountryCodeEnumType;
+import org.vaadin.appfoundation.persistence.data.AbstractPojo;
 
-public class Location implements Serializable {
+@Entity
+public class Location extends AbstractPojo {
     private static final long serialVersionUID = 8733461371678155708L;
 
     private CountryCodeEnumType country;

@@ -1,5 +1,8 @@
 package com.glintt.cvm.model;
 
+import javax.persistence.Entity;
+
+@Entity
 public class Address extends Location implements CommunicationChannel {
     private static final long serialVersionUID = -180716234511568602L;
 

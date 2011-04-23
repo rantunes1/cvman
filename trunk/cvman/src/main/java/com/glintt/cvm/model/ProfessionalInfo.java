@@ -13,7 +13,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.hr_xml._3.CountryCodeEnumType;
-import org.hr_xml._3.LanguageCodeEnumType;
 import org.vaadin.appfoundation.persistence.data.AbstractPojo;
 
 @Entity
@@ -27,6 +26,7 @@ public class ProfessionalInfo extends AbstractOwnedEntity<Person> {
     private String executiveSummary;
     @OneToMany(cascade = CascadeType.ALL)
     private List<Certification> certifications;
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Publication> publications;
 
     @Override
@@ -201,82 +201,6 @@ public class ProfessionalInfo extends AbstractOwnedEntity<Person> {
         List<Contributor> getContributors();
     }
 
-    private static abstract class AbstractPublicationInfo implements PublicationInfo {
-        private static final long serialVersionUID = 4877136416392413343L;
-
-        private String title;
-        private Date date;
-        private String abstractText;
-        private String comment;
-        private String issn;
-        private Copyright copyright;
-        private List<Contributor> contributors;
-
-        @Override
-        public String getTitle() {
-            return this.title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        @Override
-        public Date getDate() {
-            return this.date;
-        }
-
-        public void setDate(Date date) {
-            this.date = date;
-        }
-
-        @Override
-        public String getAbstractText() {
-            return this.abstractText;
-        }
-
-        public void setAbstractText(String abstractText) {
-            this.abstractText = abstractText;
-        }
-
-        @Override
-        public String getComment() {
-            return this.comment;
-        }
-
-        public void setComment(String comment) {
-            this.comment = comment;
-        }
-
-        @Override
-        public String getIssn() {
-            return this.issn;
-        }
-
-        public void setIssn(String issn) {
-            this.issn = issn;
-        }
-
-        @Override
-        public Copyright getCopyright() {
-            return this.copyright;
-        }
-
-        public void setCopyright(Copyright copyright) {
-            this.copyright = copyright;
-        }
-
-        @Override
-        public List<Contributor> getContributors() {
-            return this.contributors;
-        }
-
-        public void setContributors(List<Contributor> contributors) {
-            this.contributors = contributors;
-        }
-
-    }
-
     /**
      * The exclusive right given by law for a certain term of years to an
      * author, composer, designer, etc. (or his assignee), to print, publish,
@@ -285,7 +209,8 @@ public class ProfessionalInfo extends AbstractOwnedEntity<Person> {
      * @author rantunes
      * 
      */
-    public static class Copyright implements Serializable {
+    @Entity
+    public static class Copyright extends AbstractPojo {
         private static final long serialVersionUID = -3767039591083709707L;
 
         // A year associated with a copyright.
@@ -322,9 +247,11 @@ public class ProfessionalInfo extends AbstractOwnedEntity<Person> {
      * @author rantunes
      * 
      */
-    public static class Contributor implements Serializable {
+    @Entity
+    public static class Contributor extends AbstractPojo {
         private static final long serialVersionUID = 9181399038147853365L;
 
+        @OneToOne(cascade = CascadeType.ALL)
         private PersonName name;
         // The typical publication function performed by a person; e.g. author,
         // editor, illustrator.
@@ -346,241 +273,5 @@ public class ProfessionalInfo extends AbstractOwnedEntity<Person> {
             this.role = role;
         }
 
-    }
-
-    public static class Publication implements Serializable {
-        private static final long serialVersionUID = -3314110483131404477L;
-
-        private String description;
-        private final PublicationProfileCode type;
-        private final PublicationInfo info;
-
-        public Publication(PublicationProfileCode publicationType, PublicationInfo publicationInfo) {
-            this(publicationType, publicationInfo, null);
-        }
-
-        public Publication(PublicationProfileCode publicationType, PublicationInfo publicationInfo, String description) {
-            this.type = publicationType;
-            this.info = publicationInfo;
-            this.description = description;
-        }
-
-        public String getDescription() {
-            return this.description;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
-        public PublicationProfileCode getType() {
-            return this.type;
-        }
-
-        public PublicationInfo getInfo() {
-            return this.info;
-        }
-
-        /**
-         * A literary composition forming materially part of a journal,
-         * magazine, encyclopædia, or other collection, but treating a specific
-         * topic distinctly and independently.
-         * 
-         * @author rantunes
-         * 
-         */
-        public static class Article extends AbstractPublicationInfo {
-            private static final long serialVersionUID = -2913162075597884603L;
-
-            private String journalName;
-            private String volume;
-            private String issue;
-            // The page number or page range where an article appears.
-            private String pageNumbers;
-            // The language in which the publication is printed.
-            private LanguageCodeEnumType language;
-
-            public String getJournalName() {
-                return this.journalName;
-            }
-
-            public void setJournalName(String journalName) {
-                this.journalName = journalName;
-            }
-
-            public String getVolume() {
-                return this.volume;
-            }
-
-            public void setVolume(String volume) {
-                this.volume = volume;
-            }
-
-            public String getIssue() {
-                return this.issue;
-            }
-
-            public void setIssue(String issue) {
-                this.issue = issue;
-            }
-
-            public String getPageNumbers() {
-                return this.pageNumbers;
-            }
-
-            public void setPageNumbers(String pageNumbers) {
-                this.pageNumbers = pageNumbers;
-            }
-
-            public LanguageCodeEnumType getLanguage() {
-                return this.language;
-            }
-
-            public void setLanguage(LanguageCodeEnumType language) {
-                this.language = language;
-            }
-
-        }
-
-        /**
-         * A literary composition such as would occupy one or more volumes,
-         * without regard to the material form or forms in which it actually
-         * exists.
-         * 
-         * @author rantunes
-         * 
-         */
-        public static class Book extends UnspecifiedPublication {
-            private static final long serialVersionUID = 6006057696164145408L;
-
-            private String edition;
-            private String chapter;
-
-            public String getEdition() {
-                return this.edition;
-            }
-
-            public void setEdition(String edition) {
-                this.edition = edition;
-            }
-
-            public String getChapter() {
-                return this.chapter;
-            }
-
-            public void setChapter(String chapter) {
-                this.chapter = chapter;
-            }
-
-        }
-
-        /**
-         * Written notes, memoranda, letters, documents, etc. prepared for
-         * delivery at a conference.
-         * 
-         * @author rantunes
-         * 
-         */
-        public static class ConferencePaper extends AbstractPublicationInfo {
-            private static final long serialVersionUID = 3448578531475471506L;
-
-            // The name of the speaking event.
-            private String eventName;
-            // The date of the event.
-            private Date eventDate;
-            // The name of the physicial or virtual location or facility hosting
-            // a meeting or event.
-            private String eventLocationName;
-            private Location eventLocation;
-
-            public String getEventName() {
-                return this.eventName;
-            }
-
-            public void setEventName(String eventName) {
-                this.eventName = eventName;
-            }
-
-            public Date getEventDate() {
-                return this.eventDate;
-            }
-
-            public void setEventDate(Date eventDate) {
-                this.eventDate = eventDate;
-            }
-
-            public String getEventLocationName() {
-                return this.eventLocationName;
-            }
-
-            public void setEventLocationName(String eventLocationName) {
-                this.eventLocationName = eventLocationName;
-            }
-
-            public Location getEventLocation() {
-                return this.eventLocation;
-            }
-
-            public void setEventLocation(Location eventLocation) {
-                this.eventLocation = eventLocation;
-            }
-
-        }
-
-        /**
-         * Bibliographic information for other publications, such as a Thesis,
-         * Whitepaper, Report, Technical Documentation, etc.
-         * 
-         * @author rantunes
-         * 
-         */
-        public static class UnspecifiedPublication extends AbstractPublicationInfo {
-            private static final long serialVersionUID = 3356659353741010693L;
-
-            // The International Standard Book Number is a 10-digit number
-            // that uniquely identifies books and book-like products published
-            // internationally.
-            // The ISBN is defined by the ISO ISO 2108 standard.
-            private String isbn;
-            // The number of pages in a book or other publication.
-            private int numberOfPages;
-            // The name of the publisher.
-            private String publisherName;
-            // A particular place; local position of the publisher.
-            private Location publisherLocation;
-
-            public String getIsbn() {
-                return this.isbn;
-            }
-
-            public void setIsbn(String isbn) {
-                this.isbn = isbn;
-            }
-
-            public int getNumberOfPages() {
-                return this.numberOfPages;
-            }
-
-            public void setNumberOfPages(int numberOfPages) {
-                this.numberOfPages = numberOfPages;
-            }
-
-            public String getPublisherName() {
-                return this.publisherName;
-            }
-
-            public void setPublisherName(String publisherName) {
-                this.publisherName = publisherName;
-            }
-
-            public Location getPublisherLocation() {
-                return this.publisherLocation;
-            }
-
-            public void setPublisherLocation(Location publisherLocation) {
-                this.publisherLocation = publisherLocation;
-            }
-
-        }
     }
 }

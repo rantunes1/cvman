@@ -79,4 +79,20 @@ public class Person extends AbstractPojo implements Owner {
         this.professionalInfos.add(professionalInfo);
     }
 
+    protected Collection<PersonalInfo> getPersonalInfos() {
+        return this.personalInfos;
+    }
+
+    protected void setPersonalInfos(Collection<PersonalInfo> personalInfos) {
+        this.personalInfos = personalInfos;
+    }
+
+    protected Collection<ProfessionalInfo> getProfessionalInfos() {
+        return this.professionalInfos;
+    }
+
+    protected void setProfessionalInfos(Collection<ProfessionalInfo> professionalInfos) {
+        this.professionalInfos = professionalInfos;
+    }
+
 }

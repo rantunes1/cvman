@@ -1,6 +1,7 @@
 package com.glintt.cvm;
 
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -54,24 +55,24 @@ import com.glintt.cvm.model.Person;
 import com.glintt.cvm.model.PersonName;
 import com.glintt.cvm.model.PersonalInfo;
 import com.glintt.cvm.model.PersonalInfo.BirthInfo;
-import com.glintt.cvm.model.PersonalInfo.UserProfile;
-import com.glintt.cvm.model.PersonalInfo.UserProfile.Email;
-import com.glintt.cvm.model.PersonalInfo.UserProfile.MobilePhone;
-import com.glintt.cvm.model.PersonalInfo.UserProfile.Telephone;
 import com.glintt.cvm.model.PersonalInfo.UserProfileCode;
 import com.glintt.cvm.model.ProfessionalInfo;
 import com.glintt.cvm.model.ProfessionalInfo.Certification;
 import com.glintt.cvm.model.ProfessionalInfo.Certification.IssuingAuthority;
 import com.glintt.cvm.model.ProfessionalInfo.Contributor;
 import com.glintt.cvm.model.ProfessionalInfo.Copyright;
-import com.glintt.cvm.model.ProfessionalInfo.Publication;
-import com.glintt.cvm.model.ProfessionalInfo.Publication.Article;
-import com.glintt.cvm.model.ProfessionalInfo.Publication.Book;
-import com.glintt.cvm.model.ProfessionalInfo.Publication.ConferencePaper;
-import com.glintt.cvm.model.ProfessionalInfo.Publication.UnspecifiedPublication;
 import com.glintt.cvm.model.ProfessionalInfo.PublicationInfo;
 import com.glintt.cvm.model.ProfessionalInfo.PublicationProfileCode;
+import com.glintt.cvm.model.Publication;
+import com.glintt.cvm.model.Publication.Article;
+import com.glintt.cvm.model.Publication.Book;
+import com.glintt.cvm.model.Publication.ConferencePaper;
+import com.glintt.cvm.model.Publication.UnspecifiedPublication;
 import com.glintt.cvm.model.TestPerson;
+import com.glintt.cvm.model.UserProfile;
+import com.glintt.cvm.model.UserProfile.Email;
+import com.glintt.cvm.model.UserProfile.MobilePhone;
+import com.glintt.cvm.model.UserProfile.Telephone;
 
 public class CandidateConverter {
 
@@ -525,16 +526,20 @@ public class CandidateConverter {
     private Candidate convertToCandidate(Person person) {
         Candidate candidate = new Candidate();
 
-        candidate.setCandidatePerson(createCandidatePerson(person.getPersonalInfo(), person.getLanguageId()));
-        candidate.getCandidateProfile().add(createCandidateProfile(person.getProfessionalInfo(), person.getLanguageId()));
+        PersonalInfo personalInfo = person.getPersonalInfo();
+        if (personalInfo != null) {
+            candidate.setCandidatePerson(createCandidatePerson(personalInfo, person.getLanguageId()));
+        }
+        ProfessionalInfo professionalInfo = person.getProfessionalInfo();
+        if (professionalInfo != null) {
+            candidate.getCandidateProfile().add(createCandidateProfile(professionalInfo, person.getLanguageId()));
+        }
 
         return candidate;
     }
 
-    public static void main(String[] args) throws Exception {
-
-        Person person = new TestPerson();
-
+    // @todo review exception to be thrown
+    public void convertAndSave(Person person, OutputStream target) throws Exception {
         JAXBContext ctx = JAXBContext.newInstance("org.hr_xml._3");
 
         Marshaller m = ctx.createMarshaller();
@@ -558,8 +563,12 @@ public class CandidateConverter {
         //
         // });
 
-        Candidate candidate = new CandidateConverter().convertToCandidate(person);
-        m.marshal(candidate, new FileOutputStream("candidateOut.xml"));
+        Candidate candidate = convertToCandidate(person);
+        m.marshal(candidate, target);
 
+    }
+
+    public static void main(String[] args) throws Exception {
+        new CandidateConverter().convertAndSave(new TestPerson(), new FileOutputStream("candidateOut.xml"));
     }
 }

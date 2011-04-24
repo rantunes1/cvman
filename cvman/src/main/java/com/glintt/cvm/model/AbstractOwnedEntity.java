@@ -17,21 +17,8 @@ public abstract class AbstractOwnedEntity<O extends Owner> extends AbstractPojo 
         return getOwner().getLanguageId();
     }
 
-    public Long getOwnerId() {
-        Owner owner = getOwner();
-        return (owner != null) ? getOwner().getId() : null;
-    }
-
     public boolean isOwnedBy(O owner) {
-        if (this.getOwner() == null || owner == null) {
-            return false;
-        }
-        if (this.getLanguageId() == null || owner.getLanguageId() == null) {
-            return false;
-        }
-        if (this.getOwnerId() == null || owner.getId() == null) {
-            return false;
-        }
-        return this.getLanguageId().value().equals(owner.getLanguageId().value()) && this.id.equals(owner.getId());
+        Owner currentOwner = getOwner();
+        return currentOwner != null && currentOwner.equals(owner);
     }
 }

@@ -3,7 +3,9 @@ package com.glintt.cvm;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -27,54 +29,73 @@ import org.hr_xml._3.ConferencePaperType;
 import org.hr_xml._3.CopyrightType;
 import org.hr_xml._3.CountryCodeEnumType;
 import org.hr_xml._3.CountryCodeType;
+import org.hr_xml._3.EffectiveDatedIndicatorType;
+import org.hr_xml._3.EmployerHistoryType;
+import org.hr_xml._3.EmploymentHistoryType;
+import org.hr_xml._3.EmploymentPeriodType;
 import org.hr_xml._3.FamilyNameType;
 import org.hr_xml._3.FormattedPublicationDescriptionType;
 import org.hr_xml._3.FreeFormDateType;
 import org.hr_xml._3.GenderCodeType;
+import org.hr_xml._3.InternetDomainNameType;
 import org.hr_xml._3.IssuingAuthorityType;
 import org.hr_xml._3.LanguageCodeEnumType;
 import org.hr_xml._3.LanguageCodeType;
 import org.hr_xml._3.LocationSummaryType;
 import org.hr_xml._3.MaritalStatusCodeType;
+import org.hr_xml._3.OrganizationContactType;
+import org.hr_xml._3.OrganizationNameType;
 import org.hr_xml._3.OtherPublicationType;
 import org.hr_xml._3.PersonNameType;
+import org.hr_xml._3.PositionHistoryType;
+import org.hr_xml._3.PositionLocationType;
+import org.hr_xml._3.PositionTitleType;
 import org.hr_xml._3.PublicationContributorType;
 import org.hr_xml._3.PublicationHistoryType;
 import org.hr_xml._3.PublicationRoleCodeType;
 import org.hr_xml._3.PublicationType;
+import org.hr_xml._3.ResourceRelationshipCodeEnumType;
+import org.hr_xml._3.ResourceRelationshipCodeType;
 import org.hr_xml._3.UseCodeType;
 import org.openapplications.oagis._9.CodeType;
 import org.openapplications.oagis._9.CountrySubDivisionCodeType;
+import org.openapplications.oagis._9.DescriptionType;
 import org.openapplications.oagis._9.NameType;
 import org.openapplications.oagis._9.NoteType;
 import org.openapplications.oagis._9.TextType;
 
 import com.glintt.cvm.model.Address;
 import com.glintt.cvm.model.Location;
+import com.glintt.cvm.model.OrganizationContacts;
 import com.glintt.cvm.model.Person;
+import com.glintt.cvm.model.PersonContacts;
+import com.glintt.cvm.model.PersonContacts.Email;
+import com.glintt.cvm.model.PersonContacts.MobilePhone;
+import com.glintt.cvm.model.PersonContacts.Telephone;
 import com.glintt.cvm.model.PersonName;
 import com.glintt.cvm.model.PersonalInfo;
 import com.glintt.cvm.model.PersonalInfo.BirthInfo;
-import com.glintt.cvm.model.PersonalInfo.UserProfileCode;
+import com.glintt.cvm.model.PersonalInfo.PersonContactsProfile;
 import com.glintt.cvm.model.ProfessionalInfo;
 import com.glintt.cvm.model.ProfessionalInfo.Certification;
 import com.glintt.cvm.model.ProfessionalInfo.Certification.IssuingAuthority;
 import com.glintt.cvm.model.ProfessionalInfo.Contributor;
 import com.glintt.cvm.model.ProfessionalInfo.Copyright;
+import com.glintt.cvm.model.ProfessionalInfo.Employer;
+import com.glintt.cvm.model.ProfessionalInfo.Position;
 import com.glintt.cvm.model.ProfessionalInfo.PublicationInfo;
 import com.glintt.cvm.model.ProfessionalInfo.PublicationProfileCode;
+import com.glintt.cvm.model.ProfessionalInfo.TimePeriod;
 import com.glintt.cvm.model.Publication;
 import com.glintt.cvm.model.Publication.Article;
 import com.glintt.cvm.model.Publication.Book;
 import com.glintt.cvm.model.Publication.ConferencePaper;
 import com.glintt.cvm.model.Publication.UnspecifiedPublication;
 import com.glintt.cvm.model.TestPerson;
-import com.glintt.cvm.model.UserProfile;
-import com.glintt.cvm.model.UserProfile.Email;
-import com.glintt.cvm.model.UserProfile.MobilePhone;
-import com.glintt.cvm.model.UserProfile.Telephone;
 
-public class CandidateConverter {
+public class HRXMLConverter {
+
+    private static final String DATE_FORMAT = "dd-MM-yyyy";
 
     private TextType createLocalizedText(LanguageCodeEnumType languageId, String value) {
         return createLocalizedText(languageId, value, new TextType());
@@ -173,7 +194,7 @@ public class CandidateConverter {
         lct.setValue(personalInfo.getPrimaryLanguage().value());
         person.getPrimaryLanguageCode().add(lct);
 
-        addCommunicationChannels(person, personalInfo, lang);
+        processCommunicationChannels(person, personalInfo, lang);
 
         return person;
     }
@@ -182,9 +203,9 @@ public class CandidateConverter {
         type.setPublicationTitle(info.getTitle());
         Date publicationDate = info.getDate();
         if (publicationDate != null) {
-            type.setPublicationDate(formatDate(publicationDate, "dd-MM-yyyy"));
+            type.setPublicationDate(formatDate(publicationDate, DATE_FORMAT));
         }
-        List<Contributor> contributors = info.getContributors();
+        Collection<Contributor> contributors = info.getContributors();
         if (contributors != null) {
             for (Contributor contributor : contributors) {
                 PersonName contributorName = contributor.getName();
@@ -248,7 +269,7 @@ public class CandidateConverter {
             profile.setExecutiveSummary(createLocalizedText(lang, executiveSummary));
         }
 
-        List<Certification> certifications = professionalInfo.getCertifications();
+        Collection<Certification> certifications = professionalInfo.getCertifications();
         if (certifications != null) {
             CertificationsType certs = new CertificationsType();
             for (Certification certification : certifications) {
@@ -256,17 +277,20 @@ public class CandidateConverter {
                 cert.setCertificationName(createLocalizedText(lang, certification.getName()));
                 Date certificateIssueDate = certification.getIssueDate();
                 if (certificateIssueDate != null) {
-                    cert.setFirstIssuedDate(formatDate(certificateIssueDate, "dd-MM-yyyy"));
+                    cert.setFirstIssuedDate(formatDate(certificateIssueDate, DATE_FORMAT));
                 }
                 IssuingAuthority issuingAuthority = certification.getIssuingAuthority();
                 if (issuingAuthority != null) {
                     IssuingAuthorityType issuingAuthorityType = new IssuingAuthorityType();
                     issuingAuthorityType.setName(createName(lang, issuingAuthority.getName()));
-                    LocationSummaryType location = new LocationSummaryType();
-                    location.setCountryCode(createCountryCode(issuingAuthority.getCountry()));
-                    location.setCityName(createName(lang, issuingAuthority.getCity()));
-                    location.setPostalCode(createCode(lang, issuingAuthority.getPostalCode()));
-                    issuingAuthorityType.setLocationSummary(location);
+                    Location iaLocation = issuingAuthority.getLocation();
+                    if (iaLocation != null) {
+                        LocationSummaryType location = new LocationSummaryType();
+                        location.setCountryCode(createCountryCode(iaLocation.getCountry()));
+                        location.setCityName(createName(lang, iaLocation.getCity()));
+                        location.setPostalCode(createCode(lang, iaLocation.getPostalCode()));
+                        issuingAuthorityType.setLocationSummary(location);
+                    }
                     cert.setIssuingAuthority(issuingAuthorityType);
                 }
                 certs.getCertification().add(cert);
@@ -274,7 +298,7 @@ public class CandidateConverter {
             profile.setCertifications(certs);
         }
 
-        List<Publication> publications = professionalInfo.getPublications();
+        Collection<Publication> publications = professionalInfo.getPublications();
         if (publications != null) {
             PublicationHistoryType pubs = new PublicationHistoryType();
             for (Publication publication : publications) {
@@ -371,7 +395,7 @@ public class CandidateConverter {
                     }
                     Date eventDate = conferencePaper.getEventDate();
                     if (eventDate != null) {
-                        ((ConferencePaperType) type).setEventDate(formatDate(eventDate, "dd-MM-yyyy"));
+                        ((ConferencePaperType) type).setEventDate(formatDate(eventDate, DATE_FORMAT));
                     }
                     String eventLocationName = conferencePaper.getEventLocationName();
                     if (eventLocationName != null) {
@@ -424,8 +448,92 @@ public class CandidateConverter {
             profile.setPublicationHistory(pubs);
         }
 
+        Collection<Employer> employers = professionalInfo.getEmployers();
+        if (employers != null) {
+            EmploymentHistoryType employmentHist = new EmploymentHistoryType();
+            for (Employer employer : employers) {
+                EmployerHistoryType employerHistType = new EmployerHistoryType();
+
+                employerHistType.setOrganizationName(createLocalizedText(lang, employer.getName(), new OrganizationNameType()));
+                employerHistType.setHeadcountNumeric(new BigInteger(employer.getHeadcount()));
+                OrganizationContacts contacts = employer.getContacts();
+                if (contacts != null) {
+                    OrganizationContactType oct = new OrganizationContactType();
+                    oct.setContactName(createLocalizedText(lang, contacts.getName().getFullName()));
+                    oct.setRoleName(createLocalizedText(lang, contacts.getRole()));
+                    addCommunicationChannels(oct.getCommunication(), contacts, lang, 0);
+                    employerHistType.setOrganizationContact(oct);
+                }
+                String organizationURL = employer.getUrl();
+                if (organizationURL != null) {
+                    InternetDomainNameType domainName = new InternetDomainNameType();
+                    domainName.setValue(organizationURL);
+                    employerHistType.setInternetDomainName(domainName);
+                }
+                TimePeriod employementPeriod = employer.getEmploymentPeriod();
+                if (employementPeriod != null) {
+                    EmploymentPeriodType ep = convertTimePeriodToEmploymentPeriod(employementPeriod);
+                    employerHistType.setEmploymentPeriod(ep);
+                }
+                Collection<Position> positions = employer.getPositions();
+                if (positions != null) {
+                    for (Position position : positions) {
+                        PositionHistoryType ph = new PositionHistoryType();
+                        ph.setPositionTitle(createLocalizedText(lang, position.getTitle(), new PositionTitleType()));
+                        String description = position.getDescription();
+                        if (description != null) {
+                            DescriptionType desc = new DescriptionType();
+                            desc.setValue(description);
+                            desc.setLanguageID(lang.value());
+                            ph.getDescription().add(desc);
+                        }
+                        ResourceRelationshipCodeEnumType relationshipType = position.getRelationshipType();
+                        if (relationshipType != null) {
+                            ResourceRelationshipCodeType rct = new ResourceRelationshipCodeType();
+                            rct.setValue(relationshipType.value());
+                            ph.setResourceRelationshipCode(rct);
+                        }
+                        String unitName = position.getUnitName();
+                        if (unitName != null) {
+                            ph.setOrganizationUnitName(createLocalizedText(lang, unitName));
+                        }
+                        Address address = position.getAddress();
+                        if (address != null) {
+                            PositionLocationType location = new PositionLocationType();
+                            AddressType locationAddress = convertAddressToAddressType(address, lang);
+                            location.setAddress(locationAddress);
+                            ph.setPositionLocation(location);
+                        }
+                        TimePeriod employmentPeriod = position.getEmploymentPeriod();
+                        if (employmentPeriod != null) {
+                            EmploymentPeriodType ep = convertTimePeriodToEmploymentPeriod(employementPeriod);
+                            ph.setEmploymentPeriod(ep);
+                        }
+
+                        // ph.getPersonCompetency().add(e);
+
+                        // ph.setCurrentIndicator(value);
+                        // ph.setURI(value);
+                        // ph.getJobCategoryCode().add(e);
+                        // ph.getJobLevel().add(e);
+                        // ph.setPositionRemuneration(value);
+                        // ph.setEmploymentVerification(value);
+
+                        employerHistType.getPositionHistory().add(ph);
+                    }
+                }
+
+                // employerHistType.getPersonContact().add(e);
+                // employerHistType.setCurrentIndicator(value);
+                // employerHistType.getIndustryCode().add(e);
+                // employerHistType.setEmploymentVerification(value);
+
+                employmentHist.getEmployerHistory().add(employerHistType);
+            }
+            profile.setEmploymentHistory(employmentHist);
+        }
+
         // profile.setEducationHistory(value);
-        // profile.setEmploymentHistory(value);
         // profile.setExperienceSummary(value);
         // profile.setLicenses(value);
         // profile.setMilitaryHistory(value);
@@ -437,87 +545,121 @@ public class CandidateConverter {
         return profile;
     }
 
+    private EmploymentPeriodType convertTimePeriodToEmploymentPeriod(TimePeriod employementPeriod) {
+        EmploymentPeriodType ep = new EmploymentPeriodType();
+        ep.setStartDate(formatDate(employementPeriod.getStartDate(), DATE_FORMAT));
+        Date endDate = employementPeriod.getEndDate();
+        if (endDate != null) {
+            ep.setEndDate(formatDate(endDate, DATE_FORMAT));
+        } else {
+            EffectiveDatedIndicatorType edi = new EffectiveDatedIndicatorType();
+            edi.setValue(true);
+            ep.setCurrentIndicator(edi);
+        }
+        return ep;
+    }
+
     // adds communication channels from all profiles
-    private void addCommunicationChannels(CandidatePersonType person, PersonalInfo personalInfo, LanguageCodeEnumType lang) {
+    private void processCommunicationChannels(CandidatePersonType person, PersonalInfo personalInfo, LanguageCodeEnumType lang) {
         int channelIndex = 0;
-        for (UserProfileCode userProfileCode : PersonalInfo.UserProfileCode.values()) {
-            UserProfile profile = personalInfo.getProfile(userProfileCode);
-            if (profile != null) {
-                channelIndex = addCommunicationChannelsForProfile(person, profile, personalInfo, lang, channelIndex);
+        for (PersonContactsProfile userProfileCode : PersonalInfo.PersonContactsProfile.values()) {
+            PersonContacts contacts = personalInfo.getPersonContacts(userProfileCode);
+            if (contacts != null) {
+                channelIndex = addCommunicationChannels(person.getCommunication(), contacts, lang, channelIndex);
             }
         }
+    }
+
+    private AddressType convertAddressToAddressType(Address address, LanguageCodeEnumType lang) {
+        AddressType addressType = new AddressType();
+        addressType.setLanguageCode(lang.value());
+        addressType.setStreetName(createName(lang, address.getStreetName()));
+        addressType.setBuildingName(createName(lang, address.getBuildingName()));
+        addressType.setBuildingNumber(createLocalizedText(lang, address.getBuildingNumber()));
+        addressType.setFloor(createLocalizedText(lang, address.getFloor()));
+        addressType.setCityName(createName(lang, address.getCity()));
+        addressType.setCountryCode(createCountryCode(address.getCountry()));
+        addressType.setCurrentAddressIndicator(Boolean.TRUE);
+        addressType.setPostalCode(createCode(lang, address.getPostalCode()));
+        addressType.setPostOfficeBox(createLocalizedText(lang, address.getPostOfficeBox()));
+        return addressType;
+    }
+
+    private CommunicationABIEType convertAddressChannel(Address address, UseCodeType useCode, LanguageCodeEnumType lang) {
+        CommunicationABIEType addressContainer = new CommunicationABIEType();
+        ChannelCodeType addressCh = new ChannelCodeType();
+        addressCh.setValue(address.getChannelCode());
+        addressContainer.setChannelCode(addressCh);
+        addressContainer.setUseCode(useCode);
+        AddressType addressType = convertAddressToAddressType(address, lang);
+        addressContainer.setAddress(addressType);
+        return addressContainer;
+    }
+
+    private CommunicationABIEType convertEmailChannel(Email email, UseCodeType useCode, LanguageCodeEnumType lang) {
+        CommunicationABIEType emailContainer = new CommunicationABIEType();
+        ChannelCodeType emailCh = new ChannelCodeType();
+        emailCh.setValue(email.getChannelCode());
+        emailContainer.setChannelCode(emailCh);
+        emailContainer.setUseCode(useCode);
+        emailContainer.setHTMLPreferredIndicator(Boolean.TRUE);
+        emailContainer.setPreferredIndicator(Boolean.TRUE);
+        emailContainer.setURI(email.getEmailAddress());
+        return emailContainer;
+    }
+
+    private CommunicationABIEType convertMobilePhoneChannel(MobilePhone mobilePhone, UseCodeType useCode, LanguageCodeEnumType lang) {
+        CommunicationABIEType mobilePhoneContainer = new CommunicationABIEType();
+        ChannelCodeType mbChann = new ChannelCodeType();
+        mbChann.setValue(mobilePhone.getChannelCode());
+        mobilePhoneContainer.setChannelCode(mbChann);
+        mobilePhoneContainer.setUseCode(useCode);
+        mobilePhoneContainer.setCountryDialing(createLocalizedText(lang, mobilePhone.getCountryDialing()));
+        mobilePhoneContainer.setDialNumber(createLocalizedText(lang, mobilePhone.getDialNumber()));
+        return mobilePhoneContainer;
+    }
+
+    private CommunicationABIEType convertPhoneChannel(Telephone phone, UseCodeType useCode, LanguageCodeEnumType lang) {
+        CommunicationABIEType phoneContainer = new CommunicationABIEType();
+        ChannelCodeType tChann = new ChannelCodeType();
+        tChann.setValue(phone.getChannelCode());
+        phoneContainer.setChannelCode(tChann);
+        phoneContainer.setUseCode(useCode);
+        phoneContainer.setCountryDialing(createLocalizedText(lang, phone.getCountryDialing()));
+        phoneContainer.setDialNumber(createLocalizedText(lang, phone.getDialNumber()));
+        return phoneContainer;
     }
 
     /**
      * 
      * @param person
-     * @param profile
+     * @param contacts
      * @param personalInfo
      * @param lang
      * @param channelIndex
      *            the index for the next entry on the XML document
      * @return
      */
-    private int addCommunicationChannelsForProfile(CandidatePersonType person, UserProfile profile, PersonalInfo personalInfo,
+    private int addCommunicationChannels(List<CommunicationABIEType> communicationChannels, PersonContacts contacts,
             LanguageCodeEnumType lang, int channelIndex) {
         UseCodeType useCode = new UseCodeType();
-        useCode.setValue(profile.getProfileCode().toString().toLowerCase());
+        useCode.setValue(contacts.getContactsProfile().toString().toLowerCase());
 
-        Address profileAddress = profile.getAddress();
+        Address profileAddress = contacts.getAddress();
         if (profileAddress != null) {
-            CommunicationABIEType addressContainer = new CommunicationABIEType();
-            ChannelCodeType addressCh = new ChannelCodeType();
-            addressCh.setValue(profileAddress.getChannelCode());
-            addressContainer.setChannelCode(addressCh);
-            addressContainer.setUseCode(useCode);
-            AddressType address = new AddressType();
-            address.setLanguageCode(lang.value());
-            address.setStreetName(createName(lang, profileAddress.getStreetName()));
-            address.setBuildingName(createName(lang, profileAddress.getBuildingName()));
-            address.setBuildingNumber(createLocalizedText(lang, profileAddress.getBuildingNumber()));
-            address.setFloor(createLocalizedText(lang, profileAddress.getFloor()));
-            address.setCityName(createName(lang, profileAddress.getCity()));
-            address.setCountryCode(createCountryCode(profileAddress.getCountry()));
-            address.setCurrentAddressIndicator(Boolean.TRUE);
-            address.setPostalCode(createCode(lang, profileAddress.getPostalCode()));
-            address.setPostOfficeBox(createLocalizedText(lang, profileAddress.getPostOfficeBox()));
-            addressContainer.setAddress(address);
-            person.getCommunication().add(channelIndex++, addressContainer);
+            communicationChannels.add(channelIndex++, convertAddressChannel(profileAddress, useCode, lang));
         }
-        Email profileEmail = profile.getEmail();
+        Email profileEmail = contacts.getEmail();
         if (profileEmail != null) {
-            CommunicationABIEType email = new CommunicationABIEType();
-            ChannelCodeType emailCh = new ChannelCodeType();
-            emailCh.setValue(profileEmail.getChannelCode());
-            email.setChannelCode(emailCh);
-            email.setUseCode(useCode);
-            email.setHTMLPreferredIndicator(Boolean.TRUE);
-            email.setPreferredIndicator(Boolean.TRUE);
-            email.setURI(profileEmail.getEmailAddress());
-            person.getCommunication().add(channelIndex++, email);
+            communicationChannels.add(channelIndex++, convertEmailChannel(profileEmail, useCode, lang));
         }
-        MobilePhone profileMobile = profile.getMobilePhone();
+        MobilePhone profileMobile = contacts.getMobilePhone();
         if (profileMobile != null) {
-            CommunicationABIEType mobilePhone = new CommunicationABIEType();
-            ChannelCodeType mbChann = new ChannelCodeType();
-            mbChann.setValue(profileMobile.getChannelCode());
-            mobilePhone.setChannelCode(mbChann);
-            mobilePhone.setUseCode(useCode);
-            mobilePhone.setCountryDialing(createLocalizedText(lang, profileMobile.getCountryDialing()));
-            mobilePhone.setDialNumber(createLocalizedText(lang, profileMobile.getDialNumber()));
-            person.getCommunication().add(channelIndex++, mobilePhone);
+            communicationChannels.add(channelIndex++, convertMobilePhoneChannel(profileMobile, useCode, lang));
         }
-        Telephone profilePhone = profile.getTelephone();
+        Telephone profilePhone = contacts.getTelephone();
         if (profilePhone != null) {
-            CommunicationABIEType telephone = new CommunicationABIEType();
-            ChannelCodeType tChann = new ChannelCodeType();
-            tChann.setValue(profilePhone.getChannelCode());
-            telephone.setChannelCode(tChann);
-            telephone.setUseCode(useCode);
-            telephone.setCountryDialing(createLocalizedText(lang, profilePhone.getCountryDialing()));
-            telephone.setDialNumber(createLocalizedText(lang, profilePhone.getDialNumber()));
-            person.getCommunication().add(channelIndex++, telephone);
-
+            communicationChannels.add(channelIndex++, convertPhoneChannel(profilePhone, useCode, lang));
         }
 
         return channelIndex;
@@ -569,6 +711,6 @@ public class CandidateConverter {
     }
 
     public static void main(String[] args) throws Exception {
-        new CandidateConverter().convertAndSave(new TestPerson(), new FileOutputStream("candidateOut.xml"));
+        new HRXMLConverter().convertAndSave(new TestPerson(), new FileOutputStream("candidateOut.xml"));
     }
 }

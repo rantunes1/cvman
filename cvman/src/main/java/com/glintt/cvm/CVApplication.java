@@ -69,7 +69,7 @@ public class CVApplication extends NavigableApplication {
         try {
             Person testPersonBD = FacadeFactory.getFacade().find(Person.class, testPerson.getId());
             System.out.println("person retrieved : " + testPersonBD.getId());
-            new CandidateConverter().convertAndSave(testPersonBD, new FileOutputStream("candidateBDOut.xml"));
+            new HRXMLConverter().convertAndSave(testPersonBD, new FileOutputStream("candidateBDOut.xml"));
             System.out.println("person converted");
         } catch (Exception e) {
             // TODO Auto-generated catch block

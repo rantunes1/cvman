@@ -1,8 +1,8 @@
 package com.glintt.cvm.model;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -12,22 +12,27 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hr_xml._3.CountryCodeEnumType;
+import org.hr_xml._3.ResourceRelationshipCodeEnumType;
 import org.vaadin.appfoundation.persistence.data.AbstractPojo;
 
 @Entity
 public class ProfessionalInfo extends AbstractOwnedEntity<Person> {
     private static final long serialVersionUID = 2456109426437042121L;
 
+    private String profileName;
+    private String executiveSummary;
+
     @ManyToOne(cascade = CascadeType.ALL)
     private Person owner;
 
-    private String profileName;
-    private String executiveSummary;
     @OneToMany(cascade = CascadeType.ALL)
-    private List<Certification> certifications;
+    private Collection<Certification> certifications;
+
     @OneToMany(cascade = CascadeType.ALL)
-    private List<Publication> publications;
+    private Collection<Publication> publications;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private Collection<Employer> employers;
 
     @Override
     public void setOwner(Person owner) {
@@ -61,20 +66,28 @@ public class ProfessionalInfo extends AbstractOwnedEntity<Person> {
         this.executiveSummary = executiveSummary;
     }
 
-    public List<Certification> getCertifications() {
+    public Collection<Certification> getCertifications() {
         return this.certifications;
     }
 
-    public void setCertifications(List<Certification> certifications) {
+    public void setCertifications(Collection<Certification> certifications) {
         this.certifications = certifications;
     }
 
-    public List<Publication> getPublications() {
+    public Collection<Publication> getPublications() {
         return this.publications;
     }
 
-    public void setPublications(List<Publication> publications) {
+    public void setPublications(Collection<Publication> publications) {
         this.publications = publications;
+    }
+
+    public Collection<Employer> getEmployers() {
+        return this.employers;
+    }
+
+    public void setEmployers(Collection<Employer> employers) {
+        this.employers = employers;
     }
 
     @Entity
@@ -116,9 +129,9 @@ public class ProfessionalInfo extends AbstractOwnedEntity<Person> {
             private static final long serialVersionUID = 7587925526133195307L;
 
             private String name;
-            private CountryCodeEnumType country;
-            private String city;
-            private String postalCode;
+
+            @OneToOne(cascade = CascadeType.ALL)
+            private Location location;
 
             public String getName() {
                 return this.name;
@@ -128,28 +141,12 @@ public class ProfessionalInfo extends AbstractOwnedEntity<Person> {
                 this.name = name;
             }
 
-            public CountryCodeEnumType getCountry() {
-                return this.country;
+            public Location getLocation() {
+                return this.location;
             }
 
-            public void setCountry(CountryCodeEnumType country) {
-                this.country = country;
-            }
-
-            public String getCity() {
-                return this.city;
-            }
-
-            public void setCity(String city) {
-                this.city = city;
-            }
-
-            public String getPostalCode() {
-                return this.postalCode;
-            }
-
-            public void setPostalCode(String postalCode) {
-                this.postalCode = postalCode;
+            public void setLocation(Location location) {
+                this.location = location;
             }
 
         }
@@ -198,7 +195,7 @@ public class ProfessionalInfo extends AbstractOwnedEntity<Person> {
          * 
          * @return
          */
-        List<Contributor> getContributors();
+        Collection<Contributor> getContributors();
     }
 
     /**
@@ -271,6 +268,165 @@ public class ProfessionalInfo extends AbstractOwnedEntity<Person> {
 
         public void setRole(String role) {
             this.role = role;
+        }
+
+    }
+
+    @Entity
+    public static class Employer extends AbstractPojo {
+        private static final long serialVersionUID = -8555972669444760251L;
+
+        String name;
+        String url;
+        String headcount;
+
+        @OneToOne(cascade = CascadeType.ALL)
+        OrganizationContacts contacts;
+
+        @OneToOne(cascade = CascadeType.ALL)
+        TimePeriod employmentPeriod;
+
+        @OneToMany(cascade = CascadeType.ALL)
+        Collection<Position> positions;
+
+        public String getName() {
+            return this.name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getHeadcount() {
+            return this.headcount;
+        }
+
+        public void setHeadcount(String headcount) {
+            this.headcount = headcount;
+        }
+
+        public String getUrl() {
+            return this.url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public OrganizationContacts getContacts() {
+            return this.contacts;
+        }
+
+        public void setContacts(OrganizationContacts contacts) {
+            this.contacts = contacts;
+        }
+
+        public TimePeriod getEmploymentPeriod() {
+            return this.employmentPeriod;
+        }
+
+        public void setEmploymentPeriod(TimePeriod employmentPeriod) {
+            this.employmentPeriod = employmentPeriod;
+        }
+
+        public Collection<Position> getPositions() {
+            return this.positions;
+        }
+
+        public void setPositions(Collection<Position> positions) {
+            this.positions = positions;
+        }
+    }
+
+    @Entity
+    public static class Position extends AbstractPojo {
+        private static final long serialVersionUID = -7655905137694310988L;
+
+        private String title;
+        private String description;
+        private String unitName;
+        private ResourceRelationshipCodeEnumType relationshipType;
+
+        @OneToOne(cascade = CascadeType.ALL)
+        private Address address;
+
+        @OneToOne(cascade = CascadeType.ALL)
+        TimePeriod employmentPeriod;
+
+        public String getTitle() {
+            return this.title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getDescription() {
+            return this.description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public String getUnitName() {
+            return this.unitName;
+        }
+
+        public void setUnitName(String unitName) {
+            this.unitName = unitName;
+        }
+
+        public ResourceRelationshipCodeEnumType getRelationshipType() {
+            return this.relationshipType;
+        }
+
+        public void setRelationshipType(ResourceRelationshipCodeEnumType relationshipType) {
+            this.relationshipType = relationshipType;
+        }
+
+        public Address getAddress() {
+            return this.address;
+        }
+
+        public void setAddress(Address address) {
+            this.address = address;
+        }
+
+        public TimePeriod getEmploymentPeriod() {
+            return this.employmentPeriod;
+        }
+
+        public void setEmploymentPeriod(TimePeriod employmentPeriod) {
+            this.employmentPeriod = employmentPeriod;
+        }
+
+    }
+
+    @Entity
+    public static class TimePeriod extends AbstractPojo {
+        private static final long serialVersionUID = -6711183449975831043L;
+
+        @Temporal(TemporalType.DATE)
+        private Date startDate;
+
+        @Temporal(TemporalType.DATE)
+        private Date endDate;
+
+        public Date getStartDate() {
+            return this.startDate;
+        }
+
+        public void setStartDate(Date startDate) {
+            this.startDate = startDate;
+        }
+
+        public Date getEndDate() {
+            return this.endDate;
+        }
+
+        public void setEndDate(Date endDate) {
+            this.endDate = endDate;
         }
 
     }

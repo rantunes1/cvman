@@ -1,7 +1,7 @@
 package com.glintt.cvm.model;
 
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorColumn;
@@ -32,7 +32,7 @@ public abstract class AbstractPublicationInfo extends AbstractPojo implements Pu
     @OneToOne(cascade = CascadeType.ALL)
     private Copyright copyright;
     @OneToMany(cascade = CascadeType.ALL)
-    private List<Contributor> contributors;
+    private Collection<Contributor> contributors;
 
     @Override
     public String getTitle() {
@@ -89,11 +89,11 @@ public abstract class AbstractPublicationInfo extends AbstractPojo implements Pu
     }
 
     @Override
-    public List<Contributor> getContributors() {
+    public Collection<Contributor> getContributors() {
         return this.contributors;
     }
 
-    public void setContributors(List<Contributor> contributors) {
+    public void setContributors(Collection<Contributor> contributors) {
         this.contributors = contributors;
     }
 

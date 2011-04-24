@@ -135,7 +135,7 @@ public class CVLevelWindow extends HeaderFooterFluidAppLevelWindow {
         return content;
     }
 
-    protected void refresh() {
+    public void refresh() {
         this.headerBand.removeAllComponents();
         this.headerBand.addComponent(createHeader());
 

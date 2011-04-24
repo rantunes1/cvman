@@ -8,6 +8,7 @@ import org.vaadin.appfoundation.persistence.facade.FacadeFactory;
 
 import com.glintt.cvm.model.CVUser;
 import com.glintt.cvm.model.UserType;
+import com.glintt.cvm.security.ApplicationRoles;
 import com.glintt.cvm.ui.FileUploadFormField;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
@@ -103,6 +104,7 @@ public class CreateUserForm extends Form {
                     CVUser user = ((BeanItem<CVUser>) CreateUserForm.this.getItemDataSource()).getBean();
                     if (user.getUserType() == null) {
                         user.setUserType(UserType.EXTERNAL);
+                        user.setRole(ApplicationRoles.USER);
                     }
                     FacadeFactory.getFacade().store(user);
                 } catch (Exception ex) {

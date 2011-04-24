@@ -1,6 +1,5 @@
 package com.glintt.cvm;
 
-import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Locale;
@@ -22,16 +21,15 @@ import org.vaadin.appfoundation.authorization.Permissions;
 import org.vaadin.appfoundation.authorization.jpa.JPAPermissionManager;
 import org.vaadin.appfoundation.i18n.Lang;
 import org.vaadin.appfoundation.persistence.facade.FacadeFactory;
-import org.vaadin.appfoundation.persistence.facade.IFacade;
 import org.vaadin.navigator7.NavigableApplication;
 import org.vaadin.navigator7.window.NavigableAppLevelWindow;
 
 import com.glintt.cvm.exception.ApplicationException;
 import com.glintt.cvm.exception.SecurityException;
 import com.glintt.cvm.model.CVUser;
-import com.glintt.cvm.model.Person;
-import com.glintt.cvm.model.TestPerson;
 import com.glintt.cvm.model.UserType;
+import com.glintt.cvm.security.ApplicationResources;
+import com.glintt.cvm.security.ApplicationRoles;
 import com.glintt.cvm.util.AppConfig;
 import com.glintt.cvm.util.AppProperties;
 import com.vaadin.terminal.Terminal;
@@ -60,21 +58,28 @@ public class CVApplication extends NavigableApplication {
         SessionHandler.initialize(this);
         Permissions.initialize(this, new JPAPermissionManager());
 
+        Permissions.allowAll(ApplicationRoles.ADMINISTRATOR, ApplicationResources.ADMINISTRATION);
+        Permissions.denyAll(ApplicationRoles.MANAGER, ApplicationResources.ADMINISTRATION);
+        Permissions.denyAll(ApplicationRoles.USER, ApplicationResources.ADMINISTRATION);
+        Permissions.denyAll(ApplicationRoles.USER, ApplicationResources.MANAGEMENT);
+
         // ViewHandler.initialize(this);
 
         // @todo TEST CODE (to be removed)
-        Person testPerson = new TestPerson();
-        FacadeFactory.getFacade().store(testPerson);
-
-        try {
-            Person testPersonBD = FacadeFactory.getFacade().find(Person.class, testPerson.getId());
-            System.out.println("person retrieved : " + testPersonBD.getId());
-            new HRXMLConverter().convertAndSave(testPersonBD, new FileOutputStream("candidateBDOut.xml"));
-            System.out.println("person converted");
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        // Person testPerson = new TestPerson();
+        // FacadeFactory.getFacade().store(testPerson);
+        //
+        // try {
+        // Person testPersonBD = FacadeFactory.getFacade().find(Person.class,
+        // testPerson.getId());
+        // System.out.println("person retrieved : " + testPersonBD.getId());
+        // new HRXMLConverter().convertAndSave(testPersonBD, new
+        // FileOutputStream("candidateBDOut.xml"));
+        // System.out.println("person converted");
+        // } catch (Exception e) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // }
     }
 
     @Override
@@ -116,10 +121,10 @@ public class CVApplication extends NavigableApplication {
             appEx = aex;
         }
         // locate user on local storage
+        String query = "SELECT u FROM CVUser u WHERE u.username = :username";
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("username", username);
-        IFacade persistence = FacadeFactory.getFacade();
-        CVUser user = persistence.find("SELECT u FROM CVUser u WHERE u.username = :username", parameters);
+        CVUser user = FacadeFactory.getFacade().find(query, parameters);
 
         if (user == null) {
             if (authenticatedUser == null) {
@@ -132,7 +137,7 @@ public class CVApplication extends NavigableApplication {
                 user = authenticatedUser;
                 user.setUserType(UserType.INTERNAL);
                 user.setPassword(null);
-                persistence.store(user);
+                FacadeFactory.getFacade().store(user);
             }
         } else {
             if (authenticatedUser == null) {
@@ -142,6 +147,15 @@ public class CVApplication extends NavigableApplication {
                     // @todo review this policy. passwords are not being checked
                     // and we're relying
                     // on the fact that 'username' must be unique
+                } else if (UserType.EXTERNAL.equals(user.getUserType())) {
+                    if (password == null || !password.equals(user.getPassword())) {
+                        // unable to authenticate user. re-throw exception
+                        if (appEx != null) {
+                            throw appEx;
+                        } else {
+                            throw new SecurityException(Lang.getMessage("Login.ErrorMessage.authentication_failed"));
+                        }
+                    }
                 } else {
                     // unable to authenticate user. re-throw exception
                     if (appEx != null) {
@@ -155,6 +169,10 @@ public class CVApplication extends NavigableApplication {
             }
         }
 
+        if (user != null && user.getRole() == null) {
+            user.setRole(ApplicationRoles.USER); // defaults to user role if no
+                                                 // role was set before
+        }
         this.user = user;
     }
 

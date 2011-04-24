@@ -2,9 +2,9 @@ package com.glintt.cvm.ui.forms;
 
 import org.vaadin.appfoundation.i18n.Lang;
 import org.vaadin.navigator7.NavigableApplication;
-import org.vaadin.navigator7.window.HeaderFooterFixedAppLevelWindow;
 
 import com.glintt.cvm.CVApplication;
+import com.glintt.cvm.CVLevelWindow;
 import com.glintt.cvm.exception.ApplicationException;
 import com.glintt.cvm.ui.pages.HomePage;
 import com.vaadin.ui.CustomComponent;
@@ -47,8 +47,7 @@ public class AppLoginForm extends LoginForm {
                     return;
                 }
 
-                ((HeaderFooterFixedAppLevelWindow) NavigableApplication.getCurrentNavigableAppLevelWindow()).getHeaderBand()
-                        .requestRepaint();
+                ((CVLevelWindow) NavigableApplication.getCurrentNavigableAppLevelWindow()).refresh();
 
                 NavigableApplication.getCurrentNavigableAppLevelWindow().getNavigator().navigateTo(HomePage.class);
 

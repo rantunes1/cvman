@@ -47,6 +47,7 @@
                         org.eclipse.persistence.jpa.PersistenceProvider
                 </provider>
                 <class>org.vaadin.appfoundation.authentication.data.User</class>
+                <class>org.vaadin.appfoundation.authorization.jpa.PermissionEntity</class>
                 <exclude-unlisted-classes>false</exclude-unlisted-classes>
                 <properties>
                         <property name="eclipselink.logging.level" value="FINE" />
@@ -54,7 +55,7 @@
                         <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/curricula" />
                         <property name="javax.persistence.jdbc.user" value="cv_admin" />
                         <property name="javax.persistence.jdbc.password" value="cv_admin" />
-                        <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
+                        <property name="eclipselink.ddl-generation" value="create-tables" />
                         <property name="eclipselink.ddl-generation.output-mode" value="database" />
                         <property name="eclipselink.orm.throw.exceptions" value="true" />
                 </properties>

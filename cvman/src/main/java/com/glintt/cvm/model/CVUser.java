@@ -1,6 +1,8 @@
 package com.glintt.cvm.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 
 import org.vaadin.appfoundation.authentication.data.User;
 
@@ -23,6 +25,9 @@ public class CVUser extends User {
     private String postalCode;
 
     private byte[] picture;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private NamedRole role;
 
     public UserType getUserType() {
         return this.userType;
@@ -118,6 +123,14 @@ public class CVUser extends User {
 
     public void setPicture(byte[] picture) {
         this.picture = picture;
+    }
+
+    public NamedRole getRole() {
+        return this.role;
+    }
+
+    public void setRole(NamedRole role) {
+        this.role = role;
     }
 
 }

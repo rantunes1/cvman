@@ -1,7 +1,7 @@
 package com.glintt.cvm.model;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -35,7 +35,7 @@ public class PersonalInfo extends AbstractOwnedEntity<Person> {
     private LanguageCodeEnumType primaryLanguage;
 
     @OneToMany(cascade = CascadeType.PERSIST)
-    private List<UserProfile> profiles;
+    private Collection<PersonContacts> contacts;
 
     @OneToOne(cascade = CascadeType.ALL)
     private BirthInfo birthInfo;
@@ -145,29 +145,29 @@ public class PersonalInfo extends AbstractOwnedEntity<Person> {
         }
     }
 
-    public UserProfile getProfile(UserProfileCode profileCode) {
-        List<UserProfile> profiles = this.profiles;
-        if (profiles != null) {
-            for (UserProfile profile : profiles) {
-                if (profile.getProfileCode().equals(profileCode)) {
-                    return profile;
+    public PersonContacts getPersonContacts(PersonContactsProfile contactsProfile) {
+        Collection<PersonContacts> contacts = this.contacts;
+        if (contacts != null) {
+            for (PersonContacts personContacts : contacts) {
+                if (personContacts.getContactsProfile().equals(contactsProfile)) {
+                    return personContacts;
                 }
             }
         }
         return null;
     }
 
-    public void addProfile(UserProfile profile) {
-        if (profile == null) {
+    public void addPersonContacts(PersonContacts contacts) {
+        if (contacts == null) {
             return;
         }
-        if (this.profiles == null) {
-            this.profiles = new ArrayList<UserProfile>();
+        if (this.contacts == null) {
+            this.contacts = new ArrayList<PersonContacts>();
         }
-        this.profiles.add(profile);
+        this.contacts.add(contacts);
     }
 
-    public enum UserProfileCode {
+    public enum PersonContactsProfile {
         PERSONAL, BUSINESS
     }
 

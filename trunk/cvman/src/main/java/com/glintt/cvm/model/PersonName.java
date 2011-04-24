@@ -41,4 +41,12 @@ public class PersonName extends AbstractPojo {
     public void setSurname(String surname) {
         this.surname = surname;
     }
+
+    public String getFullName() {
+        return getFullName(false);
+    }
+
+    public String getFullName(boolean surnameFirst) {
+        return (surnameFirst) ? getSurname() + ", " + getFirstName() : getFirstName() + " " + getSurname();
+    }
 }

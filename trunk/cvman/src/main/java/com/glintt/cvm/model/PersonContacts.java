@@ -8,30 +8,30 @@ import javax.persistence.OneToOne;
 import org.hr_xml._3.ChannelCodeEnumType;
 import org.vaadin.appfoundation.persistence.data.AbstractPojo;
 
-import com.glintt.cvm.model.PersonalInfo.UserProfileCode;
+import com.glintt.cvm.model.PersonalInfo.PersonContactsProfile;
 
 @Entity
-public class UserProfile extends AbstractPojo {
+public class PersonContacts extends AbstractPojo {
     private static final long serialVersionUID = -4260663480634580428L;
 
     @Column(nullable = false)
-    private UserProfileCode profileCode;
+    private PersonContactsProfile contactsProfile;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Address address;
     @OneToOne(cascade = CascadeType.ALL)
-    private UserProfile.Email email;
+    private PersonContacts.Email email;
     @OneToOne(cascade = CascadeType.ALL)
-    private UserProfile.MobilePhone mobilePhone;
+    private PersonContacts.MobilePhone mobilePhone;
     @OneToOne(cascade = CascadeType.ALL)
-    private UserProfile.Telephone telephone;
+    private PersonContacts.Telephone telephone;
 
-    public void setProfileCode(UserProfileCode profileCode) {
-        this.profileCode = profileCode;
+    public void setContactsProfile(PersonContactsProfile contactsProfile) {
+        this.contactsProfile = contactsProfile;
     }
 
-    public UserProfileCode getProfileCode() {
-        return this.profileCode;
+    public PersonContactsProfile getContactsProfile() {
+        return this.contactsProfile;
     }
 
     public Address getAddress() {
@@ -42,27 +42,27 @@ public class UserProfile extends AbstractPojo {
         this.address = address;
     }
 
-    public UserProfile.Email getEmail() {
+    public PersonContacts.Email getEmail() {
         return this.email;
     }
 
-    public void setEmail(UserProfile.Email email) {
+    public void setEmail(PersonContacts.Email email) {
         this.email = email;
     }
 
-    public UserProfile.MobilePhone getMobilePhone() {
+    public PersonContacts.MobilePhone getMobilePhone() {
         return this.mobilePhone;
     }
 
-    public void setMobilePhone(UserProfile.MobilePhone mobilePhone) {
+    public void setMobilePhone(PersonContacts.MobilePhone mobilePhone) {
         this.mobilePhone = mobilePhone;
     }
 
-    public UserProfile.Telephone getTelephone() {
+    public PersonContacts.Telephone getTelephone() {
         return this.telephone;
     }
 
-    public void setTelephone(UserProfile.Telephone telephone) {
+    public void setTelephone(PersonContacts.Telephone telephone) {
         this.telephone = telephone;
     }
 
@@ -70,7 +70,7 @@ public class UserProfile extends AbstractPojo {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((this.profileCode == null) ? 0 : this.profileCode.hashCode());
+        result = prime * result + ((this.contactsProfile == null) ? 0 : this.contactsProfile.hashCode());
         return result;
     }
 
@@ -82,8 +82,8 @@ public class UserProfile extends AbstractPojo {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        UserProfile other = (UserProfile) obj;
-        if (this.profileCode != other.profileCode)
+        PersonContacts other = (PersonContacts) obj;
+        if (this.contactsProfile != other.contactsProfile)
             return false;
         return true;
     }
@@ -133,7 +133,7 @@ public class UserProfile extends AbstractPojo {
     }
 
     @Entity
-    public static class MobilePhone extends UserProfile.PhoneChannel {
+    public static class MobilePhone extends PersonContacts.PhoneChannel {
         private static final long serialVersionUID = -1982803103647078318L;
 
         @Override
@@ -144,7 +144,7 @@ public class UserProfile extends AbstractPojo {
     }
 
     @Entity
-    public static class Telephone extends UserProfile.PhoneChannel {
+    public static class Telephone extends PersonContacts.PhoneChannel {
         private static final long serialVersionUID = 339523083834771863L;
 
         @Override

@@ -1,8 +1,8 @@
 package com.glintt.cvm.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Entity;
 
@@ -10,26 +10,31 @@ import org.hr_xml._3.CountryCodeEnumType;
 import org.hr_xml._3.GenderCodeEnumType;
 import org.hr_xml._3.LanguageCodeEnumType;
 import org.hr_xml._3.MaritalStatusCodeEnumType;
+import org.hr_xml._3.ResourceRelationshipCodeEnumType;
 
+import com.glintt.cvm.model.PersonContacts.Email;
+import com.glintt.cvm.model.PersonContacts.MobilePhone;
+import com.glintt.cvm.model.PersonContacts.Telephone;
 import com.glintt.cvm.model.PersonalInfo.BirthInfo;
-import com.glintt.cvm.model.PersonalInfo.UserProfileCode;
+import com.glintt.cvm.model.PersonalInfo.PersonContactsProfile;
 import com.glintt.cvm.model.ProfessionalInfo.Certification;
 import com.glintt.cvm.model.ProfessionalInfo.Certification.IssuingAuthority;
 import com.glintt.cvm.model.ProfessionalInfo.Contributor;
 import com.glintt.cvm.model.ProfessionalInfo.Copyright;
+import com.glintt.cvm.model.ProfessionalInfo.Employer;
+import com.glintt.cvm.model.ProfessionalInfo.Position;
 import com.glintt.cvm.model.ProfessionalInfo.PublicationProfileCode;
+import com.glintt.cvm.model.ProfessionalInfo.TimePeriod;
 import com.glintt.cvm.model.Publication.Article;
 import com.glintt.cvm.model.Publication.Book;
 import com.glintt.cvm.model.Publication.ConferencePaper;
 import com.glintt.cvm.model.Publication.UnspecifiedPublication;
-import com.glintt.cvm.model.UserProfile.Email;
-import com.glintt.cvm.model.UserProfile.MobilePhone;
-import com.glintt.cvm.model.UserProfile.Telephone;
 
 @Entity
 public class TestPerson extends Person {
     private static final long serialVersionUID = 8579660817063564713L;
 
+    @SuppressWarnings("deprecation")
     public TestPerson() {
         super(LanguageCodeEnumType.PT);
         PersonalInfo personalInfo = new PersonalInfo();
@@ -52,8 +57,8 @@ public class TestPerson extends Person {
         birthInfo.setBirthLocation(birthLocation);
         personalInfo.setBirthInfo(birthInfo);
 
-        UserProfile personalProfile = new UserProfile();
-        personalProfile.setProfileCode(UserProfileCode.PERSONAL);
+        PersonContacts personalProfile = new PersonContacts();
+        personalProfile.setContactsProfile(PersonContactsProfile.PERSONAL);
         Address personalAddress = new Address();
         personalAddress.setStreetName("Rua da Palma");
         personalAddress.setBuildingName("C.C. Martim Moniz");
@@ -64,58 +69,62 @@ public class TestPerson extends Person {
         personalAddress.setPostalCode("1100-111");
         personalAddress.setPostOfficeBox("LISBOA");
         personalProfile.setAddress(personalAddress);
-        Email personalEmail = new UserProfile.Email();
+        Email personalEmail = new PersonContacts.Email();
         personalEmail.setEmailAddress("joao.silva@somedomain.net");
         personalProfile.setEmail(personalEmail);
-        MobilePhone personalMobile = new UserProfile.MobilePhone();
+        MobilePhone personalMobile = new PersonContacts.MobilePhone();
         personalMobile.setCountryDialing("351");
         personalMobile.setDialNumber("911 111 111");
         personalProfile.setMobilePhone(personalMobile);
-        personalInfo.addProfile(personalProfile);
-        Telephone personalTelephone = new UserProfile.Telephone();
+        personalInfo.addPersonContacts(personalProfile);
+        Telephone personalTelephone = new PersonContacts.Telephone();
         personalTelephone.setCountryDialing("351");
         personalTelephone.setDialNumber("212 345 678");
         personalProfile.setTelephone(personalTelephone);
 
-        UserProfile businessProfile = new UserProfile();
-        businessProfile.setProfileCode(UserProfileCode.BUSINESS);
-        MobilePhone businessMobile = new UserProfile.MobilePhone();
+        PersonContacts businessProfile = new PersonContacts();
+        businessProfile.setContactsProfile(PersonContactsProfile.BUSINESS);
+        MobilePhone businessMobile = new PersonContacts.MobilePhone();
         businessMobile.setCountryDialing("351");
         businessMobile.setDialNumber("922 222 222");
         businessProfile.setMobilePhone(businessMobile);
-        personalInfo.addProfile(businessProfile);
+        personalInfo.addPersonContacts(businessProfile);
 
         ProfessionalInfo professionalInfo = new ProfessionalInfo();
 
         professionalInfo.setProfileName("Sample CV generated from curricula WebApp");
         professionalInfo.setExecutiveSummary("executive summary text...");
 
-        List<Certification> certifications = new ArrayList<Certification>();
+        Collection<Certification> certifications = new ArrayList<Certification>();
         Certification certification1 = new Certification();
         certification1.setName("nome da certificação 1");
         certification1.setIssueDate(new Date());
         IssuingAuthority ia1 = new IssuingAuthority();
         ia1.setName("issuing authority 1");
-        ia1.setCountry(CountryCodeEnumType.PT);
-        ia1.setCity("Lisboa");
-        ia1.setPostalCode("1100-002 LISBOA");
+        Location ia1Location = new Location();
+        ia1Location.setCountry(CountryCodeEnumType.PT);
+        ia1Location.setCity("Lisboa");
+        ia1Location.setPostalCode("1100-002 LISBOA");
+        ia1.setLocation(ia1Location);
         certification1.setIssuingAuthority(ia1);
         certifications.add(certification1);
         Certification certification2 = new Certification();
         certification2.setName("nome da certificação 2");
         IssuingAuthority ia2 = new IssuingAuthority();
         ia2.setName("issuing authority 2");
-        ia2.setCountry(CountryCodeEnumType.ES);
-        ia2.setCity("Madrid");
+        Location ia2Location = new Location();
+        ia2Location.setCountry(CountryCodeEnumType.ES);
+        ia2Location.setCity("Madrid");
+        ia2.setLocation(ia2Location);
         certification2.setIssuingAuthority(ia2);
         certifications.add(certification2);
         professionalInfo.setCertifications(certifications);
 
-        List<Publication> publications = new ArrayList<Publication>();
+        Collection<Publication> publications = new ArrayList<Publication>();
         Copyright exampleCopyright = new Copyright();
         exampleCopyright.setYear("2011");
         exampleCopyright.setText("all rights reserved");
-        List<Contributor> exampleContributors = new ArrayList<Contributor>();
+        Collection<Contributor> exampleContributors = new ArrayList<Contributor>();
         Contributor contributor1 = new Contributor();
         contributor1.setName(new PersonName("Herman", "José"));
         contributor1.setRole("co-author");
@@ -216,6 +225,48 @@ public class TestPerson extends Person {
         emptyPaper.setInfo(new ConferencePaper());
         publications.add(emptyPaper);
         professionalInfo.setPublications(publications);
+
+        Collection<Employer> employers = new ArrayList<Employer>();
+        Employer employer1 = new Employer();
+        employer1.setName("Employer 1");
+        employer1.setUrl("http://www.employer1.com");
+        employer1.setHeadcount("100");
+        OrganizationContacts organizationContacts = new OrganizationContacts();
+        organizationContacts.setName(new PersonName("Maria Deolinda", "Pereira"));
+        organizationContacts.setRole("gestora de recursos humanos");
+        organizationContacts.setMobilePhone(businessMobile);
+        organizationContacts.setEmail(personalEmail);
+        employer1.setContacts(organizationContacts);
+        TimePeriod tp1 = new TimePeriod();
+        tp1.setStartDate(new Date(2010, 1, 1));
+        tp1.setEndDate(new Date(2010, 12, 31));
+        employer1.setEmploymentPeriod(tp1);
+        Collection<Position> employer1Positions = new ArrayList<Position>();
+        Position position1 = new Position();
+        position1.setTitle("position 1");
+        position1.setDescription("description for position 1");
+        position1.setRelationshipType(ResourceRelationshipCodeEnumType.EMPLOYEE);
+        position1.setUnitName("unit name for position 1");
+        position1.setAddress(personalAddress);
+        position1.setEmploymentPeriod(tp1);
+        employer1Positions.add(position1);
+        Position position2 = new Position();
+        position2.setTitle("position 2");
+        position2.setDescription("description for position 2");
+        position2.setRelationshipType(ResourceRelationshipCodeEnumType.VENDOR_EMPLOYEE);
+        position2.setUnitName("unit name for position 2");
+        employer1Positions.add(position2);
+        employer1.setPositions(employer1Positions);
+        employers.add(employer1);
+        Employer employer2 = new Employer();
+        employer2.setName("Employer 2");
+        employer2.setUrl("http://www.employer2.com");
+        employer2.setHeadcount("10000");
+        TimePeriod tp2 = new TimePeriod();
+        tp2.setStartDate(new Date(2011, 1, 1));
+        employer2.setEmploymentPeriod(tp2);
+        employers.add(employer2);
+        professionalInfo.setEmployers(employers);
 
         this.setPersonalInfo(personalInfo);
         this.setProfessionalInfo(professionalInfo);

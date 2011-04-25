@@ -25,5 +25,13 @@
 		    	<seg>Mudar linguagem : </seg>
 			</tuv>
 		</tu>		
+		<tu tuid="Header.logout">
+			<tuv lang="en">
+		    	<seg>Logout </seg>
+			</tuv>
+			<tuv lang="pt">
+		    	<seg>Sair</seg>
+			</tuv>
+		</tu>
 	</body>
 </tmx>

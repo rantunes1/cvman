@@ -5,10 +5,12 @@ import java.util.Locale;
 import org.vaadin.appfoundation.i18n.Lang;
 import org.vaadin.navigator7.NavigableApplication;
 import org.vaadin.navigator7.Navigator.NavigationEvent;
+import org.vaadin.navigator7.ParamPageLink;
 import org.vaadin.navigator7.WebApplication;
 import org.vaadin.navigator7.interceptor.PageChangeListenersInterceptor.PageChangeListener;
 import org.vaadin.navigator7.window.HeaderFooterFluidAppLevelWindow;
 
+import com.glintt.cvm.ui.pages.LoginPage;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.Alignment;
@@ -36,14 +38,12 @@ public class CVLevelWindow extends HeaderFooterFluidAppLevelWindow {
         header.setWidth("100%");
         header.setHeight(6, Component.UNITS_EM);
 
-        Label headerTxt = null;
         if (((CVApplication) NavigableApplication.getCurrent()).isUserLogged()) {
-            headerTxt = new Label(Lang.getMessage("Header.authenticated.caption"));
+            header.addComponent(new Label(Lang.getMessage("Header.authenticated.caption")));
+            header.addComponent(new ParamPageLink(Lang.getMessage("Header.logout"), LoginPage.class, "x"));
         } else {
-            headerTxt = new Label(Lang.getMessage("Header.guest.caption"));
+            header.addComponent(new Label(Lang.getMessage("Header.guest.caption")));
         }
-        header.addComponent(headerTxt);
-        header.setComponentAlignment(headerTxt, Alignment.TOP_LEFT);
 
         ComboBox i18Combo = new ComboBox(Lang.getMessage("Header.lang"));
         i18Combo.setNullSelectionAllowed(false);

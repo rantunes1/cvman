@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import org.vaadin.navigator7.NavigableApplication;
 import org.vaadin.navigator7.WebApplication;
+import org.vaadin.navigator7.interceptor.ExceptionPage;
 import org.vaadin.navigator7.interceptor.Interceptor;
 import org.vaadin.navigator7.interceptor.NavigationWarningInterceptor;
 import org.vaadin.navigator7.interceptor.PageChangeListenersInterceptor;
@@ -19,7 +20,7 @@ public class CVWebApplication extends WebApplication implements Serializable {
     private transient PageChangeListenersInterceptor pageChangeListenerInterceptor;
 
     public CVWebApplication() {
-        registerPages(new Class[] { HomePage.class, CreateUserPage.class });
+        registerPages(new Class[] { LoginPage.class, HomePage.class, CreateUserPage.class });
     }
 
     @Override
@@ -33,12 +34,24 @@ public class CVWebApplication extends WebApplication implements Serializable {
             @Override
             public void intercept(PageInvocation pageInvocation) {
 
-                if (pageInvocation.getPageClass().equals(CreateUserPage.class)
-                        || ((CVApplication) NavigableApplication.getCurrent()).isUserLogged()) {
-                    pageInvocation.invoke();
+                if (pageInvocation.getPageClass().equals(ExceptionPage.class)) {
+                    pageInvocation.getNavigator().navigateTo(HomePage.class, pageInvocation.getParams());
                 } else {
-                    pageInvocation.getNavigator().placePage(new LoginPage(), pageInvocation.getParams(),
-                            pageInvocation.isNeedToChangeUri());
+                    boolean isUserLogged = ((CVApplication) NavigableApplication.getCurrent()).isUserLogged();
+                    if (!isUserLogged) {
+                        if (pageInvocation.getPageClass().equals(CreateUserPage.class)
+                                || pageInvocation.getPageClass().equals(LoginPage.class)) {
+                            pageInvocation.invoke();
+                        } else {
+                            pageInvocation.getNavigator().navigateTo(LoginPage.class, pageInvocation.getParams());
+                        }
+                    } else if (pageInvocation.getPageClass().equals(LoginPage.class) && pageInvocation.getParams() == null) {
+                        pageInvocation.getNavigator().navigateTo(HomePage.class, pageInvocation.getParams());
+                    } else if (pageInvocation.getPageClass().equals(CreateUserPage.class)) {
+                        pageInvocation.getNavigator().navigateTo(HomePage.class, pageInvocation.getParams());
+                    } else {
+                        pageInvocation.invoke();
+                    }
                 }
             }
         });

@@ -16,9 +16,9 @@ public class AppLoginForm extends LoginForm {
 
     public AppLoginForm(final CustomComponent container) {
         super();
-        this.setStyleName("loginForm");
+        setStyleName("loginForm");
 
-        this.addListener(new LoginForm.LoginListener() {
+        addListener(new LoginForm.LoginListener() {
             private static final long serialVersionUID = 754194795438709240L;
 
             @Override
@@ -60,5 +60,4 @@ public class AppLoginForm extends LoginForm {
         app.authenticate(username, password);
         return app.isUserLogged();
     }
-
 }

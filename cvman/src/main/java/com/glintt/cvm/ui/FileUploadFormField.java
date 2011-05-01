@@ -29,7 +29,6 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Html5File;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.VerticalLayout;
@@ -49,10 +48,11 @@ public class FileUploadFormField extends CustomField {
 
         VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);
-        layout.addComponent(new Label("Drag text from desktop application or image files from the "
-                + "file system to the drop box below (dragging files requires HTML5 capable browser like FF 3.6, Safari or Chrome)"));
 
         this.dropPane = new CssLayout();
+        this.dropPane
+                .setDescription("Drag text from desktop application or image files from the "
+                        + "file system to the drop box below (dragging files requires HTML5 capable browser like FF 3.6, Safari or Chrome)");
         this.dropPane.setWidth("200px");
         this.dropPane.setHeight("200px");
         this.dropPane.addStyleName("image-drop-pane");

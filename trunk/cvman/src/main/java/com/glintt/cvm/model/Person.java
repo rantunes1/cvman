@@ -17,6 +17,8 @@ public class Person extends AbstractPojo implements Owner {
 
     private final LanguageCodeEnumType languageId;
 
+    private Long userId;
+
     @OneToMany(mappedBy = "owner", cascade = CascadeType.PERSIST)
     private Collection<PersonalInfo> personalInfos;
     @OneToMany(mappedBy = "owner", cascade = CascadeType.PERSIST)
@@ -93,6 +95,14 @@ public class Person extends AbstractPojo implements Owner {
 
     protected void setProfessionalInfos(Collection<ProfessionalInfo> professionalInfos) {
         this.professionalInfos = professionalInfos;
+    }
+
+    public Long getUserId() {
+        return this.userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
 }

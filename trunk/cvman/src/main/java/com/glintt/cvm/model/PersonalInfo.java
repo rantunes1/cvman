@@ -19,6 +19,8 @@ import org.vaadin.appfoundation.persistence.data.AbstractPojo;
 public class PersonalInfo extends AbstractOwnedEntity<Person> {
     private static final long serialVersionUID = 6066626402959959669L;
 
+    private byte[] picture;
+
     @ManyToOne(cascade = CascadeType.ALL)
     private Person owner;
 
@@ -118,6 +120,14 @@ public class PersonalInfo extends AbstractOwnedEntity<Person> {
 
     public void setBirthInfo(BirthInfo birthInfo) {
         this.birthInfo = birthInfo;
+    }
+
+    public byte[] getPicture() {
+        return this.picture;
+    }
+
+    public void setPicture(byte[] picture) {
+        this.picture = picture;
     }
 
     @Entity

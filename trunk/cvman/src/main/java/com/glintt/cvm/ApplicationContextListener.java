@@ -33,6 +33,7 @@ public class ApplicationContextListener implements ServletContextListener {
         translationFiles.add(this.getClass().getClassLoader().getResource("homePage.xml"));
         translationFiles.add(this.getClass().getClassLoader().getResource("loginPage.xml"));
         translationFiles.add(this.getClass().getClassLoader().getResource("createUserPage.xml"));
+        translationFiles.add(this.getClass().getClassLoader().getResource("personalInfoForm.xml"));
         logger.info("I18N INITITALIZED");
 
         for (URL translation : translationFiles) {

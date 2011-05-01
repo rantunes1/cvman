@@ -24,8 +24,6 @@ public class CVUser extends User {
     private String locality;
     private String postalCode;
 
-    private byte[] picture;
-
     @OneToOne(cascade = CascadeType.ALL)
     private NamedRole role;
 
@@ -117,14 +115,6 @@ public class CVUser extends User {
         this.postalCode = postalCode;
     }
 
-    public byte[] getPicture() {
-        return this.picture;
-    }
-
-    public void setPicture(byte[] picture) {
-        this.picture = picture;
-    }
-
     public NamedRole getRole() {
         return this.role;
     }
@@ -132,5 +122,4 @@ public class CVUser extends User {
     public void setRole(NamedRole role) {
         this.role = role;
     }
-
 }

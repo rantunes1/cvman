@@ -9,7 +9,7 @@ import com.vaadin.ui.FormFieldFactory;
 public class CertificationsInfoForm extends AbstractBaseForm {
 
     public CertificationsInfoForm(Person person) {
-        super(person);
+        super(person.getProfessionalInfo());
 
     }
 

@@ -15,18 +15,21 @@ import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
+import org.apache.lucene.util.Version;
 import org.vaadin.appfoundation.authentication.SessionHandler;
 import org.vaadin.appfoundation.authentication.data.User;
 import org.vaadin.appfoundation.authorization.Permissions;
 import org.vaadin.appfoundation.authorization.jpa.JPAPermissionManager;
 import org.vaadin.appfoundation.i18n.Lang;
 import org.vaadin.appfoundation.persistence.facade.FacadeFactory;
+import org.vaadin.lucenecontainer.facade.LuceneFacade;
 import org.vaadin.navigator7.NavigableApplication;
 import org.vaadin.navigator7.window.NavigableAppLevelWindow;
 
 import com.glintt.cvm.exception.ApplicationException;
 import com.glintt.cvm.exception.SecurityException;
 import com.glintt.cvm.model.CVUser;
+import com.glintt.cvm.model.Person;
 import com.glintt.cvm.model.UserType;
 import com.glintt.cvm.security.ApplicationResources;
 import com.glintt.cvm.security.ApplicationRoles;
@@ -40,7 +43,12 @@ import com.vaadin.ui.Window.Notification;
 public class CVApplication extends NavigableApplication {
     private static final long serialVersionUID = 5614209556433681287L;
 
+    // @todo inject value?
+    private static final Version LUCENE_VERSION = Version.LUCENE_31;
+    private static final String[] FIELD_NAMES = { "personalInfo", "professionalInfo" };
+
     private User user;
+    private LuceneFacade luceneFacade;
 
     @Override
     public void init() {
@@ -63,6 +71,11 @@ public class CVApplication extends NavigableApplication {
         Permissions.denyAll(ApplicationRoles.USER, ApplicationResources.ADMINISTRATION);
         Permissions.denyAll(ApplicationRoles.USER, ApplicationResources.MANAGEMENT);
 
+        System.out.println("INITIALIZING LUCENE INDEX");
+        setLuceneFacade(new LuceneFacade(LUCENE_VERSION, AppConfig.getString(AppProperties.LUCENE_INDEX_DIR.getKey()),
+                AppProperties.LUCENE_INDEX_ID_PERSON.getKey()));
+        getLuceneFacade()
+                .createIndex(AppProperties.LUCENE_INDEX_DIR.getKey(), FacadeFactory.getFacade(), Person.class, FIELD_NAMES);
         // ViewHandler.initialize(this);
 
         // @todo TEST CODE (to be removed)
@@ -244,6 +257,14 @@ public class CVApplication extends NavigableApplication {
 
     public boolean isUserLogged() {
         return getUser() != null;
+    }
+
+    public LuceneFacade getLuceneFacade() {
+        return this.luceneFacade;
+    }
+
+    public void setLuceneFacade(LuceneFacade luceneFacade) {
+        this.luceneFacade = luceneFacade;
     }
 
 }

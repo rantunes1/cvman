@@ -7,6 +7,10 @@ public enum AppProperties {
 
     THEME("theme.name"),
 
+    LUCENE_INDEX_DIR("lucene.index.dir"),
+
+    LUCENE_INDEX_ID_PERSON("lucene.index.id.person"),
+
     ;
 
     private String key;

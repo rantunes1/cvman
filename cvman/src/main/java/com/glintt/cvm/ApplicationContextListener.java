@@ -20,7 +20,7 @@ public class ApplicationContextListener implements ServletContextListener {
     @Override
     public void contextDestroyed(ServletContextEvent paramServletContextEvent) {
         // do nothing
-
+        logger.info("CONTEXT DESTROYED");
     }
 
     @Override

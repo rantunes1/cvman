@@ -50,9 +50,6 @@ public class FileUploadFormField extends CustomField {
         layout.setMargin(true);
 
         this.dropPane = new CssLayout();
-        this.dropPane
-                .setDescription("Drag text from desktop application or image files from the "
-                        + "file system to the drop box below (dragging files requires HTML5 capable browser like FF 3.6, Safari or Chrome)");
         this.dropPane.setWidth("200px");
         this.dropPane.setHeight("200px");
         this.dropPane.addStyleName("image-drop-pane");
@@ -61,6 +58,8 @@ public class FileUploadFormField extends CustomField {
         dropBox.setSizeUndefined();
 
         Panel panel = new Panel(dropBox);
+        panel.setDescription("Drag text from desktop application or image files from the "
+                + "file system to the drop box below (dragging files requires HTML5 capable browser like FF 3.6, Safari or Chrome)");
         panel.setSizeUndefined();
         panel.addStyleName("no-vertical-drag-hints");
         panel.addStyleName("no-horizontal-drag-hints");
@@ -92,14 +91,10 @@ public class FileUploadFormField extends CustomField {
                     && (webBrowser.getBrowserMajorVersion() >= 4 || (webBrowser.getBrowserMajorVersion() == 3 && webBrowser
                             .getBrowserMinorVersion() >= 6));
             if (!supportsHtml5FileDrop) {
-                /*
-                 * pretty much all chromes and safaris are new enough
-                 */
-
                 supportsHtml5FileDrop = webBrowser.isChrome() || webBrowser.isSafari() && webBrowser.getBrowserMajorVersion() > 4;
             }
             if (!supportsHtml5FileDrop) {
-                // @todo hide grag indicator and show a 'single-click' upload
+                // @todo hide drag indicator and show a 'single-click' upload
                 // component
                 getWindow().showNotification(
                         "Image file drop is only supported on Firefox 3.6 and later. "
@@ -111,6 +106,7 @@ public class FileUploadFormField extends CustomField {
     private class ImageDropBox extends DragAndDropWrapper implements DropHandler {
         private static final long serialVersionUID = 389003491350858041L;
 
+        // @todo declare on AppProperties
         private static final long FILE_SIZE_LIMIT = 2 * 1024 * 1024; // 2MB
 
         public ImageDropBox(Component root) {
@@ -129,12 +125,14 @@ public class FileUploadFormField extends CustomField {
                     final String fileName = html5File.getFileName();
 
                     if (html5File.getFileSize() > FILE_SIZE_LIMIT) {
-                        getWindow().showNotification("File rejected. Max 2Mb files are accepted by Sampler",
+                        getWindow().showNotification(
+                                "File rejected. Max " + (FILE_SIZE_LIMIT / 1024 / 1024) + "Mb files are accepted.",
                                 Notification.TYPE_WARNING_MESSAGE);
                     } else {
 
                         final ByteArrayOutputStream bas = new ByteArrayOutputStream();
                         StreamVariable streamVariable = new StreamVariable() {
+                            private static final long serialVersionUID = -4778149214665537608L;
 
                             @Override
                             public OutputStream getOutputStream() {
@@ -183,7 +181,7 @@ public class FileUploadFormField extends CustomField {
 
         private void showFile(final String name, final String type, final ByteArrayOutputStream bas) {
             try {
-                final BufferedImage image = scale(ImageIO.read(new ByteArrayInputStream(bas.toByteArray())),
+                final BufferedImage image = scaleImage(ImageIO.read(new ByteArrayInputStream(bas.toByteArray())),
                         (int) (FileUploadFormField.this.dropPane.getWidth()), (int) (FileUploadFormField.this.dropPane.getHeight()));
 
                 StreamResource resource = new StreamResource(new StreamSource() {
@@ -214,7 +212,7 @@ public class FileUploadFormField extends CustomField {
             }
         }
 
-        private BufferedImage scale(BufferedImage image, int w, int h) {
+        private BufferedImage scaleImage(BufferedImage image, int w, int h) {
             BufferedImage t = new BufferedImage(w, h, BufferedImage.SCALE_DEFAULT);
             Graphics2D g = t.createGraphics();
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

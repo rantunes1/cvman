@@ -1,27 +1,8 @@
 @CHARSET "ISO-8859-1";
 
-@import "../reindeer/styles.css";        /* for 'extend' vaadin themes.*/
+/* @import "../reindeer/styles.css";        /* for 'extend' vaadin themes.*/
+@import "../chameleon-blue/styles.css";
   
-.PageTemplate-mainLayout {
-    width:100%
-}
-
-/* Full window width */
-.FixedPageTemplate-bandOuterLayout {
-    width:100%
-}
-
-/* Fixed width inside bandOuterLayout */
-.FixedPageTemplate-bandInnerLayout {
-    margin: 0 auto;  /* Centered inside outer div */
-}
-
-/* Layout containing your pages (probably between a header and a footer) */
-.FixedPageTemplate-layoutPage {
-    padding-top:15px;   /* Not too close from the header */
-	padding-bottom:20px; /* Not too close from the footer */
-}
-
 .header{
 	background-color: #fed;
 }
@@ -39,10 +20,6 @@
 	height: 120px !important;
 	width: 145px !important;
 	padding: 10px;
-}
-
-.v-button{
-	margin-top: 15px;
 }
 
 .v-textfield-error, .v-select-error{

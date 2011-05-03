@@ -34,9 +34,14 @@ public abstract class AbstractFormFieldFactory extends DefaultFieldFactory {
                     field = super.createField(item, propId, uiContext);
                 }
 
-                if (field.getCaption() == null) {
-                    field.setCaption(createCaptionByPropertyId(propertyId));
+                String caption = field.getCaption();
+                if (caption == null) {
+                    caption = createCaptionByPropertyId(propertyId);
                 }
+                if (caption.indexOf(" :") < 0) {
+                    caption += " :";
+                }
+                field.setCaption(caption);
 
                 field.setRequired(fieldDefinition.isRequired());
 

@@ -1,5 +1,11 @@
 package com.glintt.cvm.ui.pages;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.imageio.ImageIO;
+
 import com.glintt.cvm.model.Person;
 import com.glintt.cvm.model.PersonalInfo;
 import com.glintt.cvm.model.ProfessionalInfo;
@@ -29,9 +35,11 @@ public class UserTab extends CustomComponent {
         if (personalInfo == null) {
             personalInfo = new PersonalInfo();
             person.setPersonalInfo(personalInfo);
+            setDefaultPicture(personalInfo);
             // start in editing mode
             personalInfoPanel.addComponent(new PersonalInfoForm(person));
         } else {
+            setDefaultPicture(personalInfo);
             // start in view mode
             Panel viewer = new Panel("#PERSONAL INFO VIEWER#");
             Button editButton = new Button("#EDIT#");
@@ -104,5 +112,23 @@ public class UserTab extends CustomComponent {
             setCompositionRoot(layout);
         }
 
+    }
+
+    private void setDefaultPicture(PersonalInfo personalInfo) {
+        // @todo inject properties for file location
+        if (personalInfo.getPicture() == null) {
+            InputStream is = this.getClass().getClassLoader().getResourceAsStream("images/h_nophoto.jpg");
+            if (is != null) {
+                ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+                try {
+                    // @todo get image type from file extension
+                    ImageIO.write(ImageIO.read(is), "jpg", outStream);
+                    personalInfo.setPicture(outStream.toByteArray());
+                } catch (IOException ignored) {
+                    // ignore exception
+                    // @todo log exception
+                }
+            }
+        }
     }
 }

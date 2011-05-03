@@ -9,7 +9,7 @@ import org.vaadin.appfoundation.persistence.facade.FacadeFactory;
 import com.glintt.cvm.model.CVUser;
 import com.glintt.cvm.model.UserType;
 import com.glintt.cvm.security.ApplicationRoles;
-import com.glintt.cvm.ui.FileUploadFormField;
+import com.glintt.cvm.ui.customfields.FileUploadFormField;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.terminal.ErrorMessage;

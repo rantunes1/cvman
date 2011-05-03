@@ -3,20 +3,19 @@ package com.glintt.cvm.ui.forms;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hr_xml._3.CountryCodeEnumType;
 import org.hr_xml._3.GenderCodeEnumType;
 import org.hr_xml._3.LanguageCodeEnumType;
 import org.hr_xml._3.MaritalStatusCodeEnumType;
 
 import com.glintt.cvm.model.Person;
-import com.glintt.cvm.ui.FileUploadFormField;
+import com.glintt.cvm.model.PersonalInfo;
+import com.glintt.cvm.ui.customfields.EnumBasedComboBox;
+import com.glintt.cvm.ui.customfields.FileUploadFormField;
 import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.ui.AbstractSelect.Filtering;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.FormFieldFactory;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Select;
 
 public class PersonalInfoForm extends AbstractBaseForm {
 
@@ -24,6 +23,7 @@ public class PersonalInfoForm extends AbstractBaseForm {
 
     public PersonalInfoForm(Person person) {
         super(person.getPersonalInfo());
+        PersonalInfo pi = person.getPersonalInfo();
     }
 
     @Override
@@ -35,56 +35,14 @@ public class PersonalInfoForm extends AbstractBaseForm {
                 if ("picture".equals(propertyId)) {
                     return new FileUploadFormField(item, propertyId);
                 } else if ("maritalStatus".equals(propertyId)) {
-                    IndexedContainer container = new IndexedContainer();
-                    container.addContainerProperty("name", String.class, null);
-                    container.addContainerProperty("value", String.class, null);
-                    for (MaritalStatusCodeEnumType mscet : MaritalStatusCodeEnumType.values()) {
-                        Item option = container.addItem(mscet.name());
-                        option.getItemProperty("name").setValue(mscet.name());
-                        option.getItemProperty("value").setValue(mscet.value());
-                    }
-                    container.sort(new Object[] { "name" }, new boolean[] { true });
-                    ComboBox martitalStatusCombo = new ComboBox(null, container);
-                    martitalStatusCombo.setItemCaptionMode(Select.ITEM_CAPTION_MODE_PROPERTY);
-                    martitalStatusCombo.setItemCaptionPropertyId("value");
-                    martitalStatusCombo.setFilteringMode(Filtering.FILTERINGMODE_CONTAINS);
-                    martitalStatusCombo.setImmediate(true);
-                    martitalStatusCombo.setNullSelectionAllowed(false);
-                    return martitalStatusCombo;
+                    return new EnumBasedComboBox(item, propertyId, MaritalStatusCodeEnumType.values(),
+                            MaritalStatusCodeEnumType.class);
                 } else if ("gender".equals(propertyId)) {
-                    IndexedContainer container = new IndexedContainer();
-                    container.addContainerProperty("name", String.class, null);
-                    container.addContainerProperty("value", String.class, null);
-                    for (GenderCodeEnumType gcet : GenderCodeEnumType.values()) {
-                        Item option = container.addItem(gcet.name());
-                        option.getItemProperty("name").setValue(gcet.name());
-                        option.getItemProperty("value").setValue(gcet.value());
-                    }
-                    container.sort(new Object[] { "name" }, new boolean[] { true });
-                    ComboBox genderCombo = new ComboBox(null, container);
-                    genderCombo.setItemCaptionMode(Select.ITEM_CAPTION_MODE_PROPERTY);
-                    genderCombo.setItemCaptionPropertyId("value");
-                    genderCombo.setFilteringMode(Filtering.FILTERINGMODE_CONTAINS);
-                    genderCombo.setImmediate(true);
-                    genderCombo.setNullSelectionAllowed(false);
-                    return genderCombo;
+                    return new EnumBasedComboBox(item, propertyId, GenderCodeEnumType.values(), GenderCodeEnumType.class);
                 } else if ("primaryLanguage".equals(propertyId)) {
-                    IndexedContainer container = new IndexedContainer();
-                    container.addContainerProperty("name", String.class, null);
-                    container.addContainerProperty("value", String.class, null);
-                    for (LanguageCodeEnumType lcet : LanguageCodeEnumType.values()) {
-                        Item option = container.addItem(lcet.name());
-                        option.getItemProperty("name").setValue(lcet.name());
-                        option.getItemProperty("value").setValue(lcet.value());
-                    }
-                    container.sort(new Object[] { "name" }, new boolean[] { true });
-                    ComboBox languageCombo = new ComboBox(null, container);
-                    languageCombo.setItemCaptionMode(Select.ITEM_CAPTION_MODE_PROPERTY);
-                    languageCombo.setItemCaptionPropertyId("value");
-                    languageCombo.setFilteringMode(Filtering.FILTERINGMODE_CONTAINS);
-                    languageCombo.setImmediate(true);
-                    languageCombo.setNullSelectionAllowed(false);
-                    return languageCombo;
+                    return new EnumBasedComboBox(item, propertyId, LanguageCodeEnumType.values(), LanguageCodeEnumType.class);
+                } else if ("citizenshipCountry".equals(propertyId)) {
+                    return new EnumBasedComboBox(item, propertyId, CountryCodeEnumType.values(), CountryCodeEnumType.class);
                 }
                 return null;
             }

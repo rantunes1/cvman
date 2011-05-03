@@ -1,4 +1,4 @@
-package com.glintt.cvm.ui;
+package com.glintt.cvm.ui.customfields;
 
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -35,6 +35,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window.Notification;
 
 public class FileUploadFormField extends CustomField {
+
     private static final long serialVersionUID = 4960715027303457297L;
 
     private final ProgressIndicator progress;
@@ -101,6 +102,69 @@ public class FileUploadFormField extends CustomField {
                                 + "Text can be dropped into the box on other browsers.", Notification.TYPE_WARNING_MESSAGE);
             }
         }
+
+        Object propertyValue = this.item.getItemProperty(this.propertyId).getValue();
+        if (propertyValue != null) {
+            showImage(getImage((byte[]) propertyValue, true), this.propertyId.toString());
+        }
+    }
+
+    private BufferedImage getImage(byte[] rawImage, boolean scale) {
+        try {
+
+            BufferedImage image = ImageIO.read(new ByteArrayInputStream(rawImage));
+            return (scale) ? scaleImage(image, (int) (this.dropPane.getWidth()), (int) (this.dropPane.getHeight())) : image;
+        } catch (IOException e) {
+            return null;
+        }
+
+    }
+
+    private void showImage(final BufferedImage image, String name) {
+        if (name == null) {
+            // set some random name
+            name = this.dropPane.toString();
+        }
+        StreamResource resource = new StreamResource(new StreamSource() {
+            private static final long serialVersionUID = -72695620096190384L;
+
+            @Override
+            public InputStream getStream() {
+                if (image != null) {
+                    ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+                    try {
+                        // @todo get image format from 'type' method
+                        // parameter
+                        ImageIO.write(image, "jpg", outStream);
+                        return new ByteArrayInputStream(outStream.toByteArray());
+                    } catch (IOException e) {
+                        // @todo deal with exception
+                        e.printStackTrace();
+                    }
+                }
+                return null;
+            }
+        }, name, getApplication());
+        Embedded embedded = new Embedded(name.equals(this.propertyId) ? null : name, resource);
+
+        this.dropPane.removeAllComponents();
+        this.dropPane.addComponent(embedded);
+    }
+
+    private void showFile(final String name, final String type, final ByteArrayOutputStream bas) {
+        final BufferedImage image = getImage(bas.toByteArray(), true);
+        showImage(image, name);
+    }
+
+    private BufferedImage scaleImage(BufferedImage image, int w, int h) {
+        BufferedImage t = new BufferedImage(w, h, BufferedImage.SCALE_DEFAULT);
+        Graphics2D g = t.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        g.drawImage(image, 0, 0, w, h, 0, 0, image.getWidth(), image.getHeight(), null);
+        g.dispose();
+        return t;
     }
 
     private class ImageDropBox extends DragAndDropWrapper implements DropHandler {
@@ -177,50 +241,6 @@ public class FileUploadFormField extends CustomField {
                 String text = tr.getText();
                 // @todo check if there's something to do here
             }
-        }
-
-        private void showFile(final String name, final String type, final ByteArrayOutputStream bas) {
-            try {
-                final BufferedImage image = scaleImage(ImageIO.read(new ByteArrayInputStream(bas.toByteArray())),
-                        (int) (FileUploadFormField.this.dropPane.getWidth()), (int) (FileUploadFormField.this.dropPane.getHeight()));
-
-                StreamResource resource = new StreamResource(new StreamSource() {
-                    @Override
-                    public InputStream getStream() {
-                        if (image != null) {
-                            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-                            try {
-                                // @todo get image format from 'type' method
-                                // parameter
-                                ImageIO.write(image, "jpg", outStream);
-                                return new ByteArrayInputStream(outStream.toByteArray());
-                            } catch (IOException e) {
-                                // @todo deal with exception
-                                e.printStackTrace();
-                            }
-                        }
-                        return null;
-                    }
-                }, name, getApplication());
-                Embedded embedded = new Embedded(name, resource);
-
-                FileUploadFormField.this.dropPane.removeAllComponents();
-                FileUploadFormField.this.dropPane.addComponent(embedded);
-            } catch (IOException e) {
-                // @todo deal with exception
-                e.printStackTrace();
-            }
-        }
-
-        private BufferedImage scaleImage(BufferedImage image, int w, int h) {
-            BufferedImage t = new BufferedImage(w, h, BufferedImage.SCALE_DEFAULT);
-            Graphics2D g = t.createGraphics();
-            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-            g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-            g.drawImage(image, 0, 0, w, h, 0, 0, image.getWidth(), image.getHeight(), null);
-            g.dispose();
-            return t;
         }
 
         @Override

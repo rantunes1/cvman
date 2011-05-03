@@ -48,7 +48,7 @@ public class CVApplication extends NavigableApplication {
     private static final String[] FIELD_NAMES = { "personalInfo", "professionalInfo" };
 
     private User user;
-    private LuceneFacade luceneFacade;
+    private transient LuceneFacade luceneFacade;
 
     @Override
     public void init() {

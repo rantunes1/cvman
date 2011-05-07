@@ -35,5 +35,4 @@ public class ProfessionalInfoForm extends AbstractBaseForm {
         // TODO Auto-generated method stub
 
     }
-
 }

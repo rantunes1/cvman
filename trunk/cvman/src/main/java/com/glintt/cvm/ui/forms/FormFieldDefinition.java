@@ -6,37 +6,48 @@ public class FormFieldDefinition implements Serializable {
     private static final long serialVersionUID = -8030824488900043262L;
     private final String name;
     private final String caption;
+    private final String width;
     private final boolean isRequired;
-    private final int startCol, startRow, endCol, endRow;
+    private final FieldPosition position;
 
     public FormFieldDefinition(String name) {
-        this(name, null, false, 0, 0, 0, 0);
+        this(name, null, false, null, null);
     }
 
     public FormFieldDefinition(String name, String caption) {
-        this(name, caption, false, 0, 0, 0, 0);
+        this(name, caption, false, null, null);
+    }
+
+    public FormFieldDefinition(String name, String caption, String width) {
+        this(name, caption, false, null, null);
     }
 
     public FormFieldDefinition(String name, boolean isRequired) {
-        this(name, null, isRequired, 0, 0, 0, 0);
+        this(name, null, isRequired, null, null);
+    }
+
+    public FormFieldDefinition(String name, boolean isRequired, String width) {
+        this(name, null, isRequired, width, null);
     }
 
     public FormFieldDefinition(String name, String caption, boolean isRequired) {
-        this(name, caption, isRequired, 0, 0, 0, 0);
+        this(name, caption, isRequired, null, null);
     }
 
-    public FormFieldDefinition(String name, String caption, boolean isRequired, int col, int row) {
-        this(name, caption, isRequired, col, row, col, row);
+    public FormFieldDefinition(String name, String caption, boolean isRequired, String width) {
+        this(name, caption, isRequired, width, null);
     }
 
-    public FormFieldDefinition(String name, String caption, boolean isRequired, int startCol, int startRow, int endCol, int endRow) {
+    public FormFieldDefinition(String name, String caption, boolean isRequired, FieldPosition position) {
+        this(name, caption, isRequired, null, position);
+    }
+
+    public FormFieldDefinition(String name, String caption, boolean isRequired, String width, FieldPosition position) {
         this.name = name;
         this.caption = caption;
         this.isRequired = isRequired;
-        this.startCol = startCol;
-        this.startRow = startRow;
-        this.endCol = endCol;
-        this.endRow = endRow;
+        this.width = width;
+        this.position = position;
     }
 
     public String getName() {
@@ -47,24 +58,50 @@ public class FormFieldDefinition implements Serializable {
         return this.caption;
     }
 
+    public String getWidth() {
+        return this.width;
+    }
+
     public boolean isRequired() {
         return this.isRequired;
     }
 
-    public int getStartCol() {
-        return this.startCol;
+    public FieldPosition getPosition() {
+        return this.position;
     }
 
-    public int getStartRow() {
-        return this.startRow;
-    }
+    public static class FieldPosition implements Serializable {
+        private static final long serialVersionUID = 3394803367392383071L;
 
-    public int getEndCol() {
-        return this.endCol;
-    }
+        private final int startCol, startRow, endCol, endRow;
 
-    public int getEndRow() {
-        return this.endRow;
+        public FieldPosition(int column, int row) {
+            this(column, row, column, row);
+        }
+
+        public FieldPosition(int startCol, int startRow, int endCol, int endRow) {
+            this.startCol = startCol;
+            this.startRow = startRow;
+            this.endCol = endCol;
+            this.endRow = endRow;
+        }
+
+        public int getStartCol() {
+            return this.startCol;
+        }
+
+        public int getStartRow() {
+            return this.startRow;
+        }
+
+        public int getEndCol() {
+            return this.endCol;
+        }
+
+        public int getEndRow() {
+            return this.endRow;
+        }
+
     }
 
 }

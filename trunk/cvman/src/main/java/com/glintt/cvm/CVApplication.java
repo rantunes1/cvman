@@ -17,7 +17,6 @@ import javax.naming.directory.SearchResult;
 
 import org.apache.lucene.util.Version;
 import org.vaadin.appfoundation.authentication.SessionHandler;
-import org.vaadin.appfoundation.authentication.data.User;
 import org.vaadin.appfoundation.authorization.Permissions;
 import org.vaadin.appfoundation.authorization.jpa.JPAPermissionManager;
 import org.vaadin.appfoundation.i18n.Lang;
@@ -47,7 +46,6 @@ public class CVApplication extends NavigableApplication {
     private static final Version LUCENE_VERSION = Version.LUCENE_31;
     private static final String[] FIELD_NAMES = { "personalInfo", "professionalInfo" };
 
-    private User user;
     private transient LuceneFacade luceneFacade;
 
     @Override
@@ -186,7 +184,7 @@ public class CVApplication extends NavigableApplication {
             user.setRole(ApplicationRoles.USER); // defaults to user role if no
                                                  // role was set before
         }
-        this.user = user;
+        setUser(user);
     }
 
     private CVUser authenticateOnLDAP(String username, String password) throws ApplicationException {
@@ -244,15 +242,6 @@ public class CVApplication extends NavigableApplication {
             nex.printStackTrace();
             throw new SecurityException(nex);
         }
-    }
-
-    @Override
-    public User getUser() {
-        return this.user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public boolean isUserLogged() {

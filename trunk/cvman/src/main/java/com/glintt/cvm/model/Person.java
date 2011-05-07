@@ -11,6 +11,8 @@ import org.hr_xml._3.LanguageCodeEnumType;
 import org.vaadin.appfoundation.i18n.Lang;
 import org.vaadin.appfoundation.persistence.data.AbstractPojo;
 
+import com.glintt.cvm.api.Owner;
+
 @Entity
 public class Person extends AbstractPojo implements Owner {
     private static final long serialVersionUID = 8039258127166847667L;

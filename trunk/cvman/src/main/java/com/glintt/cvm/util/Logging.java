@@ -2,8 +2,8 @@ package com.glintt.cvm.util;
 
 import org.vaadin.appfoundation.persistence.facade.FacadeFactory;
 
-import com.glintt.cvm.model.LogLevel;
-import com.glintt.cvm.model.LogMessage;
+import com.glintt.cvm.api.LogLevel;
+import com.glintt.cvm.api.LogMessage;
 
 /**
  * Logging utility class.

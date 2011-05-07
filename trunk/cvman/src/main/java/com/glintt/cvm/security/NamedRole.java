@@ -1,4 +1,4 @@
-package com.glintt.cvm.model;
+package com.glintt.cvm.security;
 
 import java.util.HashSet;
 import java.util.Set;

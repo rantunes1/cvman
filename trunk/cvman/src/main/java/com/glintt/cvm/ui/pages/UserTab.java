@@ -1,11 +1,5 @@
 package com.glintt.cvm.ui.pages;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.imageio.ImageIO;
-
 import com.glintt.cvm.model.Person;
 import com.glintt.cvm.model.PersonalInfo;
 import com.glintt.cvm.model.ProfessionalInfo;
@@ -15,7 +9,6 @@ import com.glintt.cvm.ui.forms.PersonalInfoForm;
 import com.glintt.cvm.ui.forms.ProfessionalInfoForm;
 import com.glintt.cvm.ui.forms.PublicationsInfoForm;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
@@ -28,50 +21,83 @@ public class UserTab extends CustomComponent {
     public UserTab(Person person) {
         VerticalLayout layout = new VerticalLayout();
 
-        CssLayout personalInfoLayout = new CssLayout();
+        HorizontalLayout personalInfoLayout = new HorizontalLayout();
         personalInfoLayout.setSizeFull();
-        Panel personalInfoPanel = new Panel("#personal profile#");
+        Panel personalInfoPanel = new Panel("#personal information#");
         PersonalInfo personalInfo = person.getPersonalInfo();
         if (personalInfo == null) {
-            personalInfo = new PersonalInfo();
-            person.setPersonalInfo(personalInfo);
-            setDefaultPicture(personalInfo);
-            // start in editing mode
-            personalInfoPanel.addComponent(new PersonalInfoForm(person));
-        } else {
-            setDefaultPicture(personalInfo);
-            // start in view mode
-            Panel viewer = new Panel("#PERSONAL INFO VIEWER#");
-            Button editButton = new Button("#EDIT#");
-            personalInfoPanel.addComponent(viewer);
-            personalInfoPanel.addComponent(editButton);
+            person.setPersonalInfo(new PersonalInfo());
         }
+        TabSheet personalInfoTabs = new TabSheet();
+        personalInfoTabs.addTab(new PersonalProfileTab(person), "#personal profile info#", null);
+        personalInfoTabs.addTab(new AdditionalPersonalInfoTab(person), "#additional profile info#", null);
+        personalInfoTabs.setSizeFull();
+        personalInfoPanel.addComponent(personalInfoTabs);
         personalInfoLayout.addComponent(personalInfoPanel);
+        layout.addComponent(personalInfoLayout);
 
         HorizontalLayout professionalInfoLayout = new HorizontalLayout();
         professionalInfoLayout.setSizeFull();
-        Panel professionalInfoPanel = new Panel("#professional profile#");
+        Panel professionalInfoPanel = new Panel("#professional information#");
         ProfessionalInfo professionalInfo = person.getProfessionalInfo();
         if (professionalInfo == null) {
-            professionalInfo = new ProfessionalInfo();
-            person.setProfessionalInfo(professionalInfo);
+            person.setProfessionalInfo(new ProfessionalInfo());
         }
         TabSheet professionalInfoTabs = new TabSheet();
         professionalInfoTabs.setSizeFull();
-        professionalInfoTabs.addTab(new GeneralInfoTab(person), "general info", null);
-        professionalInfoTabs.addTab(new EmploymentInfoTab(person), "employement history", null);
-        professionalInfoTabs.addTab(new CertificationsTab(person), "certifications", null);
-        professionalInfoTabs.addTab(new PublicationsTab(person), "publications", null);
+        professionalInfoTabs.addTab(new GeneralInfoTab(person), "#general info#", null);
+        professionalInfoTabs.addTab(new EmploymentInfoTab(person), "#employement history#", null);
+        professionalInfoTabs.addTab(new CertificationsTab(person), "#certifications#", null);
+        professionalInfoTabs.addTab(new PublicationsTab(person), "#publications#", null);
         professionalInfoPanel.addComponent(professionalInfoTabs);
         professionalInfoLayout.addComponent(professionalInfoPanel);
-
-        layout.addComponent(personalInfoLayout);
         layout.addComponent(professionalInfoLayout);
+
         setCompositionRoot(layout);
     }
 
-    public static class GeneralInfoTab extends CustomComponent {
+    public static class PersonalProfileTab extends CustomComponent {
         private static final long serialVersionUID = -9140239051160684236L;
+
+        public PersonalProfileTab(Person person) {
+            VerticalLayout layout = new VerticalLayout();
+            PersonalInfo personalInfo = person.getPersonalInfo();
+            if (personalInfo == null || personalInfo.getId() == null) {
+                // start in editing mode
+                layout.addComponent(new PersonalInfoForm(person));
+            } else {
+                // start in view mode
+                Panel viewer = new Panel("#PERSONAL INFO VIEWER#");
+                Button editButton = new Button("#EDIT#");
+                layout.addComponent(viewer);
+                layout.addComponent(editButton);
+            }
+            setCompositionRoot(layout);
+        }
+
+    }
+
+    public static class AdditionalPersonalInfoTab extends CustomComponent {
+
+        public AdditionalPersonalInfoTab(Person person) {
+            VerticalLayout layout = new VerticalLayout();
+            PersonalInfo personalInfo = person.getPersonalInfo();
+            if (personalInfo == null || personalInfo.getId() == null) {
+                // start in editing mode
+                layout.addComponent(new PersonalInfoForm(person));
+            } else {
+                // start in view mode
+                Panel viewer = new Panel("#PERSONAL INFO VIEWER#");
+                Button editButton = new Button("#EDIT#");
+                layout.addComponent(viewer);
+                layout.addComponent(editButton);
+            }
+            setCompositionRoot(layout);
+        }
+
+    }
+
+    public static class GeneralInfoTab extends CustomComponent {
 
         public GeneralInfoTab(Person person) {
             VerticalLayout layout = new VerticalLayout();
@@ -112,23 +138,5 @@ public class UserTab extends CustomComponent {
             setCompositionRoot(layout);
         }
 
-    }
-
-    private void setDefaultPicture(PersonalInfo personalInfo) {
-        // @todo inject properties for file location
-        if (personalInfo.getPicture() == null) {
-            InputStream is = this.getClass().getClassLoader().getResourceAsStream("images/h_nophoto.jpg");
-            if (is != null) {
-                ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-                try {
-                    // @todo get image type from file extension
-                    ImageIO.write(ImageIO.read(is), "jpg", outStream);
-                    personalInfo.setPicture(outStream.toByteArray());
-                } catch (IOException ignored) {
-                    // ignore exception
-                    // @todo log exception
-                }
-            }
-        }
     }
 }

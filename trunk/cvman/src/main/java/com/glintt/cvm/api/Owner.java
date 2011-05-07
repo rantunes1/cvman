@@ -1,4 +1,4 @@
-package com.glintt.cvm.model;
+package com.glintt.cvm.api;
 
 import org.hr_xml._3.LanguageCodeEnumType;
 

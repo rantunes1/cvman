@@ -6,6 +6,8 @@ import javax.persistence.OneToOne;
 
 import org.vaadin.appfoundation.authentication.data.User;
 
+import com.glintt.cvm.security.NamedRole;
+
 @Entity
 public class CVUser extends User {
 

@@ -1,8 +1,8 @@
 package com.glintt.cvm.model;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 
 import javax.persistence.Entity;
 
@@ -50,7 +50,9 @@ public class TestPerson extends Person {
 
         BirthInfo birthInfo = new PersonalInfo.BirthInfo();
         Location birthLocation = new Location();
-        birthInfo.setBirthDate("01-01-1970");
+        Calendar birthDate = Calendar.getInstance();
+        birthDate.set(1970, 1, 1);
+        birthInfo.setBirthDate(birthDate.getTime());
         birthLocation.setCountry(CountryCodeEnumType.PT);
         birthLocation.setCountryDivision("Sintra");
         birthLocation.setCity("Queluz");
@@ -98,7 +100,8 @@ public class TestPerson extends Person {
         Collection<Certification> certifications = new ArrayList<Certification>();
         Certification certification1 = new Certification();
         certification1.setName("nome da certificação 1");
-        certification1.setIssueDate(new Date());
+        Calendar cert1issuedate = Calendar.getInstance();
+        certification1.setIssueDate(cert1issuedate.getTime());
         IssuingAuthority ia1 = new IssuingAuthority();
         ia1.setName("issuing authority 1");
         Location ia1Location = new Location();
@@ -135,7 +138,8 @@ public class TestPerson extends Person {
         exampleContributors.add(contributor2);
         Article articleContent = new Article();
         articleContent.setTitle("article title");
-        articleContent.setDate(new Date());
+        Calendar articledate = Calendar.getInstance();
+        articleContent.setDate(articledate.getTime());
         articleContent.setAbstractText("abstract text of article");
         articleContent.setComment("comment for the article");
         articleContent.setIssn("1534-0481");
@@ -160,7 +164,8 @@ public class TestPerson extends Person {
         publications.add(emptyArticle);
         UnspecifiedPublication otherContent = new UnspecifiedPublication();
         otherContent.setTitle("unspecified title");
-        otherContent.setDate(new Date());
+        Calendar othercontentdate = Calendar.getInstance();
+        otherContent.setDate(othercontentdate.getTime());
         otherContent.setAbstractText("abstract text of unspecified");
         otherContent.setComment("comment for the unspecified");
         otherContent.setIssn("1234-5678");
@@ -184,7 +189,8 @@ public class TestPerson extends Person {
         publications.add(nullOther);
         Book bookContent = new Book();
         bookContent.setTitle("book title");
-        bookContent.setDate(new Date());
+        Calendar bookcontentdate = Calendar.getInstance();
+        bookContent.setDate(bookcontentdate.getTime());
         bookContent.setAbstractText("abstract text of book");
         bookContent.setComment("comment for the book");
         bookContent.setIssn("1234-5678");
@@ -205,11 +211,13 @@ public class TestPerson extends Person {
         publications.add(emptyBook);
         ConferencePaper paperContent = new ConferencePaper();
         paperContent.setTitle("conference paper title");
-        paperContent.setDate(new Date());
+        Calendar papercontentdate = Calendar.getInstance();
+        paperContent.setDate(papercontentdate.getTime());
         paperContent.setAbstractText("abstract text of conference paper");
         paperContent.setComment("comment for the conference paper");
         paperContent.setEventName("event name");
-        paperContent.setEventDate(new Date());
+        Calendar papereventdate = Calendar.getInstance();
+        paperContent.setEventDate(papereventdate.getTime());
         paperContent.setEventLocationName("pavilhão atlântico");
         paperContent.setEventLocation(exampleLocation);
         Publication paper = new Publication();
@@ -238,8 +246,12 @@ public class TestPerson extends Person {
         organizationContacts.setEmail(personalEmail);
         employer1.setContacts(organizationContacts);
         TimePeriod tp1 = new TimePeriod();
-        tp1.setStartDate(new Date(2010, 1, 1));
-        tp1.setEndDate(new Date(2010, 12, 31));
+        Calendar tp1startdate = Calendar.getInstance();
+        tp1startdate.set(2010, 1, 1);
+        tp1.setStartDate(tp1startdate.getTime());
+        Calendar tp1enddate = Calendar.getInstance();
+        tp1enddate.set(2010, 12, 31);
+        tp1.setEndDate(tp1enddate.getTime());
         employer1.setEmploymentPeriod(tp1);
         Collection<Position> employer1Positions = new ArrayList<Position>();
         Position position1 = new Position();
@@ -263,7 +275,9 @@ public class TestPerson extends Person {
         employer2.setUrl("http://www.employer2.com");
         employer2.setHeadcount("10000");
         TimePeriod tp2 = new TimePeriod();
-        tp2.setStartDate(new Date(2011, 1, 1));
+        Calendar tp2startdate = Calendar.getInstance();
+        tp2startdate.set(2010, 12, 31);
+        tp2.setStartDate(tp2startdate.getTime());
         employer2.setEmploymentPeriod(tp2);
         employers.add(employer2);
         professionalInfo.setEmployers(employers);

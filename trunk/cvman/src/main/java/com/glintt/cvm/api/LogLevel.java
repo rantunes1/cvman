@@ -1,4 +1,4 @@
-package com.glintt.cvm.model;
+package com.glintt.cvm.api;
 
 public enum LogLevel {
     DEBUG, INFO, WARNING, ERROR;

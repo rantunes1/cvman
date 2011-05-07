@@ -15,6 +15,8 @@ import javax.persistence.TemporalType;
 import org.hr_xml._3.ResourceRelationshipCodeEnumType;
 import org.vaadin.appfoundation.persistence.data.AbstractPojo;
 
+import com.glintt.cvm.api.AbstractOwnedEntity;
+
 @Entity
 public class ProfessionalInfo extends AbstractOwnedEntity<Person> {
     private static final long serialVersionUID = 2456109426437042121L;

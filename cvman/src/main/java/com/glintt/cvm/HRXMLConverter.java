@@ -136,10 +136,19 @@ public class HRXMLConverter {
         return csdct;
     }
 
-    private FreeFormDateType formatDate(Date date, String format) {
+    private String formatDate(Date date, String format) {
+        if (date == null) {
+            return null;
+        }
+        if (format == null) {
+            return date.toString();
+        }
+        return new SimpleDateFormat(format).format(date);
+    }
+
+    private FreeFormDateType convertToDateType(Date date, String format) {
         FreeFormDateType formatted = new FreeFormDateType();
-        SimpleDateFormat formatter = new SimpleDateFormat(format);
-        formatted.getFormattedDateTime().add(formatter.format(date));
+        formatted.getFormattedDateTime().add(formatDate(date, format));
         return formatted;
     }
 
@@ -181,7 +190,7 @@ public class HRXMLConverter {
             bpt.setCityName(createName(lang, birthLocation.getCity()));
             person.setBirthPlace(bpt);
         }
-        person.getBirthDate().add(birthInfo.getBirthDate());
+        person.getBirthDate().add(formatDate(birthInfo.getBirthDate(), DATE_FORMAT));
 
         CitizenshipCountryCodeType ccc = new CitizenshipCountryCodeType();
         ccc.setValue(personalInfo.getCitizenshipCountry().value());
@@ -203,7 +212,7 @@ public class HRXMLConverter {
         type.setPublicationTitle(info.getTitle());
         Date publicationDate = info.getDate();
         if (publicationDate != null) {
-            type.setPublicationDate(formatDate(publicationDate, DATE_FORMAT));
+            type.setPublicationDate(convertToDateType(publicationDate, DATE_FORMAT));
         }
         Collection<Contributor> contributors = info.getContributors();
         if (contributors != null) {
@@ -277,7 +286,7 @@ public class HRXMLConverter {
                 cert.setCertificationName(createLocalizedText(lang, certification.getName()));
                 Date certificateIssueDate = certification.getIssueDate();
                 if (certificateIssueDate != null) {
-                    cert.setFirstIssuedDate(formatDate(certificateIssueDate, DATE_FORMAT));
+                    cert.setFirstIssuedDate(convertToDateType(certificateIssueDate, DATE_FORMAT));
                 }
                 IssuingAuthority issuingAuthority = certification.getIssuingAuthority();
                 if (issuingAuthority != null) {
@@ -395,7 +404,7 @@ public class HRXMLConverter {
                     }
                     Date eventDate = conferencePaper.getEventDate();
                     if (eventDate != null) {
-                        ((ConferencePaperType) type).setEventDate(formatDate(eventDate, DATE_FORMAT));
+                        ((ConferencePaperType) type).setEventDate(convertToDateType(eventDate, DATE_FORMAT));
                     }
                     String eventLocationName = conferencePaper.getEventLocationName();
                     if (eventLocationName != null) {
@@ -547,10 +556,10 @@ public class HRXMLConverter {
 
     private EmploymentPeriodType convertTimePeriodToEmploymentPeriod(TimePeriod employementPeriod) {
         EmploymentPeriodType ep = new EmploymentPeriodType();
-        ep.setStartDate(formatDate(employementPeriod.getStartDate(), DATE_FORMAT));
+        ep.setStartDate(convertToDateType(employementPeriod.getStartDate(), DATE_FORMAT));
         Date endDate = employementPeriod.getEndDate();
         if (endDate != null) {
-            ep.setEndDate(formatDate(endDate, DATE_FORMAT));
+            ep.setEndDate(convertToDateType(endDate, DATE_FORMAT));
         } else {
             EffectiveDatedIndicatorType edi = new EffectiveDatedIndicatorType();
             edi.setValue(true);

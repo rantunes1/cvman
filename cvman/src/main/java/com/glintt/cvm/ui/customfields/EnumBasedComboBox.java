@@ -2,23 +2,17 @@ package com.glintt.cvm.ui.customfields;
 
 import java.lang.reflect.Method;
 
-import org.vaadin.addon.customfield.CustomField;
-
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.AbstractSelect.Filtering;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Select;
 
-public class EnumBasedComboBox extends CustomField {
+public class EnumBasedComboBox extends AbstractItemField {
     private static final long serialVersionUID = 309906974793801811L;
 
-    private final Item item;
-    private final Object propertyId;
-
     public <E extends Enum<?>> EnumBasedComboBox(Item item, Object propertyId, E[] enumValues, Class<E> enumClass) {
-        this.item = item;
-        this.propertyId = propertyId;
+        super(item, propertyId);
 
         Method valueMethod = null;
         try {
@@ -56,10 +50,4 @@ public class EnumBasedComboBox extends CustomField {
 
         setCompositionRoot(combo);
     }
-
-    @Override
-    public Class<?> getType() {
-        return this.item.getItemProperty(this.propertyId).getType();
-    }
-
 }

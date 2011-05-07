@@ -2,18 +2,23 @@ package com.glintt.cvm.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hr_xml._3.CountryCodeEnumType;
 import org.hr_xml._3.GenderCodeEnumType;
 import org.hr_xml._3.LanguageCodeEnumType;
 import org.hr_xml._3.MaritalStatusCodeEnumType;
 import org.vaadin.appfoundation.persistence.data.AbstractPojo;
+
+import com.glintt.cvm.api.AbstractOwnedEntity;
 
 @Entity
 public class PersonalInfo extends AbstractOwnedEntity<Person> {
@@ -134,15 +139,16 @@ public class PersonalInfo extends AbstractOwnedEntity<Person> {
     public static class BirthInfo extends AbstractPojo {
         private static final long serialVersionUID = 8418850177040426201L;
 
-        private String birthDate;
+        @Temporal(TemporalType.DATE)
+        private Date birthDate;
         @OneToOne(cascade = CascadeType.ALL)
         private Location birthLocation;
 
-        public String getBirthDate() {
+        public Date getBirthDate() {
             return this.birthDate;
         }
 
-        public void setBirthDate(String birthDate) {
+        public void setBirthDate(Date birthDate) {
             this.birthDate = birthDate;
         }
 

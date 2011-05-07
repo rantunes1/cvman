@@ -30,6 +30,7 @@ public class ApplicationContextListener implements ServletContextListener {
         List<URL> translationFiles = new ArrayList<URL>();
         translationFiles.add(this.getClass().getClassLoader().getResource("header.xml"));
         translationFiles.add(this.getClass().getClassLoader().getResource("footer.xml"));
+        translationFiles.add(this.getClass().getClassLoader().getResource("formsDefaults.xml"));
         translationFiles.add(this.getClass().getClassLoader().getResource("homePage.xml"));
         translationFiles.add(this.getClass().getClassLoader().getResource("loginPage.xml"));
         translationFiles.add(this.getClass().getClassLoader().getResource("createUserPage.xml"));

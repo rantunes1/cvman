@@ -1,4 +1,4 @@
-package com.glintt.cvm.model;
+package com.glintt.cvm.api;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -6,6 +6,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
 import org.vaadin.appfoundation.persistence.data.AbstractPojo;
+
 
 /**
  * Entity class for log messages.

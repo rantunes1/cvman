@@ -1,9 +1,10 @@
-package com.glintt.cvm.model;
+package com.glintt.cvm.api;
 
 import javax.persistence.MappedSuperclass;
 
 import org.hr_xml._3.LanguageCodeEnumType;
 import org.vaadin.appfoundation.persistence.data.AbstractPojo;
+
 
 @MappedSuperclass
 public abstract class AbstractOwnedEntity<O extends Owner> extends AbstractPojo {

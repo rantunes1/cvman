@@ -3,15 +3,16 @@ package com.glintt.cvm.ui.customfields;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.imageio.ImageIO;
-
-import org.vaadin.addon.customfield.CustomField;
 
 import com.vaadin.data.Item;
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -34,25 +35,22 @@ import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window.Notification;
 
-public class FileUploadFormField extends CustomField {
+public class FileUploadFormField extends AbstractItemField {
 
     private static final long serialVersionUID = 4960715027303457297L;
 
     private final ProgressIndicator progress;
-    private final Item item;
-    private final Object propertyId;
     private final CssLayout dropPane;
 
-    public FileUploadFormField(Item item, Object propertyId) {
-        this.item = item;
-        this.propertyId = propertyId;
+    public FileUploadFormField(Item item, Object propertyId, String size) {
+        super(item, propertyId);
 
         VerticalLayout layout = new VerticalLayout();
-        layout.setMargin(true);
+        layout.setMargin(false, true, true, false);
 
         this.dropPane = new CssLayout();
-        this.dropPane.setWidth("200px");
-        this.dropPane.setHeight("200px");
+        this.dropPane.setWidth(size);
+        this.dropPane.setHeight(size);
         this.dropPane.addStyleName("image-drop-pane");
 
         ImageDropBox dropBox = new ImageDropBox(this.dropPane);
@@ -71,12 +69,18 @@ public class FileUploadFormField extends CustomField {
         this.progress.setVisible(false);
         layout.addComponent(this.progress);
 
-        setCompositionRoot(layout);
-    }
+        addListener(new ValueChangeListener() {
+            private static final long serialVersionUID = 2265504318443035482L;
 
-    @Override
-    public Class<?> getType() {
-        return this.item.getItemProperty(this.propertyId).getType();
+            @Override
+            public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
+                byte[] rawImage = (byte[]) event.getProperty().getValue();
+                FileUploadFormField.this.showImage("picture", "jpg", rawImage);
+            }
+
+        });
+
+        setCompositionRoot(layout);
     }
 
     @Override
@@ -102,19 +106,16 @@ public class FileUploadFormField extends CustomField {
                                 + "Text can be dropped into the box on other browsers.", Notification.TYPE_WARNING_MESSAGE);
             }
         }
-
-        Object propertyValue = this.item.getItemProperty(this.propertyId).getValue();
-        if (propertyValue != null) {
-            showImage(getImage((byte[]) propertyValue, true), this.propertyId.toString());
-        }
     }
 
     private BufferedImage getImage(byte[] rawImage, boolean scale) {
         try {
-
+            ImageIO.setUseCache(false);
             BufferedImage image = ImageIO.read(new ByteArrayInputStream(rawImage));
+            ImageIO.setUseCache(true);
             return (scale) ? scaleImage(image, (int) (this.dropPane.getWidth()), (int) (this.dropPane.getHeight())) : image;
-        } catch (IOException e) {
+        } catch (IOException ioex) {
+            ioex.printStackTrace();
             return null;
         }
 
@@ -125,18 +126,28 @@ public class FileUploadFormField extends CustomField {
             // set some random name
             name = this.dropPane.toString();
         }
+
         StreamResource resource = new StreamResource(new StreamSource() {
             private static final long serialVersionUID = -72695620096190384L;
 
             @Override
             public InputStream getStream() {
+                System.out.println("******************************** GET STREAM ***********************************");
+
                 if (image != null) {
                     ByteArrayOutputStream outStream = new ByteArrayOutputStream();
                     try {
                         // @todo get image format from 'type' method
                         // parameter
                         ImageIO.write(image, "jpg", outStream);
-                        return new ByteArrayInputStream(outStream.toByteArray());
+
+                        File file = File.createTempFile("XXX_", "_XXX");
+                        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+                        byte[] rawImage = outStream.toByteArray();
+                        bos.write(rawImage);
+                        bos.close();
+
+                        return new ByteArrayInputStream(rawImage);
                     } catch (IOException e) {
                         // @todo deal with exception
                         e.printStackTrace();
@@ -145,15 +156,19 @@ public class FileUploadFormField extends CustomField {
                 return null;
             }
         }, name, getApplication());
-        Embedded embedded = new Embedded(name.equals(this.propertyId) ? null : name, resource);
+        Embedded embedded = new Embedded(name.equals(getPropertyId()) ? null : name, resource);
 
         this.dropPane.removeAllComponents();
         this.dropPane.addComponent(embedded);
     }
 
-    private void showFile(final String name, final String type, final ByteArrayOutputStream bas) {
-        final BufferedImage image = getImage(bas.toByteArray(), true);
+    private void showImage(final String name, final String type, byte[] rawImage) {
+        final BufferedImage image = getImage(rawImage, true);
         showImage(image, name);
+    }
+
+    private void showFile(final String name, final String type, final ByteArrayOutputStream bas) {
+        showImage(name, type, bas.toByteArray());
     }
 
     private BufferedImage scaleImage(BufferedImage image, int w, int h) {

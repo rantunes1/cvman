@@ -1,6 +1,5 @@
 package com.glintt.cvm.security;
 
-import com.glintt.cvm.model.NamedRole;
 
 public class ApplicationRoles {
 

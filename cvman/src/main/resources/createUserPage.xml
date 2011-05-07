@@ -28,24 +28,6 @@
 		<tu tuid="CreateUserPage.UI.picture.caption">
 			<tuv lang="en"> <seg>Picture</seg> </tuv>
 			<tuv lang="pt"> <seg>Foto</seg> </tuv>
-		</tu>		
-		<tu tuid="CreateUserPage.UI.commit.caption">
-			<tuv lang="en"> <seg>Save</seg> </tuv>
-			<tuv lang="pt"> <seg>Confirmar</seg> </tuv>
-		</tu>
-		<tu tuid="CreateUserPage.UI.discard.caption">
-			<tuv lang="en"> <seg>Reset</seg> </tuv>
-			<tuv lang="pt"> <seg>Anular</seg> </tuv>
-		</tu>
-		
-		<tu tuid="CreateUserPage.Validation.generic">
-			<tuv lang="en"> <seg>Validation errors found. Please hover your mouse over marked field to see a description of the problem.</seg> </tuv>
-			<tuv lang="pt"> <seg>Foram encontrados erros de validação. Passe o rato por cima dos campos assinalados para ver o motivo.</seg> </tuv>
-		</tu>
-		<tu tuid="CreateUserPage.Validation.required">
-			<tuv lang="en"> <seg>{0} is a required field</seg> </tuv>
-			<tuv lang="pt"> <seg>O campo '{0}' é obrigatório</seg> </tuv>
-		</tu>
-		
+		</tu>				
 	</body>
 </tmx>

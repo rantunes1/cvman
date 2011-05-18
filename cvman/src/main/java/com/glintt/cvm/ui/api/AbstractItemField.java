@@ -1,10 +1,10 @@
-package com.glintt.cvm.ui.customfields;
+package com.glintt.cvm.ui.api;
 
 import org.vaadin.addon.customfield.CustomField;
 
 import com.vaadin.data.Item;
 
-public class AbstractItemField extends CustomField {
+public abstract class AbstractItemField extends CustomField {
     private static final long serialVersionUID = -3634817223129332587L;
 
     private final Item item;

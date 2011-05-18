@@ -11,9 +11,9 @@ import org.vaadin.navigator7.interceptor.NavigationWarningInterceptor;
 import org.vaadin.navigator7.interceptor.PageChangeListenersInterceptor;
 import org.vaadin.navigator7.interceptor.PageInvocation;
 
-import com.glintt.cvm.ui.pages.CreateUserPage;
-import com.glintt.cvm.ui.pages.HomePage;
-import com.glintt.cvm.ui.pages.LoginPage;
+import com.glintt.cvm.ui.pages.createuser.CreateUserPage;
+import com.glintt.cvm.ui.pages.login.LoginPage;
+import com.glintt.cvm.ui.pages.main.HomePage;
 
 public class CVWebApplication extends WebApplication implements Serializable {
     private static final long serialVersionUID = 810165665564746584L;

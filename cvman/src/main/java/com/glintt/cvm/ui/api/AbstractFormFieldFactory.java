@@ -1,4 +1,4 @@
-package com.glintt.cvm.ui.forms;
+package com.glintt.cvm.ui.api;
 
 import org.vaadin.appfoundation.i18n.Lang;
 
@@ -8,14 +8,14 @@ import com.vaadin.terminal.Paintable.RepaintRequestListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.Form;
 
 public abstract class AbstractFormFieldFactory extends DefaultFieldFactory {
     private static final long serialVersionUID = 3871354814314737712L;
 
-    private final AbstractBaseForm ownerForm;
+    private final Form ownerForm;
 
-    protected AbstractFormFieldFactory(AbstractBaseForm ownerForm) {
+    protected AbstractFormFieldFactory(Form ownerForm) {
         super();
         this.ownerForm = ownerForm;
     }
@@ -24,41 +24,6 @@ public abstract class AbstractFormFieldFactory extends DefaultFieldFactory {
 
     @Override
     public Field createField(Item item, Object propertyId, Component uiContext) {
-        String propId = (String) propertyId;
-        FormFieldDefinition fieldDefinition = this.ownerForm.getFieldDefinition(propId);
-        if (fieldDefinition != null) {
-            Field field = createPropertyField(item, propId, uiContext);
-            if (field == null) {
-                field = super.createField(item, propId, uiContext);
-            }
-
-            String caption = field.getCaption();
-            if (caption == null) {
-                caption = createCaptionByPropertyId(propertyId);
-            }
-            if (caption.indexOf(" :") < 0) {
-                caption += " :";
-            }
-            field.setCaption(caption);
-
-            field.setRequired(fieldDefinition.isRequired());
-
-            if (field.getClass().isAssignableFrom(TextField.class)) {
-                ((TextField) field).setNullRepresentation("");
-            }
-
-            String fieldWidth = fieldDefinition.getWidth();
-            if (fieldWidth != null) {
-                field.setWidth(fieldWidth);
-            }
-
-            RepaintRequestListener repaintListener = getRepaintRequestListener(field, fieldDefinition);
-            if (repaintListener != null) {
-                field.addListener(repaintListener);
-            }
-            return field;
-
-        }
 
         return null;
     }

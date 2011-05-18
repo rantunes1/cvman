@@ -1,15 +1,12 @@
-package com.glintt.cvm.ui.pages;
+package com.glintt.cvm.ui.pages.main;
 
 import com.glintt.cvm.model.Person;
 import com.glintt.cvm.model.PersonalInfo;
-import com.glintt.cvm.model.ProfessionalInfo;
-import com.glintt.cvm.ui.forms.CertificationsInfoForm;
-import com.glintt.cvm.ui.forms.EmploymentInfoForm;
-import com.glintt.cvm.ui.forms.PersonalInfoForm;
-import com.glintt.cvm.ui.forms.ProfessionalInfoForm;
-import com.glintt.cvm.ui.forms.PublicationsInfoForm;
+import com.glintt.cvm.ui.forms.personalinfo.XXX_PersonalInfoForm;
+import com.glintt.cvm.ui.forms.professionalinfo.XXX_ProfessionalInfoForm;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
@@ -24,10 +21,7 @@ public class UserTab extends CustomComponent {
         HorizontalLayout personalInfoLayout = new HorizontalLayout();
         personalInfoLayout.setSizeFull();
         Panel personalInfoPanel = new Panel("#personal information#");
-        PersonalInfo personalInfo = person.getPersonalInfo();
-        if (personalInfo == null) {
-            person.setPersonalInfo(new PersonalInfo());
-        }
+
         TabSheet personalInfoTabs = new TabSheet();
         personalInfoTabs.addTab(new PersonalProfileTab(person), "#personal profile info#", null);
         personalInfoTabs.addTab(new AdditionalPersonalInfoTab(person), "#additional profile info#", null);
@@ -39,10 +33,7 @@ public class UserTab extends CustomComponent {
         HorizontalLayout professionalInfoLayout = new HorizontalLayout();
         professionalInfoLayout.setSizeFull();
         Panel professionalInfoPanel = new Panel("#professional information#");
-        ProfessionalInfo professionalInfo = person.getProfessionalInfo();
-        if (professionalInfo == null) {
-            person.setProfessionalInfo(new ProfessionalInfo());
-        }
+
         TabSheet professionalInfoTabs = new TabSheet();
         professionalInfoTabs.setSizeFull();
         professionalInfoTabs.addTab(new GeneralInfoTab(person), "#general info#", null);
@@ -64,7 +55,8 @@ public class UserTab extends CustomComponent {
             PersonalInfo personalInfo = person.getPersonalInfo();
             if (personalInfo == null || personalInfo.getId() == null) {
                 // start in editing mode
-                layout.addComponent(new PersonalInfoForm(person));
+                Form form = new XXX_PersonalInfoForm(person.getPersonalInfo());
+                layout.addComponent(form);
             } else {
                 // start in view mode
                 Panel viewer = new Panel("#PERSONAL INFO VIEWER#");
@@ -84,7 +76,8 @@ public class UserTab extends CustomComponent {
             PersonalInfo personalInfo = person.getPersonalInfo();
             if (personalInfo == null || personalInfo.getId() == null) {
                 // start in editing mode
-                layout.addComponent(new PersonalInfoForm(person));
+                Form form = new XXX_PersonalInfoForm(person.getPersonalInfo());
+                layout.addComponent(form);
             } else {
                 // start in view mode
                 Panel viewer = new Panel("#PERSONAL INFO VIEWER#");
@@ -101,7 +94,8 @@ public class UserTab extends CustomComponent {
 
         public GeneralInfoTab(Person person) {
             VerticalLayout layout = new VerticalLayout();
-            layout.addComponent(new ProfessionalInfoForm(person));
+            Form form = new XXX_ProfessionalInfoForm(person.getProfessionalInfo());
+            layout.addComponent(form);
             setCompositionRoot(layout);
         }
 
@@ -112,7 +106,8 @@ public class UserTab extends CustomComponent {
 
         public EmploymentInfoTab(Person person) {
             VerticalLayout layout = new VerticalLayout();
-            layout.addComponent(new EmploymentInfoForm(person));
+            Form form = new XXX_ProfessionalInfoForm(person.getProfessionalInfo());
+            layout.addComponent(form);
             setCompositionRoot(layout);
         }
 
@@ -123,7 +118,8 @@ public class UserTab extends CustomComponent {
 
         public CertificationsTab(Person person) {
             VerticalLayout layout = new VerticalLayout();
-            layout.addComponent(new CertificationsInfoForm(person));
+            Form form = new XXX_ProfessionalInfoForm(person.getProfessionalInfo());
+            layout.addComponent(form);
             setCompositionRoot(layout);
         }
 
@@ -134,7 +130,8 @@ public class UserTab extends CustomComponent {
 
         public PublicationsTab(Person person) {
             VerticalLayout layout = new VerticalLayout();
-            layout.addComponent(new PublicationsInfoForm(person));
+            Form form = new XXX_ProfessionalInfoForm(person.getProfessionalInfo());
+            layout.addComponent(form);
             setCompositionRoot(layout);
         }
 

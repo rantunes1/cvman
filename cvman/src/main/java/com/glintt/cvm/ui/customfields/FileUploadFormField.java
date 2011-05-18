@@ -14,6 +14,7 @@ import java.io.OutputStream;
 
 import javax.imageio.ImageIO;
 
+import com.glintt.cvm.ui.api.AbstractItemField;
 import com.vaadin.data.Item;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -39,18 +40,23 @@ public class FileUploadFormField extends AbstractItemField {
 
     private static final long serialVersionUID = 4960715027303457297L;
 
-    private final ProgressIndicator progress;
-    private final CssLayout dropPane;
+    private ProgressIndicator progress;
+    private CssLayout dropPane;
+    private final String size;
 
     public FileUploadFormField(Item item, Object propertyId, String size) {
         super(item, propertyId);
+        this.size = size;
+        init();
+    }
 
+    private void init() {
         VerticalLayout layout = new VerticalLayout();
         layout.setMargin(false, true, true, false);
 
         this.dropPane = new CssLayout();
-        this.dropPane.setWidth(size);
-        this.dropPane.setHeight(size);
+        this.dropPane.setWidth(this.size);
+        this.dropPane.setHeight(this.size);
         this.dropPane.addStyleName("image-drop-pane");
 
         ImageDropBox dropBox = new ImageDropBox(this.dropPane);
@@ -68,17 +74,6 @@ public class FileUploadFormField extends AbstractItemField {
         this.progress.setIndeterminate(true);
         this.progress.setVisible(false);
         layout.addComponent(this.progress);
-
-        addListener(new ValueChangeListener() {
-            private static final long serialVersionUID = 2265504318443035482L;
-
-            @Override
-            public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
-                byte[] rawImage = (byte[]) event.getProperty().getValue();
-                FileUploadFormField.this.showImage("picture", "jpg", rawImage);
-            }
-
-        });
 
         setCompositionRoot(layout);
     }
@@ -106,6 +101,19 @@ public class FileUploadFormField extends AbstractItemField {
                                 + "Text can be dropped into the box on other browsers.", Notification.TYPE_WARNING_MESSAGE);
             }
         }
+
+        addListener(new ValueChangeListener() {
+            private static final long serialVersionUID = 2265504318443035482L;
+
+            @Override
+            public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
+                byte[] rawImage = (byte[]) event.getProperty().getValue();
+                FileUploadFormField.this.showImage("picture", "jpg", rawImage);
+            }
+
+        });
+
+        // showImage("picture", "jpg", (byte[]) getValue());
     }
 
     private BufferedImage getImage(byte[] rawImage, boolean scale) {

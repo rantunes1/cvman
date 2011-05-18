@@ -1,8 +1,8 @@
-package com.glintt.cvm.ui.pages;
+package com.glintt.cvm.ui.pages.createuser;
 
 import org.vaadin.navigator7.Page;
 
-import com.glintt.cvm.ui.forms.CreateUserForm;
+import com.glintt.cvm.ui.forms.createuser.CreateUserForm;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.VerticalLayout;
 

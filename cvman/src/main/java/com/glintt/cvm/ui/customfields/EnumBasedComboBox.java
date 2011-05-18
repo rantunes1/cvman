@@ -2,6 +2,7 @@ package com.glintt.cvm.ui.customfields;
 
 import java.lang.reflect.Method;
 
+import com.glintt.cvm.ui.api.AbstractItemField;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.AbstractSelect.Filtering;

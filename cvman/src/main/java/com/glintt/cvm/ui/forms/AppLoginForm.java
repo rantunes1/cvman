@@ -6,7 +6,7 @@ import org.vaadin.navigator7.NavigableApplication;
 import com.glintt.cvm.CVApplication;
 import com.glintt.cvm.CVLevelWindow;
 import com.glintt.cvm.exception.ApplicationException;
-import com.glintt.cvm.ui.pages.HomePage;
+import com.glintt.cvm.ui.pages.main.HomePage;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.LoginForm;
 import com.vaadin.ui.Window.Notification;

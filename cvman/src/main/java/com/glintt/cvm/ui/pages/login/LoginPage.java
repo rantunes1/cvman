@@ -1,4 +1,4 @@
-package com.glintt.cvm.ui.pages;
+package com.glintt.cvm.ui.pages.login;
 
 import org.vaadin.appfoundation.i18n.Lang;
 import org.vaadin.navigator7.NavigableApplication;
@@ -11,6 +11,7 @@ import org.vaadin.navigator7.uri.Param;
 import com.glintt.cvm.CVApplication;
 import com.glintt.cvm.CVLevelWindow;
 import com.glintt.cvm.ui.forms.AppLoginForm;
+import com.glintt.cvm.ui.pages.createuser.CreateUserPage;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.LoginForm;

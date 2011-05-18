@@ -1,4 +1,4 @@
-package com.glintt.cvm.ui.forms;
+package com.glintt.cvm.ui.api;
 
 import java.io.Serializable;
 
@@ -7,7 +7,7 @@ public class FormFieldDefinition implements Serializable {
     private final String name;
     private final String caption;
     private final String width;
-    private final boolean isRequired;
+    private final boolean required;
     private final FieldPosition position;
 
     public FormFieldDefinition(String name) {
@@ -22,30 +22,30 @@ public class FormFieldDefinition implements Serializable {
         this(name, caption, false, null, null);
     }
 
-    public FormFieldDefinition(String name, boolean isRequired) {
-        this(name, null, isRequired, null, null);
+    public FormFieldDefinition(String name, boolean required) {
+        this(name, null, required, null, null);
     }
 
-    public FormFieldDefinition(String name, boolean isRequired, String width) {
-        this(name, null, isRequired, width, null);
+    public FormFieldDefinition(String name, boolean required, String width) {
+        this(name, null, required, width, null);
     }
 
-    public FormFieldDefinition(String name, String caption, boolean isRequired) {
-        this(name, caption, isRequired, null, null);
+    public FormFieldDefinition(String name, String caption, boolean required) {
+        this(name, caption, required, null, null);
     }
 
-    public FormFieldDefinition(String name, String caption, boolean isRequired, String width) {
-        this(name, caption, isRequired, width, null);
+    public FormFieldDefinition(String name, String caption, boolean required, String width) {
+        this(name, caption, required, width, null);
     }
 
-    public FormFieldDefinition(String name, String caption, boolean isRequired, FieldPosition position) {
-        this(name, caption, isRequired, null, position);
+    public FormFieldDefinition(String name, String caption, boolean required, FieldPosition position) {
+        this(name, caption, required, null, position);
     }
 
-    public FormFieldDefinition(String name, String caption, boolean isRequired, String width, FieldPosition position) {
+    public FormFieldDefinition(String name, String caption, boolean required, String width, FieldPosition position) {
         this.name = name;
         this.caption = caption;
-        this.isRequired = isRequired;
+        this.required = required;
         this.width = width;
         this.position = position;
     }
@@ -63,7 +63,7 @@ public class FormFieldDefinition implements Serializable {
     }
 
     public boolean isRequired() {
-        return this.isRequired;
+        return this.required;
     }
 
     public FieldPosition getPosition() {

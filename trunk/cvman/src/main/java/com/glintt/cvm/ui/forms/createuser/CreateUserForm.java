@@ -1,4 +1,4 @@
-package com.glintt.cvm.ui.forms;
+package com.glintt.cvm.ui.forms.createuser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,9 @@ import org.vaadin.appfoundation.persistence.facade.FacadeFactory;
 import com.glintt.cvm.model.CVUser;
 import com.glintt.cvm.model.UserType;
 import com.glintt.cvm.security.ApplicationRoles;
+import com.glintt.cvm.ui.api.AbstractBaseForm;
+import com.glintt.cvm.ui.api.AbstractFormFieldFactory;
+import com.glintt.cvm.ui.api.FormFieldDefinition;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.Button.ClickEvent;
@@ -20,8 +23,9 @@ import com.vaadin.ui.FormFieldFactory;
 public class CreateUserForm extends AbstractBaseForm {
     private static final long serialVersionUID = -4348320551950432564L;
 
-    public CreateUserForm() {
-        super(new CVUser());
+    @Override
+    protected CVUser getDatasource() {
+        return new CVUser();
     }
 
     @Override
@@ -37,12 +41,6 @@ public class CreateUserForm extends AbstractBaseForm {
                 add(new FormFieldDefinition("surname", "CreateUserPage.UI.surname.caption"));
             }
         };
-    }
-
-    @Override
-    protected void initFormComponent() {
-        // nothing to do
-        // @todo deprecate method?
     }
 
     @Override
@@ -103,5 +101,4 @@ public class CreateUserForm extends AbstractBaseForm {
 
         };
     }
-
 }

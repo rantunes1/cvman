@@ -1,4 +1,4 @@
-package com.glintt.cvm.ui.forms;
+package com.glintt.cvm.ui.api;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +23,18 @@ public abstract class AbstractBaseForm extends Form implements RepaintRequestLis
     private final Button saveBtn = new Button();
     private final Button resetBtn = new Button();
 
-    protected <AP extends AbstractPojo> AbstractBaseForm(AP datasource) {
-        super();
-        initFormComponent();
-        setInternalItemDataSource(datasource);
+    protected abstract AbstractPojo getDatasource();
+
+    protected abstract FormFieldFactory createFormFactory();
+
+    protected abstract List<FormFieldDefinition> getEditableFieldsList();
+
+    protected abstract void executeOnRepaint();
+
+    /**
+     * must be called by subclasses to initialize the form
+     */
+    protected void init() {
         setValidationVisible(false);
         setValidationVisibleOnCommit(true);
         setImmediate(true);
@@ -42,6 +50,11 @@ public abstract class AbstractBaseForm extends Form implements RepaintRequestLis
             this.setVisibleItemProperties(fieldsOrder);
         }
 
+        AbstractPojo datasource = getDatasource();
+        if (datasource != null) {
+            this.setItemDataSource(new BeanItem<AbstractPojo>(datasource));
+        }
+
         HorizontalLayout footer = new HorizontalLayout();
         this.saveBtn.addListener(getOnSaveListener());
         footer.addComponent(this.saveBtn);
@@ -50,12 +63,6 @@ public abstract class AbstractBaseForm extends Form implements RepaintRequestLis
         footer.addComponent(this.resetBtn);
 
         this.setFooter(footer);
-    }
-
-    protected <AP extends AbstractPojo> void setInternalItemDataSource(AP datasource) {
-        if (datasource != null) {
-            this.setItemDataSource(new BeanItem<AP>(datasource));
-        }
     }
 
     protected boolean isEditableproperty(String propertyId) {
@@ -124,13 +131,5 @@ public abstract class AbstractBaseForm extends Form implements RepaintRequestLis
         }
         return null;
     }
-
-    protected abstract void initFormComponent();
-
-    protected abstract FormFieldFactory createFormFactory();
-
-    protected abstract List<FormFieldDefinition> getEditableFieldsList();
-
-    protected abstract void executeOnRepaint();
 
 }

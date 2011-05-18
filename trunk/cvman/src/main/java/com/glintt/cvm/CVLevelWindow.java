@@ -10,7 +10,7 @@ import org.vaadin.navigator7.WebApplication;
 import org.vaadin.navigator7.interceptor.PageChangeListenersInterceptor.PageChangeListener;
 import org.vaadin.navigator7.window.HeaderFooterFluidAppLevelWindow;
 
-import com.glintt.cvm.ui.pages.LoginPage;
+import com.glintt.cvm.ui.pages.login.LoginPage;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.Alignment;

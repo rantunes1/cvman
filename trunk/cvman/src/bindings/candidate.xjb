@@ -5,7 +5,7 @@
               xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
               jxb:extensionBindingPrefixes="inheritance">
     
-    <jxb:bindings schemaLocation="../schemas/HR-XML-3_1/org_hr-xml/3_1/Developer/Nouns/Candidate.xsd" node="/xsd:schema">
+    <jxb:bindings schemaLocation="../schemas/HR-XML-3_2/3_2/org_hr-xml/Developer/Nouns/Candidate.xsd" node="/xsd:schema">
         <jxb:bindings node="//xsd:complexType[@name='CandidateType']">
             <jxb:class name="Candidate"/>
             

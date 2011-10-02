@@ -6,9 +6,85 @@
               jxb:extensionBindingPrefixes="inheritance">
     <jxb:globalBindings typesafeEnumMaxMembers="300" />
         
-    <jxb:bindings schemaLocation="../schemas/HR-XML-3_1/org_openapplications_platform/1_1/Common/OAGi/Components/Components.xsd" node="/xsd:schema">
+    <jxb:bindings schemaLocation="../schemas/HR-XML-3_2/org_openapplications_platform/1_2/Common/OAGi/Components/Components.xsd" node="/xsd:schema">
         <jxb:bindings node="//xsd:complexType[@name='DocumentReferenceType']">
             <jxb:bindings node=".//xsd:attribute[@name='type']">
+                <jxb:property name="typeAttr"/>
+            </jxb:bindings>
+        </jxb:bindings>
+        <jxb:bindings node="//xsd:complexType[@name='SpecificationType']">
+            <jxb:bindings node=".//xsd:attribute[@name='type']">
+                <jxb:property name="typeAttr"/>
+            </jxb:bindings>
+        </jxb:bindings>
+        <jxb:bindings node="//xsd:complexType[@name='EventType']">
+            <jxb:bindings node=".//xsd:attribute[@name='type']">
+                <jxb:property name="typeAttr"/>
+            </jxb:bindings>
+        </jxb:bindings>
+        <jxb:bindings node="//xsd:complexType[@name='QualifiedAmountType']">
+            <jxb:bindings node=".//xsd:attribute[@name='type']">
+                <jxb:property name="typeAttr"/>
+            </jxb:bindings>
+        </jxb:bindings>
+        <jxb:bindings node="//xsd:complexType[@name='AllowanceChargeABIEType']">
+            <jxb:bindings node=".//xsd:attribute[@name='type']">
+                <jxb:property name="typeAttr"/>
+            </jxb:bindings>
+        </jxb:bindings>
+        <jxb:bindings node="//xsd:complexType[@name='TermABIEType']">
+            <jxb:bindings node=".//xsd:attribute[@name='type']">
+                <jxb:property name="typeAttr"/>
+            </jxb:bindings>
+        </jxb:bindings>
+        <jxb:bindings node="//xsd:complexType[@name='LocationABIEType']">
+            <jxb:bindings node=".//xsd:attribute[@name='type']">
+                <jxb:property name="typeAttr"/>
+            </jxb:bindings>
+        </jxb:bindings>
+        <jxb:bindings node="//xsd:complexType[@name='ProjectABIEType']">
+            <jxb:bindings node=".//xsd:attribute[@name='type']">
+                <jxb:property name="typeAttr"/>
+            </jxb:bindings>
+        </jxb:bindings>
+        <jxb:bindings node="//xsd:complexType[@name='TaxABIEType']">
+            <jxb:bindings node=".//xsd:attribute[@name='type']">
+                <jxb:property name="typeAttr"/>
+            </jxb:bindings>
+        </jxb:bindings>
+        <jxb:bindings node="//xsd:complexType[@name='DimensionABIEType']">
+            <jxb:bindings node=".//xsd:attribute[@name='type']">
+                <jxb:property name="typeAttr"/>
+            </jxb:bindings>
+        </jxb:bindings>
+        <jxb:bindings node="//xsd:complexType[@name='AddressBaseType']">
+            <jxb:bindings node=".//xsd:attribute[@name='type']">
+                <jxb:property name="typeAttr"/>
+            </jxb:bindings>
+        </jxb:bindings>
+                
+        <jxb:bindings node="//xsd:complexType[@name='ContactType']">
+            <jxb:bindings node=".//xsd:complexContent/xsd:extension[@base='SemanticContactType']/xsd:attribute[@name='type']">
+                <jxb:property name="typeAttr"/>
+            </jxb:bindings>
+        </jxb:bindings>
+        <jxb:bindings node="//xsd:complexType[@name='OpenAttachmentType']">
+            <jxb:bindings node=".//xsd:complexContent/xsd:extension[@base='SemanticAttachmentType']/xsd:attribute[@name='type']">
+                <jxb:property name="typeAttr"/>
+            </jxb:bindings>
+        </jxb:bindings>
+        <jxb:bindings node="//xsd:complexType[@name='ImageAttachmentType']">
+            <jxb:bindings node=".//xsd:complexContent/xsd:extension[@base='AttachmentBaseType']/xsd:attribute[@name='type']">
+                <jxb:property name="typeAttr"/>
+            </jxb:bindings>
+        </jxb:bindings>
+        <jxb:bindings node="//xsd:complexType[@name='ClassificationType']">
+            <jxb:bindings node=".//xsd:complexContent/xsd:extension[@base='ClassificationBaseType']/xsd:attribute[@name='type']">
+                <jxb:property name="typeAttr"/>
+            </jxb:bindings>
+        </jxb:bindings>
+        <jxb:bindings node="//xsd:complexType[@name='CurrencyExchangeBaseType']">
+            <jxb:bindings node=".//xsd:complexContent/xsd:extension[@base='CurrencyExchangeABIEType']/xsd:attribute[@name='type']">
                 <jxb:property name="typeAttr"/>
             </jxb:bindings>
         </jxb:bindings>

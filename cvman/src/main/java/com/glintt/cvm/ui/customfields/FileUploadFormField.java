@@ -1,15 +1,6 @@
 package com.glintt.cvm.ui.customfields;
 
-//import java.awt.Graphics2D;
-//import java.awt.RenderingHints;
-//import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 //import javax.imageio.ImageIO;
@@ -21,15 +12,12 @@ import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.service.ApplicationContext;
-import com.vaadin.terminal.StreamResource;
-import com.vaadin.terminal.StreamResource.StreamSource;
 import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.gwt.server.AbstractWebApplicationContext;
 import com.vaadin.terminal.gwt.server.WebBrowser;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.DragAndDropWrapper;
-import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Html5File;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;

@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd"
        default-lazy-init="true">
 
 	<!-- Vaadin application definition -->
 	<bean id="application" class="com.glintt.cvm.CVApplication" scope="prototype"/>
 	
 	<!-- Navigator7 WebApplication definition -->
-	<bean id="webapp" class="com.glintt.cvm.web.CVWebApplication" scope="prototype"/>		
+	<bean id="webapp" class="com.glintt.cvm.web.CVWebApplication" scope="prototype"/>
+	
+	<!-- Navigator7 WebApplicationLevel definition -->
+	<bean id="appLevelWindow" class="com.glintt.cvm.web.CVLevelWindow" scope="prototype"/>		
+	
+	 <util:set id="interceptors">
+	 	<ref bean="navigationWarningInterceptor"/>
+	 	<ref bean="pageChangeListenerInterceptor"/>
+	 	<ref bean="loginInterceptor"/>
+	 </util:set>
+	 
+	 <bean id="navigationWarningInterceptor" class="org.vaadin.navigator7.interceptor.NavigationWarningInterceptor"/>
+	 <bean id="pageChangeListenerInterceptor" class="org.vaadin.navigator7.interceptor.PageChangeListenersInterceptor"/>
+	 <bean id="loginInterceptor" class="com.glintt.cvm.web.LoginInterceptor"/>
 </beans>

@@ -44,6 +44,10 @@ public class SpringWebApplication extends WebApplication {
 		return getCurrent().applicationContext.getBean(beanType);
 	}
 
+	public static <T> T getBean(final String beanId, final Class<T> beanType) {
+		return getCurrent().applicationContext.getBean(beanId, beanType);
+	}
+
 	public static void beforeService(final HttpServletRequest request, final HttpServletResponse response,
 			final ServletContext servletContext) throws ServletException, IOException {
 		WebApplication.beforeService(request, response, servletContext);

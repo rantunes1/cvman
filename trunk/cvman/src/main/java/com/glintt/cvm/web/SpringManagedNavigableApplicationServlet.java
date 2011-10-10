@@ -7,17 +7,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-import org.vaadin.navigator7.NavigableApplication;
-import org.vaadin.navigator7.NavigableApplicationServlet;
-import org.vaadin.navigator7.WebApplication;
-
 import com.vaadin.Application;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
-import com.vaadin.terminal.gwt.server.ApplicationServlet;
 
 public class SpringManagedNavigableApplicationServlet extends AbstractApplicationServlet {
 	private static final long serialVersionUID = 5274222240867785050L;
@@ -63,6 +56,9 @@ public class SpringManagedNavigableApplicationServlet extends AbstractApplicatio
 
 	@Override
 	protected Class<? extends Application> getApplicationClass() throws ClassNotFoundException {
+		if (this.applicationClass == null) {
+			throw new ClassNotFoundException("application class was not initialised.");
+		}
 		return this.applicationClass;
 	}
 }

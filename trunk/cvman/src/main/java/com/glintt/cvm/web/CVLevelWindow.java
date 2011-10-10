@@ -1,4 +1,4 @@
-package com.glintt.cvm;
+package com.glintt.cvm.web;
 
 import java.util.Locale;
 
@@ -10,6 +10,7 @@ import org.vaadin.navigator7.WebApplication;
 import org.vaadin.navigator7.interceptor.PageChangeListenersInterceptor.PageChangeListener;
 import org.vaadin.navigator7.window.HeaderFooterFluidAppLevelWindow;
 
+import com.glintt.cvm.CVApplication;
 import com.glintt.cvm.ui.pages.login.LoginPage;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;

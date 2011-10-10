@@ -9,9 +9,9 @@ import org.vaadin.navigator7.ParamChangeListener;
 import org.vaadin.navigator7.uri.Param;
 
 import com.glintt.cvm.CVApplication;
-import com.glintt.cvm.CVLevelWindow;
 import com.glintt.cvm.ui.forms.AppLoginForm;
 import com.glintt.cvm.ui.pages.createuser.CreateUserPage;
+import com.glintt.cvm.web.CVLevelWindow;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.LoginForm;

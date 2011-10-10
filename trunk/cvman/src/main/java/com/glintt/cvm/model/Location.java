@@ -1,6 +1,8 @@
 package com.glintt.cvm.model;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 import org.hr_xml._3.CountryCodeEnumType;
 import org.vaadin.appfoundation.persistence.data.AbstractPojo;

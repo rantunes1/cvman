@@ -1,8 +1,8 @@
 package com.glintt.cvm.ui.customfields;
 
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
+//import java.awt.Graphics2D;
+//import java.awt.RenderingHints;
+//import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import javax.imageio.ImageIO;
+//import javax.imageio.ImageIO;
 
 import com.glintt.cvm.ui.api.AbstractItemField;
 import com.vaadin.data.Item;
@@ -108,7 +108,7 @@ public class FileUploadFormField extends AbstractItemField {
             @Override
             public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
                 byte[] rawImage = (byte[]) event.getProperty().getValue();
-                FileUploadFormField.this.showImage("picture", "jpg", rawImage);
+//                FileUploadFormField.this.showImage("picture", "jpg", rawImage);
             }
 
         });
@@ -116,79 +116,79 @@ public class FileUploadFormField extends AbstractItemField {
         // showImage("picture", "jpg", (byte[]) getValue());
     }
 
-    private BufferedImage getImage(byte[] rawImage, boolean scale) {
-        try {
-            ImageIO.setUseCache(false);
-            BufferedImage image = ImageIO.read(new ByteArrayInputStream(rawImage));
-            ImageIO.setUseCache(true);
-            return (scale) ? scaleImage(image, (int) (this.dropPane.getWidth()), (int) (this.dropPane.getHeight())) : image;
-        } catch (IOException ioex) {
-            ioex.printStackTrace();
-            return null;
-        }
+//    private BufferedImage getImage(byte[] rawImage, boolean scale) {
+//        try {
+//            ImageIO.setUseCache(false);
+//            BufferedImage image = ImageIO.read(new ByteArrayInputStream(rawImage));
+//            ImageIO.setUseCache(true);
+//            return (scale) ? scaleImage(image, (int) (this.dropPane.getWidth()), (int) (this.dropPane.getHeight())) : image;
+//        } catch (IOException ioex) {
+//            ioex.printStackTrace();
+//            return null;
+//        }
+//
+//    }
 
-    }
+//    private void showImage(final BufferedImage image, String name) {
+//        if (name == null) {
+//            // set some random name
+//            name = this.dropPane.toString();
+//        }
+//
+//        StreamResource resource = new StreamResource(new StreamSource() {
+//            private static final long serialVersionUID = -72695620096190384L;
+//
+//            @Override
+//            public InputStream getStream() {
+//                System.out.println("******************************** GET STREAM ***********************************");
+//
+//                if (image != null) {
+//                    ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+//                    try {
+//                        // @todo get image format from 'type' method
+//                        // parameter
+//                        ImageIO.write(image, "jpg", outStream);
+//
+//                        File file = File.createTempFile("XXX_", "_XXX");
+//                        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+//                        byte[] rawImage = outStream.toByteArray();
+//                        bos.write(rawImage);
+//                        bos.close();
+//
+//                        return new ByteArrayInputStream(rawImage);
+//                    } catch (IOException e) {
+//                        // @todo deal with exception
+//                        e.printStackTrace();
+//                    }
+//                }
+//                return null;
+//            }
+//        }, name, getApplication());
+//        Embedded embedded = new Embedded(name.equals(getPropertyId()) ? null : name, resource);
+//
+//        this.dropPane.removeAllComponents();
+//        this.dropPane.addComponent(embedded);
+//    }
 
-    private void showImage(final BufferedImage image, String name) {
-        if (name == null) {
-            // set some random name
-            name = this.dropPane.toString();
-        }
+//    private void showImage(final String name, final String type, byte[] rawImage) {
+//        final BufferedImage image = getImage(rawImage, true);
+//        showImage(image, name);
+//    }
 
-        StreamResource resource = new StreamResource(new StreamSource() {
-            private static final long serialVersionUID = -72695620096190384L;
+//    private void showFile(final String name, final String type, final ByteArrayOutputStream bas) {
+//        showImage(name, type, bas.toByteArray());
+//    }
 
-            @Override
-            public InputStream getStream() {
-                System.out.println("******************************** GET STREAM ***********************************");
-
-                if (image != null) {
-                    ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-                    try {
-                        // @todo get image format from 'type' method
-                        // parameter
-                        ImageIO.write(image, "jpg", outStream);
-
-                        File file = File.createTempFile("XXX_", "_XXX");
-                        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
-                        byte[] rawImage = outStream.toByteArray();
-                        bos.write(rawImage);
-                        bos.close();
-
-                        return new ByteArrayInputStream(rawImage);
-                    } catch (IOException e) {
-                        // @todo deal with exception
-                        e.printStackTrace();
-                    }
-                }
-                return null;
-            }
-        }, name, getApplication());
-        Embedded embedded = new Embedded(name.equals(getPropertyId()) ? null : name, resource);
-
-        this.dropPane.removeAllComponents();
-        this.dropPane.addComponent(embedded);
-    }
-
-    private void showImage(final String name, final String type, byte[] rawImage) {
-        final BufferedImage image = getImage(rawImage, true);
-        showImage(image, name);
-    }
-
-    private void showFile(final String name, final String type, final ByteArrayOutputStream bas) {
-        showImage(name, type, bas.toByteArray());
-    }
-
-    private BufferedImage scaleImage(BufferedImage image, int w, int h) {
-        BufferedImage t = new BufferedImage(w, h, BufferedImage.SCALE_DEFAULT);
-        Graphics2D g = t.createGraphics();
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-        g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-        g.drawImage(image, 0, 0, w, h, 0, 0, image.getWidth(), image.getHeight(), null);
-        g.dispose();
-        return t;
-    }
+//    private BufferedImage scaleImage(BufferedImage image, int w, int h) {
+//        BufferedImage t = new BufferedImage(w, h, BufferedImage.SCALE_DEFAULT);
+//        Graphics2D g = t.createGraphics();
+//        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+//        g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+//        g.drawImage(image, 0, 0, w, h, 0, 0, image.getWidth(), image.getHeight(), null);
+//        g.dispose();
+//        return t;
+//    }
 
     private class ImageDropBox extends DragAndDropWrapper implements DropHandler {
         private static final long serialVersionUID = 389003491350858041L;
@@ -242,7 +242,7 @@ public class FileUploadFormField extends AbstractItemField {
                             @Override
                             public void streamingFinished(StreamingEndEvent event) {
                                 FileUploadFormField.this.progress.setVisible(false);
-                                showFile(fileName, html5File.getType(), bas);
+//                                showFile(fileName, html5File.getType(), bas);
                             }
 
                             @Override

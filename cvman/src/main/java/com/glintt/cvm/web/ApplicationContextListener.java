@@ -1,4 +1,4 @@
-package com.glintt.cvm;
+package com.glintt.cvm.web;
 
 import java.io.File;
 import java.net.URL;
@@ -13,6 +13,12 @@ import org.vaadin.appfoundation.i18n.InternationalizationServlet;
 import org.vaadin.appfoundation.i18n.TmxSourceReader;
 import org.vaadin.appfoundation.persistence.facade.FacadeFactory;
 
+/**
+ * @deprecate inject context with spring
+ * @author rantunes
+ *
+ */
+@Deprecated
 public class ApplicationContextListener implements ServletContextListener {
 
     private static Logger logger = Logger.getLogger(ApplicationContextListener.class.getCanonicalName());

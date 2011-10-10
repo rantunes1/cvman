@@ -34,7 +34,6 @@ import com.glintt.cvm.model.Publication.UnspecifiedPublication;
 public class TestPerson extends Person {
     private static final long serialVersionUID = 8579660817063564713L;
 
-    @SuppressWarnings("deprecation")
     public TestPerson() {
         super(LanguageCodeEnumType.PT);
         PersonalInfo personalInfo = new PersonalInfo();

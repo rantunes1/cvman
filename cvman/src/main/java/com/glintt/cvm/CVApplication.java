@@ -34,6 +34,7 @@ import com.glintt.cvm.security.ApplicationResources;
 import com.glintt.cvm.security.ApplicationRoles;
 import com.glintt.cvm.util.AppConfig;
 import com.glintt.cvm.util.AppProperties;
+import com.glintt.cvm.web.CVLevelWindow;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
@@ -70,10 +71,11 @@ public class CVApplication extends NavigableApplication {
         Permissions.denyAll(ApplicationRoles.USER, ApplicationResources.MANAGEMENT);
 
         System.out.println("INITIALIZING LUCENE INDEX");
-        setLuceneFacade(new LuceneFacade(LUCENE_VERSION, AppConfig.getString(AppProperties.LUCENE_INDEX_DIR.getKey()),
+        String luceneIndexDir = AppConfig.getString(AppProperties.LUCENE_INDEX_DIR.getKey());
+        setLuceneFacade(new LuceneFacade(LUCENE_VERSION, luceneIndexDir,
                 AppProperties.LUCENE_INDEX_ID_PERSON.getKey()));
         getLuceneFacade()
-                .createIndex(AppProperties.LUCENE_INDEX_DIR.getKey(), FacadeFactory.getFacade(), Person.class, FIELD_NAMES);
+                .createIndex(luceneIndexDir, FacadeFactory.getFacade(), Person.class, FIELD_NAMES);
         // ViewHandler.initialize(this);
 
         // @todo TEST CODE (to be removed)

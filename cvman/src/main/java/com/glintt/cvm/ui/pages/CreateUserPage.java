@@ -1,4 +1,4 @@
-package com.glintt.cvm.ui.pages.createuser;
+package com.glintt.cvm.ui.pages;
 
 import org.vaadin.navigator7.Page;
 

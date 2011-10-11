@@ -7,9 +7,9 @@ import org.vaadin.navigator7.interceptor.Interceptor;
 import org.vaadin.navigator7.interceptor.PageInvocation;
 
 import com.glintt.cvm.CVApplication;
-import com.glintt.cvm.ui.pages.createuser.CreateUserPage;
-import com.glintt.cvm.ui.pages.login.LoginPage;
-import com.glintt.cvm.ui.pages.main.HomePage;
+import com.glintt.cvm.ui.pages.CreateUserPage;
+import com.glintt.cvm.ui.pages.HomePage;
+import com.glintt.cvm.ui.pages.LoginPage;
 
 public class LoginInterceptor implements Interceptor {
 	@Override

@@ -1,4 +1,4 @@
-package com.glintt.cvm.ui.pages.main;
+package com.glintt.cvm.ui.pages;
 
 import com.glintt.cvm.model.Person;
 import com.glintt.cvm.model.PersonalInfo;

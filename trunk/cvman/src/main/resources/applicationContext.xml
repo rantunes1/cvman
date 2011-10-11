@@ -1,27 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"	
        xmlns:util="http://www.springframework.org/schema/util"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       					   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+                           http://www.springframework.org/schema/util    http://www.springframework.org/schema/util/spring-util-2.5.xsd"
        default-lazy-init="true">
+       
+    <context:annotation-config/>
 
 	<!-- Vaadin application definition -->
-	<bean id="application" class="com.glintt.cvm.CVApplication" scope="prototype"/>
+	<bean id="application" class="com.glintt.cvm.CVApplication" scope="prototype">
+		<property name="authenticator" ref="authenticator"/>
+	</bean>
+	
+	<!-- Security -->
+	<bean id="authenticator" class="com.glintt.cvm.web.CVAuthenticator"/>
 	
 	<!-- Navigator7 WebApplication definition -->
-	<bean id="webapp" class="com.glintt.cvm.web.CVWebApplication" scope="prototype"/>
+	<bean id="webapp" class="com.glintt.cvm.web.CVWebApplication" scope="prototype">
+		<property name="interceptors" ref="interceptors"/>
+		<property name="pages" ref="pages"/>
+	</bean>
 	
 	<!-- Navigator7 WebApplicationLevel definition -->
 	<bean id="appLevelWindow" class="com.glintt.cvm.web.CVLevelWindow" scope="prototype"/>		
 	
+	<!-- Interceptors list -->
 	 <util:set id="interceptors">
-	 	<ref bean="navigationWarningInterceptor"/>
-	 	<ref bean="pageChangeListenerInterceptor"/>
-	 	<ref bean="loginInterceptor"/>
+	 	<bean id="loginInterceptor" class="com.glintt.cvm.web.LoginInterceptor" scope="prototype"/>
 	 </util:set>
 	 
-	 <bean id="navigationWarningInterceptor" class="org.vaadin.navigator7.interceptor.NavigationWarningInterceptor"/>
-	 <bean id="pageChangeListenerInterceptor" class="org.vaadin.navigator7.interceptor.PageChangeListenersInterceptor"/>
-	 <bean id="loginInterceptor" class="com.glintt.cvm.web.LoginInterceptor"/>
+	<!-- Pages list -->
+	 <util:set id="pages">
+	 	<value>com.glintt.cvm.ui.pages.LoginPage</value>
+	 	<value>com.glintt.cvm.ui.pages.HomePage</value>
+	 	<value>com.glintt.cvm.ui.pages.CreateUserPage</value>
+	 </util:set>
+	 
+	 
+		 
 </beans>

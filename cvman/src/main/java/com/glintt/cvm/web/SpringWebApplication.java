@@ -15,7 +15,7 @@ import org.vaadin.navigator7.WebApplication;
 
 public class SpringWebApplication extends WebApplication {
 
-	protected ApplicationContext applicationContext;
+	private ApplicationContext applicationContext;
 
 	public static synchronized void init(ServletConfig servletConfig, ServletContext servletContext, ClassLoader classLoader) {
 		final WebApplicationContext webApplicationContext = WebApplicationContextUtils

@@ -12,7 +12,6 @@ import org.vaadin.appfoundation.authorization.Permissions;
 import org.vaadin.appfoundation.authorization.Role;
 import org.vaadin.appfoundation.i18n.Lang;
 import org.vaadin.appfoundation.persistence.facade.FacadeFactory;
-import org.vaadin.navigator7.NavigableApplication;
 import org.vaadin.navigator7.Page;
 
 import com.glintt.cvm.CVApplication;
@@ -41,7 +40,7 @@ public class HomePage extends CustomComponent {
 		TabSheet tabs = new TabSheet();
 		tabs.setSizeFull();
 
-		CVUser user = (CVUser) ((CVApplication) NavigableApplication.getCurrent()).getUser();
+		CVUser user = (CVUser) CVApplication.getCurrent().getUser();
 		Person person = getPerson(user);
 
 		Tab t1 = tabs.addTab(new UserTab(person), "#My CV#", null);

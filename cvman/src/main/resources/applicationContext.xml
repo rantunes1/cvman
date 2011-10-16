@@ -12,11 +12,17 @@
 
 	<!-- Vaadin application definition -->
 	<bean id="application" class="com.glintt.cvm.CVApplication" scope="prototype">
-		<property name="authenticator" ref="authenticator"/>
+		<property name="formAuthenticator" ref="authenticator_form"/>
+		<property name="requestAuthenticator" ref="authenticator_oauth"/>
 	</bean>
 	
 	<!-- Security -->
-	<bean id="authenticator" class="com.glintt.cvm.web.CVAuthenticator"/>
+	<bean id="authenticator_form" class="com.glintt.cvm.security.LoginFormAuthenticator">
+		<property name="userServices" ref="userServices"/>
+	</bean>
+	<bean id="authenticator_oauth" class="com.glintt.cvm.security.OAuthAuthenticator">
+		<property name="userServices" ref="userServices"/>
+	</bean>
 	
 	<!-- Navigator7 WebApplication definition -->
 	<bean id="webapp" class="com.glintt.cvm.web.CVWebApplication" scope="prototype">
@@ -25,7 +31,10 @@
 	</bean>
 	
 	<!-- Navigator7 WebApplicationLevel definition -->
-	<bean id="appLevelWindow" class="com.glintt.cvm.web.CVLevelWindow" scope="prototype"/>		
+	<bean id="appLevelWindow" class="com.glintt.cvm.web.CVLevelWindow" scope="prototype"/>
+	
+	<!-- Services -->
+	<bean id="userServices" class="com.glintt.cvm.service.UserServicesImpl"/>		
 	
 	<!-- Interceptors list -->
 	 <util:set id="interceptors">
@@ -34,8 +43,8 @@
 	 
 	<!-- Pages list -->
 	 <util:set id="pages">
-	 	<value>com.glintt.cvm.ui.pages.LoginPage</value>
 	 	<value>com.glintt.cvm.ui.pages.HomePage</value>
+	 	<value>com.glintt.cvm.ui.pages.LoginPage</value>	 	
 	 	<value>com.glintt.cvm.ui.pages.CreateUserPage</value>
 	 </util:set>
 	 

@@ -41,6 +41,7 @@ public class CVWebApplication extends SpringWebApplication implements Serializab
 		registerInterceptor(new NavigationWarningInterceptor());
 		registerInterceptor(this.pageChangeListenerInterceptor = new PageChangeListenersInterceptor());
 
+		// register additional spring injected interceptors (if any)
 		if (this.interceptors != null) {
 			for (Interceptor interceptor : this.interceptors) {
 				registerInterceptor(interceptor);

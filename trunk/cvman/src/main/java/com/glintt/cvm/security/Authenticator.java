@@ -1,10 +1,8 @@
 package com.glintt.cvm.security;
 
-import org.vaadin.appfoundation.authentication.data.User;
-
-import com.glintt.cvm.exception.ApplicationException;
+import com.glintt.cvm.service.UserServices;
 
 public interface Authenticator {
 
-	User authenticate(String username, String password) throws ApplicationException;
+	void setUserServices(UserServices userServices);
 }

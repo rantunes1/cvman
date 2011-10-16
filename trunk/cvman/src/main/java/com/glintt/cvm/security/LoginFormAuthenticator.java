@@ -1,9 +1,6 @@
-package com.glintt.cvm.web;
+package com.glintt.cvm.security;
 
-import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Map;
-
 import javax.naming.AuthenticationException;
 import javax.naming.CommunicationException;
 import javax.naming.Context;
@@ -22,13 +19,15 @@ import com.glintt.cvm.exception.ApplicationException;
 import com.glintt.cvm.exception.SecurityException;
 import com.glintt.cvm.model.CVUser;
 import com.glintt.cvm.model.UserType;
-import com.glintt.cvm.security.ApplicationRoles;
-import com.glintt.cvm.security.Authenticator;
 
-public class CVAuthenticator implements Authenticator {
+public class LoginFormAuthenticator extends AbstractAuthenticator implements FormAuthenticator {
 
 	@Override
 	public User authenticate(String username, String password) throws ApplicationException {
+		if (username == null) {
+			return null;
+		}
+
 		CVUser authenticatedUser = null;
 		ApplicationException appEx = null;
 		try {
@@ -37,11 +36,8 @@ public class CVAuthenticator implements Authenticator {
 		} catch (ApplicationException aex) {
 			appEx = aex;
 		}
-		// locate user on local storage
-		String query = "SELECT u FROM CVUser u WHERE u.username = :username";
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("username", username);
-		CVUser user = FacadeFactory.getFacade().find(query, parameters);
+
+		CVUser user = getUserServices().findByUsername(username);
 
 		if (user == null) {
 			if (authenticatedUser == null) {
@@ -102,6 +98,9 @@ public class CVAuthenticator implements Authenticator {
 		authEnv.put(Context.PROVIDER_URL, ldapURL);
 		authEnv.put(Context.SECURITY_AUTHENTICATION, "simple");
 		authEnv.put(Context.SECURITY_PRINCIPAL, dn);
+		if (password == null) {
+			password = "";
+		}
 		authEnv.put(Context.SECURITY_CREDENTIALS, password);
 
 		try {

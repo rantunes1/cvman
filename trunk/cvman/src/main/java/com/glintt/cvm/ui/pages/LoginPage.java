@@ -9,53 +9,90 @@ import org.vaadin.navigator7.ParamChangeListener;
 import org.vaadin.navigator7.uri.Param;
 
 import com.glintt.cvm.CVApplication;
+import com.glintt.cvm.exception.ApplicationException;
 import com.glintt.cvm.ui.forms.AppLoginForm;
 import com.glintt.cvm.web.CVLevelWindow;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.LoginForm;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Button.ClickEvent;
 
 @Page
 public class LoginPage extends CustomComponent implements ParamChangeListener {
 
-    private static final long serialVersionUID = 6289195975689211422L;
+	private static final long serialVersionUID = 6289195975689211422L;
 
-    @Param(pos = 0)
-    String exit;
+	@Param(name = "exit")
+	private String exit;
 
-    public LoginPage() {
-        VerticalLayout layout = new VerticalLayout();
-        layout.setMargin(true);
-        layout.setSizeFull();
+	public LoginPage() {
+		VerticalLayout layout = new VerticalLayout();
+		layout.setMargin(true);
+		layout.setSizeFull();
 
-        LoginForm loginForm = new AppLoginForm(LoginPage.this);
+		LoginForm loginForm = new AppLoginForm(LoginPage.this);
 
-        PageLink createUserLink = new PageLink(Lang.getMessage("Login.UI.create_new_account"), CreateUserPage.class);
+		PageLink createUserLink = new PageLink(Lang.getMessage("Login.UI.create_new_account"), CreateUserPage.class);
 
-        Panel loginPanel = new Panel(Lang.getMessage("Login.UI.caption"));
-        loginPanel.setStyleName("loginPanel");
-        loginPanel.addComponent(loginForm);
-        loginPanel.addComponent(createUserLink);
+		// @todo move label strings to message resources / use image
+		Button signinLinkedInBtn = new Button("linkedin");
+		signinLinkedInBtn.addListener(new Button.ClickListener() {
+			private static final long serialVersionUID = -2275826009530243265L;
 
-        layout.addComponent(loginPanel);
-        layout.setComponentAlignment(loginPanel, Alignment.MIDDLE_CENTER);
+			@Override
+			public void buttonClick(ClickEvent event) {
+				CVApplication app = CVApplication.getCurrent();
+				try {
+					app.requestOAuthAuthentication("linkedin", LoginPage.class);
+				} catch (ApplicationException ignored) {
+					ignored.printStackTrace();
+				}
+			}
+		});
 
-        setCompositionRoot(layout);
-    }
+		Panel loginPanel = new Panel(Lang.getMessage("Login.UI.caption"));
+		loginPanel.setStyleName("loginPanel");
+		loginPanel.addComponent(loginForm);
+		loginPanel.addComponent(createUserLink);
 
-    @Override
-    public void paramChanged(NavigationEvent navigationEvent) {
-        if (this.exit != null) {
-            logout();
-        }
+		layout.addComponent(loginPanel);
+		layout.addComponent(signinLinkedInBtn);
+		layout.setComponentAlignment(loginPanel, Alignment.MIDDLE_CENTER);
 
-    }
+		setCompositionRoot(layout);
+	}
 
-    private void logout() {
-        CVApplication app = (CVApplication) NavigableApplication.getCurrent();
-        app.setUser(null);
-        ((CVLevelWindow) NavigableApplication.getCurrentNavigableAppLevelWindow()).refresh();
-    }
+	@Override
+	public void paramChanged(NavigationEvent navigationEvent) {
+		// exit =
+		// LinkedinAuth?oauth_token=2a512346-745a-4479-b341-d92554327681&oauth_verifier=75056
+		if (this.exit != null) {
+			logout();
+		} else {
+			String params = navigationEvent.getParams();
+			if (params != null) {
+				String[] parsedParams = params.substring(navigationEvent.getParams().indexOf("?") + 1).split("&");
+				for (String parsedParam : parsedParams) {
+					if ("oauth_verifier".equals(parsedParam.split("=")[0])) {
+						try {
+							CVApplication.getCurrent().completeOauthAuthentication(parsedParam.split("=")[1], HomePage.class);
+							break;
+						} catch (ApplicationException ignored) {
+							ignored.printStackTrace();
+						}
+					}
+				}
+			}
+		}
+
+	}
+
+	private void logout() {
+		this.exit = null;
+		CVApplication.getCurrent().setUser(null);
+		((CVLevelWindow) NavigableApplication.getCurrentNavigableAppLevelWindow()).refresh();
+	}
 }

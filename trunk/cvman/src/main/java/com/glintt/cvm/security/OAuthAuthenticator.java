@@ -3,8 +3,10 @@ package com.glintt.cvm.security;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.social.connect.Connection;
+import org.springframework.social.connect.ConnectionData;
 import org.springframework.social.connect.ConnectionFactory;
 import org.springframework.social.connect.ConnectionKey;
+import org.springframework.social.connect.UserProfile;
 import org.springframework.social.connect.support.ConnectionFactoryRegistry;
 import org.springframework.social.connect.support.OAuth1ConnectionFactory;
 import org.springframework.social.oauth1.AuthorizedRequestToken;
@@ -61,14 +63,24 @@ public class OAuthAuthenticator extends AbstractAuthenticator implements Request
 		AuthorizedRequestToken requestToken = new AuthorizedRequestToken(oauthRequest.getToken(), verifier);
 		OAuthToken accessToken = connectionFactory.getOAuthOperations().exchangeForAccessToken(requestToken, null);
 		Connection<?> connection = connectionFactory.createConnection(accessToken);
+		if (connection.hasExpired()) {
+			connection.refresh();
+		}
+		if (connection.hasExpired()) {
+			return null;
+		}
 		ConnectionKey key = connection.getKey();
 		UserConnection userConnection = new UserConnection();
 		userConnection.setProviderId(key.getProviderId());
 		userConnection.setProviderUserId(key.getProviderUserId());
 		CVUser user = getUserServices().findByOAuthProvider(userConnection);
 		if (user == null) {
+			ConnectionData data = connection.createData();
+			UserProfile profile = connection.fetchUserProfile();
+			String name = connection.getDisplayName();
+			String imageURL = connection.getImageUrl();
+			String profileURL = connection.getProfileUrl();
 			// @todo
-			// fetch user profile
 			// store new 'SOCIAL' user
 			// update userConnection with newly created userId
 			// store userConnection

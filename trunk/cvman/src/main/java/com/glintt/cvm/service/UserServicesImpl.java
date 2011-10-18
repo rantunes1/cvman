@@ -30,10 +30,10 @@ public class UserServicesImpl implements UserServices {
 		if (providerId == null || providerUserId == null) {
 			return null;
 		}
-		String query = "SELECT uc FROM UserConnection uc WHERE uc.providerId = :providerId and uc.providerUserId = :providerUserId";
+		String query = "SELECT uc FROM UserConnection uc WHERE uc.providerId = :providerId AND uc.providerUserId = :providerUserId";
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("providerId", providerId);
-		parameters.put("userProviderId", providerUserId);
+		parameters.put("providerUserId", providerUserId);
 		userConnection = FacadeFactory.getFacade().find(query, parameters);
 		if (userConnection == null) {
 			// user is not yet connected to this application. should be

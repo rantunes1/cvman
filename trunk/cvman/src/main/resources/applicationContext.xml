@@ -12,16 +12,7 @@
 
 	<!-- Vaadin application definition -->
 	<bean id="application" class="com.glintt.cvm.CVApplication" scope="prototype">
-		<property name="formAuthenticator" ref="authenticator_form"/>
-		<property name="requestAuthenticator" ref="authenticator_oauth"/>
-	</bean>
-	
-	<!-- Security -->
-	<bean id="authenticator_form" class="com.glintt.cvm.security.LoginFormAuthenticator">
-		<property name="userServices" ref="userServices"/>
-	</bean>
-	<bean id="authenticator_oauth" class="com.glintt.cvm.security.OAuthAuthenticator">
-		<property name="userServices" ref="userServices"/>
+		<property name="authenticationContext" ref="authenticationContext"/>
 	</bean>
 	
 	<!-- Navigator7 WebApplication definition -->
@@ -30,6 +21,15 @@
 		<property name="pages" ref="pages"/>
 	</bean>
 	
+	<!-- Authentication -->
+	<bean id="authenticationContext" class="com.glintt.cvm.security.AuthenticationContextImpl" scope="prototype">
+		<property name="formAuthenticator" ref="authenticator_form"/>
+		<property name="requestAuthenticator" ref="authenticator_oauth"/>
+		<property name="userServices" ref="userServices"/>
+	</bean>
+	<bean id="authenticator_form" class="com.glintt.cvm.security.LoginFormAuthenticator"/>
+	<bean id="authenticator_oauth" class="com.glintt.cvm.security.OAuthAuthenticator"/>
+		
 	<!-- Navigator7 WebApplicationLevel definition -->
 	<bean id="appLevelWindow" class="com.glintt.cvm.web.CVLevelWindow" scope="prototype"/>
 	

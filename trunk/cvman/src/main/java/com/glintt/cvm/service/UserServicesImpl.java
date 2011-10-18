@@ -6,6 +6,7 @@ import java.util.Map;
 import org.vaadin.appfoundation.persistence.facade.FacadeFactory;
 
 import com.glintt.cvm.model.CVUser;
+import com.glintt.cvm.security.UserConnection;
 
 public class UserServicesImpl implements UserServices {
 

@@ -1,4 +1,4 @@
-package com.glintt.cvm.service;
+package com.glintt.cvm.security;
 
 import javax.persistence.Entity;
 

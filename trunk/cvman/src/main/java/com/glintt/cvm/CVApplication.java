@@ -4,6 +4,7 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.lucene.util.Version;
+import org.springframework.beans.factory.annotation.Required;
 import org.vaadin.appfoundation.authentication.SessionHandler;
 import org.vaadin.appfoundation.authorization.Permissions;
 import org.vaadin.appfoundation.authorization.jpa.JPAPermissionManager;
@@ -18,9 +19,10 @@ import com.glintt.cvm.exception.ApplicationException;
 import com.glintt.cvm.model.Person;
 import com.glintt.cvm.security.ApplicationResources;
 import com.glintt.cvm.security.ApplicationRoles;
-import com.glintt.cvm.security.FormAuthenticator;
+import com.glintt.cvm.security.AuthenticationContext;
 import com.glintt.cvm.security.OAuthRequest;
 import com.glintt.cvm.security.RequestAuthenticator;
+import com.glintt.cvm.ui.pages.HomePage;
 import com.glintt.cvm.util.AppConfig;
 import com.glintt.cvm.util.AppProperties;
 import com.glintt.cvm.web.SpringWebApplication;
@@ -39,13 +41,28 @@ public class CVApplication extends NavigableApplication implements HttpServletRe
 	private static final Version LUCENE_VERSION = Version.LUCENE_31;
 	private static final String[] FIELD_NAMES = { "personalInfo", "professionalInfo" };
 
-	private transient FormAuthenticator formAuthenticator;
-	private transient RequestAuthenticator requestAuthenticator;
+	private transient AuthenticationContext authContext;
 	private transient HttpServletRequest request;
-	private transient OAuthRequest oauthRequest;
 
 	// @todo inject value
 	private transient LuceneFacade luceneFacade;
+
+	@Required
+	public void setAuthenticationContext(AuthenticationContext authContext) {
+		CVApplication app = CVApplication.getCurrent();
+		if (app == null) {
+			app = this;
+		}
+		app.authContext = authContext;
+	}
+
+	public AuthenticationContext getAuthenticationContext() {
+		CVApplication app = CVApplication.getCurrent();
+		if (app == null) {
+			app = this;
+		}
+		return app.authContext;
+	}
 
 	public static CVApplication getCurrent() {
 		return (CVApplication) NavigableApplication.getCurrent();
@@ -65,55 +82,6 @@ public class CVApplication extends NavigableApplication implements HttpServletRe
 			app = this;
 		}
 		return app.request;
-
-	}
-
-	private OAuthRequest getOAuthRequest() {
-		CVApplication app = CVApplication.getCurrent();
-		if (app == null) {
-			app = this;
-		}
-		return app.oauthRequest;
-	}
-
-	private void setOAuthRequest(OAuthRequest oauthRequest) {
-		CVApplication app = CVApplication.getCurrent();
-		if (app == null) {
-			app = this;
-		}
-		app.oauthRequest = oauthRequest;
-	}
-
-	public FormAuthenticator getFormAuthenticator() {
-		CVApplication app = CVApplication.getCurrent();
-		if (app == null) {
-			app = this;
-		}
-		return app.formAuthenticator;
-	}
-
-	public void setFormAuthenticator(FormAuthenticator formAuthenticator) {
-		CVApplication app = CVApplication.getCurrent();
-		if (app == null) {
-			app = this;
-		}
-		app.formAuthenticator = formAuthenticator;
-	}
-
-	public RequestAuthenticator getRequestAuthenticator() {
-		CVApplication app = CVApplication.getCurrent();
-		if (app == null) {
-			app = this;
-		}
-		return app.requestAuthenticator;
-	}
-
-	public void setRequestAuthenticator(RequestAuthenticator requestAuthenticator) {
-		CVApplication app = CVApplication.getCurrent();
-		if (app == null) {
-			app = this;
-		}
-		app.requestAuthenticator = requestAuthenticator;
 	}
 
 	@Override
@@ -208,27 +176,46 @@ public class CVApplication extends NavigableApplication implements HttpServletRe
 	}
 
 	public void authenticateForm(String username, String password) throws ApplicationException {
-		FormAuthenticator formAuthenticator = getFormAuthenticator();
-		if (formAuthenticator != null) {
-			setUser(formAuthenticator.authenticate(username, password));
-		}
+		AuthenticationContext authContext = getAuthenticationContext();
+		setUser(authContext.getFormAuthenticator().authenticate(authContext, username, password));
 	}
 
 	public void requestOAuthAuthentication(String providerId, Class<? extends Component> callbackPage) throws ApplicationException {
-		RequestAuthenticator requestAuthenticator = getRequestAuthenticator();
+		AuthenticationContext authContext = getAuthenticationContext();
+		RequestAuthenticator requestAuthenticator = authContext.getRequestAuthenticator();
 		if (requestAuthenticator != null) {
-			OAuthRequest oauthRequest = requestAuthenticator.authenticate(providerId, getRequest(), callbackPage);
-			setOAuthRequest(oauthRequest);
-			CVApplication.getCurrent().getMainWindow().open(new ExternalResource(oauthRequest.getUrl()));
+			authContext = requestAuthenticator.authenticate(authContext, providerId, getRequest(), callbackPage);
+			setAuthenticationContext(authContext);
+			CVApplication.getCurrent().getMainWindow().open(new ExternalResource(authContext.getOAuthRequest().getUrl()));
 		}
 	}
 
 	public void completeOauthAuthentication(String verifier, Class<? extends Component> callbackPage) throws ApplicationException {
-		RequestAuthenticator requestAuthenticator = getRequestAuthenticator();
+		AuthenticationContext authContext = getAuthenticationContext();
+		RequestAuthenticator requestAuthenticator = authContext.getRequestAuthenticator();
 		if (requestAuthenticator != null) {
-			OAuthRequest oauthRequest = getOAuthRequest();
+			OAuthRequest oauthRequest = authContext.getOAuthRequest();
 			if (oauthRequest != null) {
-				setUser(requestAuthenticator.signIn(oauthRequest, verifier));
+				authContext = requestAuthenticator.signIn(authContext, oauthRequest, verifier);
+				setAuthenticationContext(authContext);
+				if (!isUserLogged()) {
+					// user sign in with provider but hasn't yet signed in with
+					// the application
+
+					// @todo check if connection is associated with a user
+					// accoount
+					// - if it is, retrieve the user from database and store it
+					// in the application
+					// afterwards, redirect to homepage (see note below
+					// regarding the callback issue)
+					// if not, redirect the UI to the COMPLETE_LOGIN_PAGE
+				} else {
+					// - redirect to homepage. note: this should later be
+					// changed to redirect the request to the
+					// 'callback page'. current value for callbackPage is WRONG
+					// and should not be user (it will redirect
+					// to provider's homepage)
+				}
 
 				// ProviderSignInAttempt signInAttempt = new
 				// ProviderSignInAttempt(connection, connectionFactoryLocator,
@@ -239,14 +226,18 @@ public class CVApplication extends NavigableApplication implements HttpServletRe
 
 				// CVApplication.getCurrent().getMainWindow().open(new
 				// ExternalResource(oauthRequest.getUrl()));
-				CVApplication.getCurrentNavigableAppLevelWindow().open(new PageResource(oauthRequest.getUrl()));
+				CVApplication.getCurrentNavigableAppLevelWindow().open(new PageResource(HomePage.class));
 			}
 		}
-		setOAuthRequest(null);
+		// @todo redirect to LOGIN page as something surely failed along the way
 	}
 
 	public boolean isUserLogged() {
 		return getUser() != null;
+	}
+
+	public boolean isUserConnected() {
+		return getAuthenticationContext().getUserConnection() != null;
 	}
 
 	public LuceneFacade getLuceneFacade() {

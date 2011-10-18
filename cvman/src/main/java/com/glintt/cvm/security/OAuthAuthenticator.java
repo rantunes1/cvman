@@ -15,17 +15,15 @@ import org.springframework.social.oauth1.OAuth1Parameters;
 import org.springframework.social.oauth1.OAuth1Version;
 import org.springframework.social.oauth1.OAuthToken;
 import org.springframework.util.MultiValueMap;
-import org.vaadin.appfoundation.authentication.data.User;
 import org.vaadin.navigator7.PageLink;
 import org.vaadin.navigator7.PageResource;
 
 import com.glintt.cvm.exception.ApplicationException;
 import com.glintt.cvm.model.CVUser;
 import com.glintt.cvm.security.linkedin.LinkedInConnectionFactory;
-import com.glintt.cvm.service.UserConnection;
 import com.vaadin.ui.Component;
 
-public class OAuthAuthenticator extends AbstractAuthenticator implements RequestAuthenticator {
+public class OAuthAuthenticator implements RequestAuthenticator {
 
 	// @todo move registry to injected bean to decouple this class from
 	// references to linkedin (see class constructor)
@@ -49,16 +47,19 @@ public class OAuthAuthenticator extends AbstractAuthenticator implements Request
 	}
 
 	@Override
-	public OAuthRequest authenticate(String providerId, HttpServletRequest request, Class<? extends Component> callbackPage)
-			throws ApplicationException {
+	public AuthenticationContext authenticate(AuthenticationContext authContext, String providerId, HttpServletRequest request,
+			Class<? extends Component> callbackPage) throws ApplicationException {
 		// @todo add support for oauth2
 		OAuth1ConnectionFactory<?> connectionFactory = getOAuth1ConnectionFactory(providerId);
 		String callbackURI = callbackPage != null ? ((PageResource) new PageLink(null, callbackPage).getResource()).getURL() : "";
-		return buildOAuth1Url(providerId, connectionFactory, request, callbackURI, null);
+		OAuthRequest oauthRequest = buildOAuth1Url(providerId, connectionFactory, request, callbackURI, null);
+		authContext.setOauthRequest(oauthRequest);
+		return authContext;
 	}
 
 	@Override
-	public User signIn(OAuthRequest oauthRequest, String verifier) throws ApplicationException {
+	public AuthenticationContext signIn(AuthenticationContext authContext, OAuthRequest oauthRequest, String verifier)
+			throws ApplicationException {
 		OAuth1ConnectionFactory<?> connectionFactory = getOAuth1ConnectionFactory(oauthRequest.getProviderId());
 		AuthorizedRequestToken requestToken = new AuthorizedRequestToken(oauthRequest.getToken(), verifier);
 		OAuthToken accessToken = connectionFactory.getOAuthOperations().exchangeForAccessToken(requestToken, null);
@@ -73,7 +74,7 @@ public class OAuthAuthenticator extends AbstractAuthenticator implements Request
 		UserConnection userConnection = new UserConnection();
 		userConnection.setProviderId(key.getProviderId());
 		userConnection.setProviderUserId(key.getProviderUserId());
-		CVUser user = getUserServices().findByOAuthProvider(userConnection);
+		CVUser user = authContext.getUserServices().findByOAuthProvider(userConnection);
 		if (user == null) {
 			ConnectionData data = connection.createData();
 			UserProfile profile = connection.fetchUserProfile();
@@ -85,7 +86,9 @@ public class OAuthAuthenticator extends AbstractAuthenticator implements Request
 			// update userConnection with newly created userId
 			// store userConnection
 		}
-		return user;
+		authContext.setUserConnection(userConnection);
+		authContext.setOauthRequest(null);
+		return authContext;
 
 	}
 

@@ -20,10 +20,10 @@ import com.glintt.cvm.exception.SecurityException;
 import com.glintt.cvm.model.CVUser;
 import com.glintt.cvm.model.UserType;
 
-public class LoginFormAuthenticator extends AbstractAuthenticator implements FormAuthenticator {
+public class LoginFormAuthenticator implements FormAuthenticator {
 
 	@Override
-	public User authenticate(String username, String password) throws ApplicationException {
+	public User authenticate(AuthenticationContext authContext, String username, String password) throws ApplicationException {
 		if (username == null) {
 			return null;
 		}
@@ -37,7 +37,7 @@ public class LoginFormAuthenticator extends AbstractAuthenticator implements For
 			appEx = aex;
 		}
 
-		CVUser user = getUserServices().findByUsername(username);
+		CVUser user = authContext.getUserServices().findByUsername(username);
 
 		if (user == null) {
 			if (authenticatedUser == null) {

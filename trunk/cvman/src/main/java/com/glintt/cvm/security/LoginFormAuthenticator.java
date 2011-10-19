@@ -23,10 +23,7 @@ import com.glintt.cvm.model.UserType;
 public class LoginFormAuthenticator implements FormAuthenticator {
 
 	@Override
-	public User authenticate(AuthenticationContext authContext, String username, String password) throws ApplicationException {
-		if (username == null) {
-			return null;
-		}
+	public User authenticate(String username, String password, CVUser currentUser) throws ApplicationException {
 
 		CVUser authenticatedUser = null;
 		ApplicationException appEx = null;
@@ -37,9 +34,7 @@ public class LoginFormAuthenticator implements FormAuthenticator {
 			appEx = aex;
 		}
 
-		CVUser user = authContext.getUserServices().findByUsername(username);
-
-		if (user == null) {
+		if (currentUser == null) {
 			if (authenticatedUser == null) {
 				// unable to authenticate user. throw exception
 				throw new SecurityException(Lang.getMessage("Login.ErrorMessage.authentication_failed"));
@@ -47,21 +42,22 @@ public class LoginFormAuthenticator implements FormAuthenticator {
 				// user is not yet registered locally. create a new record
 				// for the internal user.
 				// password will not be saved.
-				user = authenticatedUser;
-				user.setUserType(UserType.INTERNAL);
-				user.setPassword(null);
-				FacadeFactory.getFacade().store(user);
+				currentUser = authenticatedUser;
+				currentUser.setPassword(null);
+
+				currentUser.setUserType(UserType.INTERNAL);
+				FacadeFactory.getFacade().store(currentUser);
 			}
 		} else {
 			if (authenticatedUser == null) {
 				// user exists on local storage but remote authentication
 				// failed.
-				if (UserType.INTERNAL.equals(user.getUserType())) {
+				if (UserType.INTERNAL.equals(currentUser.getUserType())) {
 					// @todo review this policy. passwords are not being checked
 					// and we're relying
 					// on the fact that 'username' must be unique
-				} else if (UserType.EXTERNAL.equals(user.getUserType())) {
-					if (password == null || !password.equals(user.getPassword())) {
+				} else if (UserType.EXTERNAL.equals(currentUser.getUserType())) {
+					if (password == null || !password.equals(currentUser.getPassword())) {
 						// unable to authenticate user. re-throw exception
 						if (appEx != null) {
 							throw appEx;
@@ -82,11 +78,12 @@ public class LoginFormAuthenticator implements FormAuthenticator {
 			}
 		}
 
-		if (user != null && user.getRole() == null) {
-			user.setRole(ApplicationRoles.USER); // defaults to user role if no
-													// role was set before
+		if (currentUser != null && currentUser.getRole() == null) {
+			currentUser.setRole(ApplicationRoles.USER); // defaults to user role
+														// if no
+			// role was set before
 		}
-		return user;
+		return currentUser;
 	}
 
 	private CVUser authenticateOnLDAP(String username, String password) throws ApplicationException {

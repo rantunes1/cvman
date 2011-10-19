@@ -3,10 +3,7 @@ package com.glintt.cvm.security;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.social.connect.Connection;
-import org.springframework.social.connect.ConnectionData;
 import org.springframework.social.connect.ConnectionFactory;
-import org.springframework.social.connect.ConnectionKey;
-import org.springframework.social.connect.UserProfile;
 import org.springframework.social.connect.support.ConnectionFactoryRegistry;
 import org.springframework.social.connect.support.OAuth1ConnectionFactory;
 import org.springframework.social.oauth1.AuthorizedRequestToken;
@@ -19,7 +16,6 @@ import org.vaadin.navigator7.PageLink;
 import org.vaadin.navigator7.PageResource;
 
 import com.glintt.cvm.exception.ApplicationException;
-import com.glintt.cvm.model.CVUser;
 import com.glintt.cvm.security.linkedin.LinkedInConnectionFactory;
 import com.vaadin.ui.Component;
 
@@ -47,49 +43,27 @@ public class OAuthAuthenticator implements RequestAuthenticator {
 	}
 
 	@Override
-	public AuthenticationContext authenticate(AuthenticationContext authContext, String providerId, HttpServletRequest request,
-			Class<? extends Component> callbackPage) throws ApplicationException {
+	public OAuthRequest authenticate(String providerId, HttpServletRequest request, Class<? extends Component> callbackPage)
+			throws ApplicationException {
 		// @todo add support for oauth2
 		OAuth1ConnectionFactory<?> connectionFactory = getOAuth1ConnectionFactory(providerId);
 		String callbackURI = callbackPage != null ? ((PageResource) new PageLink(null, callbackPage).getResource()).getURL() : "";
-		OAuthRequest oauthRequest = buildOAuth1Url(providerId, connectionFactory, request, callbackURI, null);
-		authContext.setOauthRequest(oauthRequest);
-		return authContext;
+		return buildOAuth1Url(providerId, connectionFactory, request, callbackURI, null);
 	}
 
 	@Override
-	public AuthenticationContext signIn(AuthenticationContext authContext, OAuthRequest oauthRequest, String verifier)
-			throws ApplicationException {
+	public Connection<?> signIn(OAuthRequest oauthRequest, String verifier) throws ApplicationException {
 		OAuth1ConnectionFactory<?> connectionFactory = getOAuth1ConnectionFactory(oauthRequest.getProviderId());
 		AuthorizedRequestToken requestToken = new AuthorizedRequestToken(oauthRequest.getToken(), verifier);
 		OAuthToken accessToken = connectionFactory.getOAuthOperations().exchangeForAccessToken(requestToken, null);
 		Connection<?> connection = connectionFactory.createConnection(accessToken);
 		if (connection.hasExpired()) {
 			connection.refresh();
+			if (connection.hasExpired()) {
+				return null;
+			}
 		}
-		if (connection.hasExpired()) {
-			return null;
-		}
-		ConnectionKey key = connection.getKey();
-		UserConnection userConnection = new UserConnection();
-		userConnection.setProviderId(key.getProviderId());
-		userConnection.setProviderUserId(key.getProviderUserId());
-		CVUser user = authContext.getUserServices().findByOAuthProvider(userConnection);
-		if (user == null) {
-			ConnectionData data = connection.createData();
-			UserProfile profile = connection.fetchUserProfile();
-			String name = connection.getDisplayName();
-			String imageURL = connection.getImageUrl();
-			String profileURL = connection.getProfileUrl();
-			// @todo
-			// store new 'SOCIAL' user
-			// update userConnection with newly created userId
-			// store userConnection
-		}
-		authContext.setUserConnection(userConnection);
-		authContext.setOauthRequest(null);
-		return authContext;
-
+		return connection;
 	}
 
 	private OAuthRequest buildOAuth1Url(String providerId, OAuth1ConnectionFactory<?> connectionFactory,

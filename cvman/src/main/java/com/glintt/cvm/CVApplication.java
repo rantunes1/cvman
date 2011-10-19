@@ -20,13 +20,10 @@ import com.glintt.cvm.model.Person;
 import com.glintt.cvm.security.ApplicationResources;
 import com.glintt.cvm.security.ApplicationRoles;
 import com.glintt.cvm.security.AuthenticationContext;
-import com.glintt.cvm.security.OAuthRequest;
-import com.glintt.cvm.security.RequestAuthenticator;
 import com.glintt.cvm.ui.pages.HomePage;
 import com.glintt.cvm.util.AppConfig;
 import com.glintt.cvm.util.AppProperties;
 import com.glintt.cvm.web.SpringWebApplication;
-import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
 import com.vaadin.ui.Component;
@@ -177,58 +174,45 @@ public class CVApplication extends NavigableApplication implements HttpServletRe
 
 	public void authenticateForm(String username, String password) throws ApplicationException {
 		AuthenticationContext authContext = getAuthenticationContext();
-		setUser(authContext.getFormAuthenticator().authenticate(authContext, username, password));
+		setUser(authContext.authenticateForm(username, password));
 	}
 
 	public void requestOAuthAuthentication(String providerId, Class<? extends Component> callbackPage) throws ApplicationException {
 		AuthenticationContext authContext = getAuthenticationContext();
-		RequestAuthenticator requestAuthenticator = authContext.getRequestAuthenticator();
-		if (requestAuthenticator != null) {
-			authContext = requestAuthenticator.authenticate(authContext, providerId, getRequest(), callbackPage);
-			setAuthenticationContext(authContext);
-			CVApplication.getCurrent().getMainWindow().open(new ExternalResource(authContext.getOAuthRequest().getUrl()));
+		String authURL = authContext.authenticateOAuthProvider(providerId, getRequest(), callbackPage);
+		PageResource redirect;
+		if (authURL == null) {
+			redirect = new PageResource(HomePage.class);
+		} else {
+			redirect = new PageResource(authURL);
 		}
+		CVApplication.getCurrentNavigableAppLevelWindow().open(redirect);
 	}
 
 	public void completeOauthAuthentication(String verifier, Class<? extends Component> callbackPage) throws ApplicationException {
 		AuthenticationContext authContext = getAuthenticationContext();
-		RequestAuthenticator requestAuthenticator = authContext.getRequestAuthenticator();
-		if (requestAuthenticator != null) {
-			OAuthRequest oauthRequest = authContext.getOAuthRequest();
-			if (oauthRequest != null) {
-				authContext = requestAuthenticator.signIn(authContext, oauthRequest, verifier);
-				setAuthenticationContext(authContext);
-				if (!isUserLogged()) {
-					// user sign in with provider but hasn't yet signed in with
-					// the application
+		authContext.signin(verifier);
+		if (!isUserLogged()) {
+			// user sign in with provider but hasn't yet signed in with
+			// the application
 
-					// @todo check if connection is associated with a user
-					// accoount
-					// - if it is, retrieve the user from database and store it
-					// in the application
-					// afterwards, redirect to homepage (see note below
-					// regarding the callback issue)
-					// if not, redirect the UI to the COMPLETE_LOGIN_PAGE
-				} else {
-					// - redirect to homepage. note: this should later be
-					// changed to redirect the request to the
-					// 'callback page'. current value for callbackPage is WRONG
-					// and should not be user (it will redirect
-					// to provider's homepage)
-				}
-
-				// ProviderSignInAttempt signInAttempt = new
-				// ProviderSignInAttempt(connection, connectionFactoryLocator,
-				// usersConnectionRepository);
-				// this.request.setAttribute(ProviderSignInAttempt.SESSION_ATTRIBUTE,
-				// signInAttempt, RequestAttributes.SCOPE_SESSION);
-				// return redirect(signUpUrl);
-
-				// CVApplication.getCurrent().getMainWindow().open(new
-				// ExternalResource(oauthRequest.getUrl()));
-				CVApplication.getCurrentNavigableAppLevelWindow().open(new PageResource(HomePage.class));
-			}
+			// @todo check if connection is associated with a user
+			// accoount
+			// - if it is, retrieve the user from database and store it
+			// in the application
+			// afterwards, redirect to homepage (see note below
+			// regarding the callback issue)
+			// if not, redirect the UI to the COMPLETE_LOGIN_PAGE
+		} else {
+			// - redirect to homepage. note: this should later be
+			// changed to redirect the request to the
+			// 'callback page'. current value for callbackPage is WRONG
+			// and should not be user (it will redirect
+			// to provider's homepage)
 		}
+
+		// ProviderSignInAttempt signInAttempt = new
+		CVApplication.getCurrentNavigableAppLevelWindow().open(new PageResource(HomePage.class));
 		// @todo redirect to LOGIN page as something surely failed along the way
 	}
 

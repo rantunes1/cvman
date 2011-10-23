@@ -27,6 +27,7 @@ public class OAuthAuthenticator implements RequestAuthenticator {
 	private String applicationUrl;
 
 	public OAuthAuthenticator() {
+		// @todo move configuration to external properties
 		this.registry.addConnectionFactory(new LinkedInConnectionFactory("kmzlmdz3rmfs", "nk6OOeG07l40DsTi"));
 	}
 

@@ -2,7 +2,9 @@ package com.glintt.cvm.model;
 
 public enum UserType {
 
-    INTERNAL,
+	INTERNAL,
 
-    EXTERNAL;
+	EXTERNAL,
+
+	SOCIAL;
 }

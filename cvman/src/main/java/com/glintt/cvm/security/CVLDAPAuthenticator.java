@@ -1,6 +1,7 @@
 package com.glintt.cvm.security;
 
 import java.util.Hashtable;
+
 import javax.naming.AuthenticationException;
 import javax.naming.CommunicationException;
 import javax.naming.Context;
@@ -11,82 +12,14 @@ import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
-import org.vaadin.appfoundation.authentication.data.User;
-import org.vaadin.appfoundation.i18n.Lang;
-import org.vaadin.appfoundation.persistence.facade.FacadeFactory;
-
 import com.glintt.cvm.exception.ApplicationException;
 import com.glintt.cvm.exception.SecurityException;
 import com.glintt.cvm.model.CVUser;
-import com.glintt.cvm.model.UserType;
 
-public class LoginFormAuthenticator implements FormAuthenticator {
+public class CVLDAPAuthenticator implements LDAPAuthenticator {
 
 	@Override
-	public User authenticate(String username, String password, CVUser currentUser) throws ApplicationException {
-
-		CVUser authenticatedUser = null;
-		ApplicationException appEx = null;
-		try {
-			// try to authenticate user on LDAP
-			authenticatedUser = authenticateOnLDAP(username, password);
-		} catch (ApplicationException aex) {
-			appEx = aex;
-		}
-
-		if (currentUser == null) {
-			if (authenticatedUser == null) {
-				// unable to authenticate user. throw exception
-				throw new SecurityException(Lang.getMessage("Login.ErrorMessage.authentication_failed"));
-			} else {
-				// user is not yet registered locally. create a new record
-				// for the internal user.
-				// password will not be saved.
-				currentUser = authenticatedUser;
-				currentUser.setPassword(null);
-
-				currentUser.setUserType(UserType.INTERNAL);
-				FacadeFactory.getFacade().store(currentUser);
-			}
-		} else {
-			if (authenticatedUser == null) {
-				// user exists on local storage but remote authentication
-				// failed.
-				if (UserType.INTERNAL.equals(currentUser.getUserType())) {
-					// @todo review this policy. passwords are not being checked
-					// and we're relying
-					// on the fact that 'username' must be unique
-				} else if (UserType.EXTERNAL.equals(currentUser.getUserType())) {
-					if (password == null || !password.equals(currentUser.getPassword())) {
-						// unable to authenticate user. re-throw exception
-						if (appEx != null) {
-							throw appEx;
-						} else {
-							throw new SecurityException(Lang.getMessage("Login.ErrorMessage.authentication_failed"));
-						}
-					}
-				} else {
-					// unable to authenticate user. re-throw exception
-					if (appEx != null) {
-						throw appEx;
-					} else {
-						throw new SecurityException(Lang.getMessage("Login.ErrorMessage.authentication_failed"));
-					}
-				}
-			} else {
-				// nothing to do
-			}
-		}
-
-		if (currentUser != null && currentUser.getRole() == null) {
-			currentUser.setRole(ApplicationRoles.USER); // defaults to user role
-														// if no
-			// role was set before
-		}
-		return currentUser;
-	}
-
-	private CVUser authenticateOnLDAP(String username, String password) throws ApplicationException {
+	public CVUser authenticate(String username, String plainTextPassword) throws ApplicationException {
 		Hashtable<String, String> authEnv = new Hashtable<String, String>(11);
 		String dn = "glintt\\" + username;
 		String ldapURL = "ldap://gpdc02.glintt.com:389/OU=SITC,DC=glintt,DC=com?sAMAccountName?sub?(objectClass=*)";
@@ -95,10 +28,10 @@ public class LoginFormAuthenticator implements FormAuthenticator {
 		authEnv.put(Context.PROVIDER_URL, ldapURL);
 		authEnv.put(Context.SECURITY_AUTHENTICATION, "simple");
 		authEnv.put(Context.SECURITY_PRINCIPAL, dn);
-		if (password == null) {
-			password = "";
+		if (plainTextPassword == null) {
+			plainTextPassword = "";
 		}
-		authEnv.put(Context.SECURITY_CREDENTIALS, password);
+		authEnv.put(Context.SECURITY_CREDENTIALS, plainTextPassword);
 
 		try {
 			InitialDirContext ctx = new InitialDirContext(authEnv);
@@ -117,7 +50,6 @@ public class LoginFormAuthenticator implements FormAuthenticator {
 			Attributes attrs = searchResult.getAttributes();
 
 			CVUser user = new CVUser();
-			user.setUsername(username);
 			user.setName(attrs.get("displayName").get().toString());
 			user.setEmail(attrs.get("mail").get().toString());
 			user.setMobileNumber(attrs.get("mobile").get().toString());
@@ -134,8 +66,8 @@ public class LoginFormAuthenticator implements FormAuthenticator {
 			return user;
 		} catch (CommunicationException cex) {
 			System.out.println("Authentication Server is not reachable");
-			throw new ApplicationException(
-					"Authentication server could not be reached. Please check your network connection and try again.");
+			throw new SecurityException(
+					"Authentication server could not be reached. Please check your network connection and try again.", cex);
 		} catch (AuthenticationException aex) {
 			System.out.println("Authentication failed!");
 			throw new SecurityException(aex);

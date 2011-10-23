@@ -43,6 +43,7 @@
 		<eclipse.persistence.version>2.1.2</eclipse.persistence.version>
 		<hsqldb.version>1.8.0.10</hsqldb.version>
 		<jackson-mapper.version>1.8.5</jackson-mapper.version>
+		<jasypt.version>1.8</jasypt.version>
 		<javax.persistence.version>2.0.3</javax.persistence.version>		
         <jaxb2.basics.version>0.6.0</jaxb2.basics.version>
         <lucene.core.version>3.4.0</lucene.core.version>
@@ -182,6 +183,12 @@
 				<version>${springframework-security-crypto.version}</version>
 		  		<scope>runtime</scope>
 		  	</dependency>
+		  	<dependency>
+			    <groupId>org.jasypt</groupId>
+    			<artifactId>jasypt</artifactId>
+    			<version>${jasypt.version}</version>
+			</dependency>
+		  	
 			
 			<dependency>
 			    <groupId>org.springframework.social</groupId>
@@ -291,11 +298,15 @@
 	  		<artifactId>spring-security-crypto</artifactId>
 	  	</dependency>
 	  	
+	  	
+	  	<dependency> <!-- internal password encryptation -->
+		    <groupId>org.jasypt</groupId>
+   			<artifactId>jasypt</artifactId>
+		</dependency>
+			
 	  	<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
-			<version>${jackson-mapper.version}</version>
-			<scope>runtime</scope>
 		</dependency>
   	
 				

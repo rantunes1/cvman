@@ -16,11 +16,14 @@ import org.vaadin.navigator7.PageResource;
 import org.vaadin.navigator7.window.NavigableAppLevelWindow;
 
 import com.glintt.cvm.exception.ApplicationException;
+import com.glintt.cvm.model.CVUser;
+import com.glintt.cvm.model.CVUserInfo;
 import com.glintt.cvm.model.Person;
 import com.glintt.cvm.security.ApplicationResources;
 import com.glintt.cvm.security.ApplicationRoles;
-import com.glintt.cvm.security.AuthenticationContext;
+import com.glintt.cvm.security.CVSecurityContext;
 import com.glintt.cvm.ui.pages.HomePage;
+import com.glintt.cvm.ui.pages.LoginPage;
 import com.glintt.cvm.util.AppConfig;
 import com.glintt.cvm.util.AppProperties;
 import com.glintt.cvm.web.SpringWebApplication;
@@ -38,27 +41,28 @@ public class CVApplication extends NavigableApplication implements HttpServletRe
 	private static final Version LUCENE_VERSION = Version.LUCENE_31;
 	private static final String[] FIELD_NAMES = { "personalInfo", "professionalInfo" };
 
-	private transient AuthenticationContext authContext;
+	private transient CVSecurityContext secContext;
 	private transient HttpServletRequest request;
+	private transient CVUserInfo userInfo;
 
 	// @todo inject value
 	private transient LuceneFacade luceneFacade;
 
 	@Required
-	public void setAuthenticationContext(AuthenticationContext authContext) {
+	public void setSecurityContext(CVSecurityContext authContext) {
 		CVApplication app = CVApplication.getCurrent();
 		if (app == null) {
 			app = this;
 		}
-		app.authContext = authContext;
+		app.secContext = authContext;
 	}
 
-	public AuthenticationContext getAuthenticationContext() {
+	private CVSecurityContext getSecurityContext() {
 		CVApplication app = CVApplication.getCurrent();
 		if (app == null) {
 			app = this;
 		}
-		return app.authContext;
+		return app.secContext;
 	}
 
 	public static CVApplication getCurrent() {
@@ -79,6 +83,43 @@ public class CVApplication extends NavigableApplication implements HttpServletRe
 			app = this;
 		}
 		return app.request;
+	}
+
+	private void setUserInfo(CVUserInfo userInfo) {
+		CVApplication app = CVApplication.getCurrent();
+		if (app == null) {
+			app = this;
+		}
+		app.userInfo = userInfo;
+	}
+
+	public CVUserInfo getUserInfo() {
+		CVApplication app = CVApplication.getCurrent();
+		if (app == null) {
+			app = this;
+		}
+		CVUserInfo userInfo = app.userInfo;
+		if (userInfo == null) {
+			userInfo = new CVUserInfo();
+		}
+		setUserInfo(userInfo);
+		return userInfo;
+	}
+
+	public void logout() {
+		setUserInfo(null);
+	}
+
+	@Override
+	public Object getUser() {
+		return getUserInfo().getUser();
+	}
+
+	@Override
+	public void setUser(Object user) {
+		if (user != null && CVUser.class.isAssignableFrom(user.getClass())) {
+			getUserInfo().setUser((CVUser) user);
+		}
 	}
 
 	@Override
@@ -173,13 +214,16 @@ public class CVApplication extends NavigableApplication implements HttpServletRe
 	}
 
 	public void authenticateForm(String username, String password) throws ApplicationException {
-		AuthenticationContext authContext = getAuthenticationContext();
-		setUser(authContext.authenticateForm(username, password));
+		CVSecurityContext secContext = getSecurityContext();
+		CVUserInfo userInfo = getUserInfo();
+		setUserInfo(secContext.authenticateForm(userInfo, username, password));
 	}
 
 	public void requestOAuthAuthentication(String providerId, Class<? extends Component> callbackPage) throws ApplicationException {
-		AuthenticationContext authContext = getAuthenticationContext();
-		String authURL = authContext.authenticateOAuthProvider(providerId, getRequest(), callbackPage);
+		CVSecurityContext authContext = getSecurityContext();
+		CVUserInfo userInfo = getUserInfo();
+		userInfo = authContext.authenticateOAuthProvider(userInfo, providerId, getRequest(), callbackPage);
+		String authURL = (userInfo.getAuthenticationURL());
 		PageResource redirect;
 		if (authURL == null) {
 			redirect = new PageResource(HomePage.class);
@@ -189,39 +233,12 @@ public class CVApplication extends NavigableApplication implements HttpServletRe
 		CVApplication.getCurrentNavigableAppLevelWindow().open(redirect);
 	}
 
-	public void completeOauthAuthentication(String verifier, Class<? extends Component> callbackPage) throws ApplicationException {
-		AuthenticationContext authContext = getAuthenticationContext();
-		authContext.signin(verifier);
-		if (!isUserLogged()) {
-			// user sign in with provider but hasn't yet signed in with
-			// the application
-
-			// @todo check if connection is associated with a user
-			// accoount
-			// - if it is, retrieve the user from database and store it
-			// in the application
-			// afterwards, redirect to homepage (see note below
-			// regarding the callback issue)
-			// if not, redirect the UI to the COMPLETE_LOGIN_PAGE
-		} else {
-			// - redirect to homepage. note: this should later be
-			// changed to redirect the request to the
-			// 'callback page'. current value for callbackPage is WRONG
-			// and should not be user (it will redirect
-			// to provider's homepage)
-		}
-
-		// ProviderSignInAttempt signInAttempt = new
-		CVApplication.getCurrentNavigableAppLevelWindow().open(new PageResource(HomePage.class));
-		// @todo redirect to LOGIN page as something surely failed along the way
-	}
-
-	public boolean isUserLogged() {
-		return getUser() != null;
-	}
-
-	public boolean isUserConnected() {
-		return getAuthenticationContext().getUserConnection() != null;
+	public void completeOAuthAuthentication(String verifier, Class<? extends Component> callbackPage) throws ApplicationException {
+		CVSecurityContext authContext = getSecurityContext();
+		CVUserInfo userInfo = getUserInfo();
+		userInfo = authContext.signin(userInfo, verifier);
+		// @todo review
+		new LoginPage().redirect(userInfo);
 	}
 
 	public LuceneFacade getLuceneFacade() {

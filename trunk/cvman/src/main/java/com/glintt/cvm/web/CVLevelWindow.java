@@ -39,7 +39,7 @@ public class CVLevelWindow extends HeaderFooterFluidAppLevelWindow {
 		header.setWidth("100%");
 		header.setHeight(6, Component.UNITS_EM);
 
-		if (CVApplication.getCurrent().isUserLogged()) {
+		if (CVApplication.getCurrent().getUserInfo().isUserLogged()) {
 			header.addComponent(new Label(Lang.getMessage("Header.authenticated.caption")));
 			header.addComponent(new ParamPageLink(Lang.getMessage("Header.logout"), LoginPage.class).addParam("exit", ""));
 		} else {
@@ -96,7 +96,7 @@ public class CVLevelWindow extends HeaderFooterFluidAppLevelWindow {
 		footer.setWidth("100%");
 
 		Label footerLbl = null;
-		if (CVApplication.getCurrent().isUserLogged()) {
+		if (CVApplication.getCurrent().getUserInfo().isUserLogged()) {
 			footerLbl = new Label(Lang.getMessage("Footer.authenticated.caption"));
 		} else {
 			footerLbl = new Label(Lang.getMessage("Footer.guest.caption"));

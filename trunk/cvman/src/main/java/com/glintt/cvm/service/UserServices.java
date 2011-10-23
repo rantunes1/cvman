@@ -1,12 +1,21 @@
 package com.glintt.cvm.service;
 
-import com.glintt.cvm.model.CVUser;
+import org.vaadin.appfoundation.authentication.data.User;
+
+import com.glintt.cvm.model.UserType;
 import com.glintt.cvm.security.UserConnection;
 
-public interface UserServices {
+public interface UserServices<U extends User> {
 
-	CVUser findByUsername(String username);
+	U findUserByUsername(String username);
 
-	CVUser findByOAuthProvider(UserConnection userConnection);
+	U findUserByTypeAndUsername(UserType internal, String username);
 
+	U findUserByUserId(Long userId);
+
+	UserConnection createUserConnection(String providerId, String providerUserId);
+
+	UserConnection findUserConnectionByOAuthProvider(String providerId, String providerUserId);
+
+	UserConnection findUserConnectionByUserId(Long userId);
 }

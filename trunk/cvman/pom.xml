@@ -211,7 +211,6 @@
 				<groupId>org.codehaus.jackson</groupId>
 				<artifactId>jackson-mapper-asl</artifactId>
 				<version>${jackson-mapper.version}</version>
-				<scope>runtime</scope>
 			</dependency>
 		    		    	
     	</dependencies>

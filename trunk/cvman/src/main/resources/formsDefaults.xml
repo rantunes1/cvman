@@ -2,22 +2,40 @@
 <tmx version="1.4">
 	<body>
 		<tu tuid="FormsDefaults.UI.commit.caption">
-			<tuv lang="en"> <seg>Save</seg> </tuv>
-			<tuv lang="pt"> <seg>Confirmar</seg> </tuv>
+			<tuv lang="en">
+				<seg>Save</seg>
+			</tuv>
+			<tuv lang="pt">
+				<seg>Confirmar</seg>
+			</tuv>
 		</tu>
 		<tu tuid="FormsDefaults.UI.discard.caption">
-			<tuv lang="en"> <seg>Reset</seg> </tuv>
-			<tuv lang="pt"> <seg>Anular</seg> </tuv>
+			<tuv lang="en">
+				<seg>Reset</seg>
+			</tuv>
+			<tuv lang="pt">
+				<seg>Anular</seg>
+			</tuv>
 		</tu>
-		
+
 		<tu tuid="FormsDefaults.Validation.generic">
-			<tuv lang="en"> <seg>Validation errors found. Please hover your mouse over marked field to see a description of the problem.</seg> </tuv>
-			<tuv lang="pt"> <seg>Foram encontrados erros de validação. Passe o rato por cima dos campos assinalados para ver o motivo.</seg> </tuv>
+			<tuv lang="en">
+				<seg>Validation errors found. Please hover your mouse over marked
+					field to see a description of the problem.</seg>
+			</tuv>
+			<tuv lang="pt">
+				<seg>Foram encontrados erros de validação. Passe o rato por cima dos
+					campos assinalados para ver o motivo.</seg>
+			</tuv>
 		</tu>
 		<tu tuid="FormsDefaults.Validation.required">
-			<tuv lang="en"> <seg>{0} is a required field</seg> </tuv>
-			<tuv lang="pt"> <seg>O campo '{0}' é obrigatório</seg> </tuv>
+			<tuv lang="en">
+				<seg>{0} is a required field</seg>
+			</tuv>
+			<tuv lang="pt">
+				<seg>O campo '{0}' é obrigatório</seg>
+			</tuv>
 		</tu>
-		
+
 	</body>
 </tmx>

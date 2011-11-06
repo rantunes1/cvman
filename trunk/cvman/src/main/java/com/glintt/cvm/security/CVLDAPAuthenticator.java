@@ -53,15 +53,9 @@ public class CVLDAPAuthenticator implements LDAPAuthenticator {
 			user.setName(attrs.get("displayName").get().toString());
 			user.setEmail(attrs.get("mail").get().toString());
 			user.setMobileNumber(attrs.get("mobile").get().toString());
-			user.setTelephoneNumber(attrs.get("telephoneNumber").get().toString());
-			user.setFirstName(attrs.get("givenName").get().toString());
-			user.setSurname(attrs.get("sn").get().toString());
 			user.setCompany(attrs.get("company").get().toString());
 			user.setCountry(attrs.get("co").get().toString());
 			user.setCountryCode(attrs.get("c").get().toString());
-			user.setStreetAddress(attrs.get("streetAddress").get().toString());
-			user.setLocality(attrs.get("l").get().toString());
-			user.setPostalCode(attrs.get("postalCode").get().toString());
 
 			return user;
 		} catch (CommunicationException cex) {

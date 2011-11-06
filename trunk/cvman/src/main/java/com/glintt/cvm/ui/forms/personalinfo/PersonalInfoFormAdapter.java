@@ -6,9 +6,9 @@ import org.hr_xml._3.LanguageCodeEnumType;
 import org.hr_xml._3.MaritalStatusCodeEnumType;
 
 import com.glintt.cvm.model.PersonalInfo;
-import com.glintt.cvm.ui.api.XXX_AbstractBeanItemAdapter;
-import com.glintt.cvm.ui.api.XXX_BuildableObjectProperty;
-import com.glintt.cvm.ui.api.XXX_BuildableObjectProperty.FieldPosition;
+import com.glintt.cvm.ui.api.AbstractBeanItemAdapter;
+import com.glintt.cvm.ui.api.BuildableObjectProperty;
+import com.glintt.cvm.ui.api.BuildableObjectProperty.FieldPosition;
 import com.glintt.cvm.ui.customfields.BirthdateField;
 import com.glintt.cvm.ui.customfields.EnumBasedComboBox;
 import com.glintt.cvm.ui.customfields.FileUploadFormField;
@@ -16,9 +16,14 @@ import com.vaadin.data.Item;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 
-public class XXX_PersonalInfoAdapter extends XXX_AbstractBeanItemAdapter<PersonalInfo> {
+public class PersonalInfoFormAdapter extends AbstractBeanItemAdapter<PersonalInfo> {
 
-    public XXX_PersonalInfoAdapter(PersonalInfo personalInfo) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1028166072391245681L;
+
+	public PersonalInfoFormAdapter(PersonalInfo personalInfo) {
         super(personalInfo, new String[] { "picture", "name", "fatherName", "motherName", "gender", "maritalStatus",
                 "citizenshipCountry", "primaryLanguage", "birthInfo" });
     }
@@ -39,7 +44,7 @@ public class XXX_PersonalInfoAdapter extends XXX_AbstractBeanItemAdapter<Persona
     }
 
     @Override
-    protected Field createField(Item item, String propertyId, XXX_BuildableObjectProperty property, Component uiContext) {
+    protected Field createField(Item item, String propertyId, BuildableObjectProperty property, Component uiContext) {
         Field field = null;
         if ("picture".equals(propertyId)) {
             field = new FileUploadFormField(item, propertyId, property.getWidth());

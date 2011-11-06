@@ -25,10 +25,40 @@ public class CVSecurityContext implements SecurityContext<CVUser, CVUserInfo> {
 	private transient LDAPAuthenticator ldapAuthenticator;
 	private transient PasswordEncryptor passwordEncryptor;
 
+	public CVSecurityContext() {
+	}
+
+	public CVSecurityContext(SecurityContext<CVUser, CVUserInfo> context) {
+		this.userServices = context.getUserServices();
+		this.requestAuthenticator = context.getRequestAuthenticator();
+		this.ldapAuthenticator = context.getLDAPAuthenticator();
+		this.passwordEncryptor = context.getPasswordEncryptor();
+	}
+
 	@Override
 	@Required
 	public void setUserServices(UserServices<CVUser> userServices) {
 		this.userServices = userServices;
+	}
+
+	@Override
+	public UserServices<CVUser> getUserServices() {
+		return this.userServices;
+	}
+
+	@Override
+	public LDAPAuthenticator getLDAPAuthenticator() {
+		return this.ldapAuthenticator;
+	}
+
+	@Override
+	public RequestAuthenticator getRequestAuthenticator() {
+		return this.requestAuthenticator;
+	}
+
+	@Override
+	public PasswordEncryptor getPasswordEncryptor() {
+		return this.passwordEncryptor;
 	}
 
 	@Override
@@ -45,6 +75,30 @@ public class CVSecurityContext implements SecurityContext<CVUser, CVUserInfo> {
 	@Override
 	public void setLDAPAuthenticator(LDAPAuthenticator ldapAuthenticator) {
 		this.ldapAuthenticator = ldapAuthenticator;
+	}
+
+	@Override
+	public CVUserInfo authenticateNewUser(CVUserInfo userInfo, CVUser newUser) throws ApplicationException {
+		if (userInfo == null) {
+			return null;
+		}
+		if (newUser == null) {
+			throw new ApplicationException("it's not possible to create a <null> new user");
+		}
+
+		// check for duplicates
+		if (this.userServices.findUserByUsername(newUser.getUsername()) != null) {
+			throw new ApplicationException("username already exists on the database");
+		}
+
+		// encrypt user password
+		newUser.setPassword(this.passwordEncryptor.encryptPassword(newUser.getPassword()));
+
+		// persist user
+		newUser = this.userServices.createUser(newUser, UserType.EXTERNAL, ApplicationRoles.USER);
+
+		userInfo.setUser(newUser);
+		return userInfo;
 	}
 
 	@Override
@@ -75,19 +129,16 @@ public class CVSecurityContext implements SecurityContext<CVUser, CVUserInfo> {
 					user = ldapUser;
 					user.setUsername(username);
 					user.setPassword(encryptedPassword);
-					user.setUserType(UserType.INTERNAL);
-					user.setRole(ApplicationRoles.USER);
-
-					FacadeFactory.getFacade().store(user);
+					user = this.userServices.createUser(user, UserType.INTERNAL, ApplicationRoles.USER);
 				} else {
-					// @todo analyse this scenario. user logged with ldap from a
+					// @todo analyze this scenario. user logged with ldap from a
 					// previous failed local login.
 					// either the account registered internally doesn't belongs
 					// to the current user or the user
 					// changed its password on ldap before logging in. check if
 					// searching by username is sufficient
 					// to exclude duplicated users. evaluate using also the
-					// e-mail accout when searching the internal user!
+					// e-mail account when searching the internal user!
 				}
 			} else {
 				// both user and ldap users are null
@@ -106,7 +157,7 @@ public class CVSecurityContext implements SecurityContext<CVUser, CVUserInfo> {
 				user.setPassword(encryptedPassword);
 				user.setUserType(UserType.SOCIAL);
 				user.setRole(ApplicationRoles.USER);
-				FacadeFactory.getFacade().store(user);
+				user = this.userServices.createUser(user, UserType.SOCIAL, ApplicationRoles.USER);
 			}
 
 			Long connectionUserId = userConnection.getUserId();

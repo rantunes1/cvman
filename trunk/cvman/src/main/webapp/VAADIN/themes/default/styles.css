@@ -2,28 +2,28 @@
 
 /* @import "../reindeer/styles.css";        /* to 'extend' vaadin theme.*/
 @import "../chameleon/styles.css";
-  
-.header{
+
+.header {
 	background-color: #fed;
 }
 
-.footer{
+.footer {
 	background-color: #fed;
 	position: fixed;
-	bottom:0;
-	z-index:1;
+	bottom: 0;
+	z-index: 1;
 }
 
-.loginPanel{
+.loginPanel {
 	width: 200px !important;
 	padding: 0px;
 }
 
-.loginForm{
+.loginForm {
 	height: 120px !important;
 	padding: 10px;
 }
 
-.v-textfield-error, .v-select-error{
+.v-textfield-error,.v-select-error {
 	background-color: pink;
 }

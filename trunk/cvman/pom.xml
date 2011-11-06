@@ -2,232 +2,35 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.glintt</groupId>
+	<parent>
+		<groupId>com.glintt</groupId>
+		<artifactId>parent</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>pom</relativePath>
+	</parent>
+
 	<artifactId>curricula</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.0-SNAPSHOT</version>
+
 	<name>Curricula</name>
 
-
-	<repositories>
-		<!-- repository>
-			<id>Glintt Internal</id>
-			<url>${server.distribution.http}/archiva/repository/internal/</url>
-		</repository -->
-		<repository>
-			<id>Vaadin Addons Repo</id>
-			<url>http://maven.vaadin.com/vaadin-addons</url>
-		</repository>
-		<repository>
-			<id>EclipseLink Repo</id>
-			<url>http://www.eclipse.org/downloads/download.php?r=1&amp;nf=1&amp;file=/rt/eclipselink/maven.repo</url>
-		</repository>
-		
-		<!-- @todo remove repository declaration once spring-security-crypto has a release version -->
-		<repository><id>s-m</id><url>http://maven.springframework.org/milestone</url></repository>
-	</repositories>
-	
-	<properties>
-		<project.organization.name>Glintt</project.organization.name>
-		<project.organization.url>http://www.glintt.com/</project.organization.url>
-        
-        <server.distribution.http>http://cvman.googlecode.com</server.distribution.http>
-        <server.distribution.https>https://cvman.googlecode.com</server.distribution.https>
-        
-		<jdk.source>1.6</jdk.source>
-		<jdk.target>1.6</jdk.target>
-		
-        <jdk.encoding>iso-8859-1</jdk.encoding> <!-- NOTE: jaxb fails with UTF-8 (see http://java.net/jira/browse/MAVEN_JAXB2_PLUGIN-27) -->
-		<project.build.sourceEncoding>${jdk.encoding}</project.build.sourceEncoding>
-		
-		<eclipse.persistence.version>2.1.2</eclipse.persistence.version>
-		<hsqldb.version>1.8.0.10</hsqldb.version>
-		<jackson-mapper.version>1.8.5</jackson-mapper.version>
-		<jasypt.version>1.8</jasypt.version>
-		<javax.persistence.version>2.0.3</javax.persistence.version>		
-        <jaxb2.basics.version>0.6.0</jaxb2.basics.version>
-        <lucene.core.version>3.4.0</lucene.core.version>
-        <mysql.connector.version>5.1.15</mysql.connector.version>
-        <servlet-api.version>2.4</servlet-api.version>
-        <springframework.version>3.0.6.RELEASE</springframework.version>
-        <springframework-security-crypto.version>3.1.0.RC3</springframework-security-crypto.version>
-        <springframework-social.version>1.0.0.RELEASE</springframework-social.version>
-		<vaadin.addons.appfoundation.version>1.3.5</vaadin.addons.appfoundation.version>
-		<vaadin.addons.customfield.version>0.9.3</vaadin.addons.customfield.version>
-		<vaadin.addons.lucenecontainer.version>1.0.2</vaadin.addons.lucenecontainer.version>
-		<vaadin.addons.navigator7.version>7.49</vaadin.addons.navigator7.version>
-		<vaadin.version>6.7.0</vaadin.version><!-- 6.7.0 05.10.2011 -->
-        <xom.version>1.2.5</xom.version>
-	</properties>
-	
 	<scm>
 		<connection>scm:svn:${server.distribution.https}/svn/trunk/cvman</connection>
 		<developerConnection>scm:svn:${server.distribution.https}/svn/trunk/cvman</developerConnection>
 		<url>http://code.google.com/p/cvman/source/browse/trunk/cvman/</url>
 	</scm>
-	
-	<dependencyManagement>
-    	<dependencies>
-            <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>servlet-api</artifactId>
-                <version>${servlet-api.version}</version>
-                <scope>provided</scope> <!-- by the application server -->
-            </dependency>
 
-            <dependency>
-				<groupId>com.vaadin</groupId>
-				<artifactId>vaadin</artifactId>
-				<version>${vaadin.version}</version>
-			</dependency>
-			
-			<dependency>
-				<groupId>org.vaadin.addons</groupId>
-				<artifactId>appfoundation</artifactId>
-				<version>${vaadin.addons.appfoundation.version}</version>
-			</dependency>
-			<!--  App foundation dependencies -->
-			<dependency>
-				<groupId>xom</groupId>
-				<artifactId>xom</artifactId>
-				<version>${xom.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eclipse.persistence</groupId>
-				<artifactId>org.eclipse.persistence.jpa</artifactId>
-				<version>${eclipse.persistence.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eclipse.persistence</groupId>
-				<artifactId>org.eclipse.persistence.core</artifactId>
-				<version>${eclipse.persistence.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eclipse.persistence</groupId>
-				<artifactId>org.eclipse.persistence.antlr</artifactId>
-				<version>${eclipse.persistence.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eclipse.persistence</groupId>
-				<artifactId>org.eclipse.persistence.asm</artifactId>
-				<version>${eclipse.persistence.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eclipse.persistence</groupId>
-				<artifactId>javax.persistence</artifactId>
-				<version>${javax.persistence.version}</version>
-			</dependency>					
-	        
-       		<dependency>
-				<groupId>org.vaadin.addons</groupId>
-				<artifactId>navigator7</artifactId>
-				<version>${vaadin.addons.navigator7.version}</version>
-			</dependency>
-			
-			<dependency>
-	   			<groupId>org.vaadin.addons</groupId>
-	   			<artifactId>lucenecontainer</artifactId>
-	   			<version>${vaadin.addons.lucenecontainer.version}</version>
-			</dependency>
-			
-			<dependency>
-				<groupId>org.vaadin.addons</groupId>
-			   	<artifactId>customfield</artifactId>
-			   	<version>${vaadin.addons.customfield.version}</version>
-			</dependency>
-			
-			<!-- This is also used by gwt-maven-plugin to deduce GWT version number. -->
-			<!--
-			<dependency>
-				<groupId>com.google.gwt</groupId>
-				<artifactId>gwt-user</artifactId>
-				<version>2.1.1</version>
-				<scope>provided</scope>
-			</dependency>
-			-->
-			
-			<dependency>
-    			<groupId>org.apache.lucene</groupId>
-    			<artifactId>lucene-core</artifactId>
-    			<version>${lucene.core.version}</version>
-			</dependency>
-			
-			
-			<dependency>
-				<groupId>mysql</groupId>
-				<artifactId>mysql-connector-java</artifactId>
-				<version>${mysql.connector.version}</version>
-				<scope>runtime</scope>
-			</dependency>
-			<dependency>
-				<groupId>hsqldb</groupId>
-				<artifactId>hsqldb</artifactId>
-				<version>${hsqldb.version}</version>
-				<scope>runtime</scope>
-	        </dependency>
-	        
-	        <dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-context</artifactId>
-				<version>${springframework.version}</version>
-			</dependency>
-	        <dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-web</artifactId>
-				<version>${springframework.version}</version>
-			</dependency>
-			
-			<dependency>
-		  		<groupId>org.springframework.security</groupId>
-		  		<artifactId>spring-security-crypto</artifactId>
-				<version>${springframework-security-crypto.version}</version>
-		  		<scope>runtime</scope>
-		  	</dependency>
-		  	<dependency>
-			    <groupId>org.jasypt</groupId>
-    			<artifactId>jasypt</artifactId>
-    			<version>${jasypt.version}</version>
-			</dependency>
-		  	
-			
-			<dependency>
-			    <groupId>org.springframework.social</groupId>
-			    <artifactId>spring-social-core</artifactId>
-		        <version>${springframework-social.version}</version>
-		    </dependency>
-			<dependency>
-			    <groupId>org.springframework.social</groupId>
-			    <artifactId>spring-social-web</artifactId>
-		        <version>${springframework-social.version}</version>
-		        <exclusions>
-		        	<exclusion>
-		        		<groupId>org.springframework</groupId>
-		        		<artifactId>spring-webmvc</artifactId>
-		        	</exclusion>
-		        </exclusions>
-		    </dependency>		
-		    
-	      	<dependency>
-				<groupId>org.codehaus.jackson</groupId>
-				<artifactId>jackson-mapper-asl</artifactId>
-				<version>${jackson-mapper.version}</version>
-			</dependency>
-		    		    	
-    	</dependencies>
-    </dependencyManagement>
-	
-
-    <dependencies>
-    	<dependency>
+	<dependencies>
+		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 		</dependency>
-    	
+
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.vaadin.addons</groupId>
 			<artifactId>appfoundation</artifactId>
@@ -256,25 +59,25 @@
 			<groupId>org.eclipse.persistence</groupId>
 			<artifactId>javax.persistence</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.vaadin.addons</groupId>
 			<artifactId>navigator7</artifactId>
-		</dependency>		
-		<dependency>
-   			<groupId>org.vaadin.addons</groupId>
-   			<artifactId>lucenecontainer</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.vaadin.addons</groupId>
-		   	<artifactId>customfield</artifactId>
+			<artifactId>lucenecontainer</artifactId>
 		</dependency>
-		
 		<dependency>
-   			<groupId>org.apache.lucene</groupId>
-   			<artifactId>lucene-core</artifactId>
+			<groupId>org.vaadin.addons</groupId>
+			<artifactId>customfield</artifactId>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-core</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
@@ -285,129 +88,100 @@
 		</dependency>
 
 		<dependency>
-		    <groupId>org.springframework.social</groupId>
-		    <artifactId>spring-social-core</artifactId>
-	    </dependency>		
-		<dependency>
-		    <groupId>org.springframework.social</groupId>
-		    <artifactId>spring-social-web</artifactId>
-	    </dependency>
-		<dependency> <!-- required for oauth by spring-social -->
-	  		<groupId>org.springframework.security</groupId>
-	  		<artifactId>spring-security-crypto</artifactId>
-	  	</dependency>
-	  	
-	  	
-	  	<dependency> <!-- internal password encryptation -->
-		    <groupId>org.jasypt</groupId>
-   			<artifactId>jasypt</artifactId>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-core</artifactId>
 		</dependency>
-			
-	  	<dependency>
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-web</artifactId>
+		</dependency>
+		<dependency> <!-- required for oauth by spring-social -->
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-crypto</artifactId>
+		</dependency>
+
+
+		<dependency> <!-- internal password encryptation -->
+			<groupId>org.jasypt</groupId>
+			<artifactId>jasypt</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
 		</dependency>
-  	
-				
+
+
 		<!-- This is also used by gwt-maven-plugin to deduce GWT version number. -->
-		<!--
-		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-user</artifactId>
-		</dependency>
-		-->
+		<!-- <dependency> <groupId>com.google.gwt</groupId> <artifactId>gwt-user</artifactId> 
+			</dependency> -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
-    </dependencies>
-	
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jmock</groupId>
+			<artifactId>jmock-junit4</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+		</dependency>
+	</dependencies>
+
 	<build>
 		<plugins>
 			<plugin>
-				<inherited>true</inherited>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
-                <configuration>
-					<source>${jdk.source}</source>
-					<target>${jdk.target}</target>
-					<optimize>true</optimize>
-					<showDeprecation>true</showDeprecation>
-					<showWarnings>true</showWarnings>
-					<encoding>${jdk.encoding}</encoding>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<inherited>true</inherited>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>buildnumber-maven-plugin</artifactId>
-                <version>1.0-beta-4</version>
+				<groupId>org.jvnet.jaxb2.maven2</groupId>
+				<artifactId>maven-jaxb2-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>set-build-number</id>
-						<phase>validate</phase>
 						<goals>
-							<goal>create</goal>
+							<goal>generate</goal>
 						</goals>
 					</execution>
 				</executions>
 				<configuration>
-					<format>{0,date,dd.MM.yyyy_HH:mm}</format>
-					<items>
-						<item>timestamp</item>
-					</items>
-					<doCheck>false</doCheck>
-					<doUpdate>false</doUpdate>
+					<extension>true</extension>
+					<args>
+						<arg>-Xannotate</arg>
+						<arg>-Xinheritance</arg>
+					</args>
+					<plugins>
+						<plugin>
+							<groupId>org.jvnet.jaxb2_commons</groupId>
+							<artifactId>jaxb2-basics</artifactId>
+							<version>${jaxb2.basics.version}</version>
+						</plugin>
+						<plugin>
+							<groupId>org.jvnet.jaxb2_commons</groupId>
+							<artifactId>jaxb2-basics-annotate</artifactId>
+							<version>${jaxb2.basics.version}</version>
+						</plugin>
+
+					</plugins>
+					<schemaDirectory>src/schemas/HR-XML-3_2/3_2/org_hr-xml/Developer/Nouns</schemaDirectory>
+					<schemaExcludes>
+						<exclude>CreditResult.xsd</exclude>
+					</schemaExcludes>
+					<bindingDirectory>src/bindings</bindingDirectory>
 				</configuration>
-			</plugin>			
-            
-            <plugin>
-                <groupId>org.jvnet.jaxb2.maven2</groupId>
-                <artifactId>maven-jaxb2-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <extension>true</extension>
-                    <args>
-                        <arg>-Xannotate</arg>
-                        <arg>-Xinheritance</arg>
-                    </args>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.jvnet.jaxb2_commons</groupId>
-                            <artifactId>jaxb2-basics</artifactId>
-                            <version>${jaxb2.basics.version}</version>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.jvnet.jaxb2_commons</groupId>
-                            <artifactId>jaxb2-basics-annotate</artifactId>
-                            <version>${jaxb2.basics.version}</version>
-                        </plugin>
-                        
-                    </plugins>
-                    <schemaDirectory>src/schemas/HR-XML-3_2/3_2/org_hr-xml/Developer/Nouns</schemaDirectory>
-                    <schemaExcludes>
-                        <exclude>CreditResult.xsd</exclude>
-                    </schemaExcludes>                            
-                    <bindingDirectory>src/bindings</bindingDirectory>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.eclipse.persistence</groupId>
-                        <artifactId>javax.persistence</artifactId>
-                        <version>${javax.persistence.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-			
-            <!-- A simple Jetty test server at http://localhost:8080/curricula can be launched with the Maven goal jetty:run 
-                 and stopped with jetty:stop -->
+				<dependencies>
+					<dependency>
+						<groupId>org.eclipse.persistence</groupId>
+						<artifactId>javax.persistence</artifactId>
+						<version>${javax.persistence.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+
+			<!-- A simple Jetty test server at http://localhost:8080/curricula can 
+				be launched with the Maven goal jetty:run and stopped with jetty:stop -->
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>maven-jetty-plugin</artifactId>
@@ -415,7 +189,8 @@
 				<configuration>
 					<stopPort>9966</stopPort>
 					<stopKey>curricula</stopKey>
-					<!-- Redeploy every x seconds if changes are detected, 0 for no automatic redeployment -->
+					<!-- Redeploy every x seconds if changes are detected, 0 for no automatic 
+						redeployment -->
 					<scanIntervalSeconds>0</scanIntervalSeconds>
 					<!-- make sure Jetty also finds the widgetset -->
 					<webAppConfig>
@@ -429,60 +204,20 @@
 				</configuration>
 			</plugin>
 
-      <!-- Compile custom GWT components or widget dependencies with the GWT compiler -->
-      <!--
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>gwt-maven-plugin</artifactId>
-        <version>2.1.0-1</version>
-        <configuration>
-          <webappDirectory>${project.build.directory}/${project.build.finalName}/VAADIN/widgetsets</webappDirectory>
-          <extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
-          <runTarget>curricula</runTarget>
-          <hostedWebapp>${project.build.directory}/${project.build.finalName}</hostedWebapp>
-          <noServer>true</noServer>
-          <port>8080</port>
-          <soyc>false</soyc>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>resources</goal>
-              <goal>compile</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>com.vaadin</groupId>
-        <artifactId>vaadin-maven-plugin</artifactId>
-        <version>1.0.1</version>
-        <executions>
-          <execution>
-            <configuration>
-            </configuration>
-            <goals>
-              <goal>update-widgetset</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      -->
+			<!-- Compile custom GWT components or widget dependencies with the GWT 
+				compiler -->
+			<!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>gwt-maven-plugin</artifactId> 
+				<version>2.1.0-1</version> <configuration> <webappDirectory>${project.build.directory}/${project.build.finalName}/VAADIN/widgetsets</webappDirectory> 
+				<extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs> <runTarget>curricula</runTarget> 
+				<hostedWebapp>${project.build.directory}/${project.build.finalName}</hostedWebapp> 
+				<noServer>true</noServer> <port>8080</port> <soyc>false</soyc> </configuration> 
+				<executions> <execution> <goals> <goal>resources</goal> <goal>compile</goal> 
+				</goals> </execution> </executions> </plugin> <plugin> <groupId>com.vaadin</groupId> 
+				<artifactId>vaadin-maven-plugin</artifactId> <version>1.0.1</version> <executions> 
+				<execution> <configuration> </configuration> <goals> <goal>update-widgetset</goal> 
+				</goals> </execution> </executions> </plugin> -->
 
-      
+
 		</plugins>
 	</build>
-
-	<developers>
-		<developer>
-			<id>rantunes</id>
-			<name>Ricardo Antunes</name>
-			<email>ricardo.antunes@glintt.com</email>
-			<organization>${project.organization.name}</organization>
-			<organizationUrl>${project.organization.url}</organizationUrl>
-			<roles>
-				<role>Developer</role>
-			</roles>
-		</developer>
-	</developers>
 </project>

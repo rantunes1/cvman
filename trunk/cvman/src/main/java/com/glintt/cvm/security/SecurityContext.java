@@ -13,13 +13,23 @@ public interface SecurityContext<U extends User, UI extends UserInfo<U>> {
 
 	void setUserServices(UserServices<U> userServices);
 
+	UserServices<U> getUserServices();
+
 	void setLDAPAuthenticator(LDAPAuthenticator ldapAuthenticator);
+
+	LDAPAuthenticator getLDAPAuthenticator();
 
 	void setRequestAuthenticator(RequestAuthenticator requestAuthenticator);
 
+	RequestAuthenticator getRequestAuthenticator();
+
 	void setPasswordEncryptor(PasswordEncryptor passwordEncryptor);
 
+	PasswordEncryptor getPasswordEncryptor();
+
 	UI authenticateForm(UI userInfo, String username, String password) throws ApplicationException;
+
+	UI authenticateNewUser(UI userInfo, U newUser) throws ApplicationException;
 
 	UI authenticateOAuthProvider(UI userInfo, String providerId, HttpServletRequest request, Class<? extends Component> callbackPage)
 			throws ApplicationException;

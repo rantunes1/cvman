@@ -2,32 +2,60 @@
 <tmx version="1.4">
 	<body>
 		<tu tuid="CreateUserPage.UI.form.caption">
-			<tuv lang="en"> <seg>Create a new User</seg> </tuv>
-			<tuv lang="pt"> <seg>Crie um novo utilizador</seg> </tuv>
+			<tuv lang="en">
+				<seg>Create a new User</seg>
+			</tuv>
+			<tuv lang="pt">
+				<seg>Crie um novo utilizador</seg>
+			</tuv>
 		</tu>
 		<tu tuid="CreateUserPage.UI.form.description">
-			<tuv lang="en"> <seg>Fill the following fields to create a new user</seg> </tuv>
-			<tuv lang="pt"> <seg>Preencha os campos abaixo para criar um novo utilizador</seg> </tuv>
+			<tuv lang="en">
+				<seg>Fill the following fields to create a new user</seg>
+			</tuv>
+			<tuv lang="pt">
+				<seg>Preencha os campos abaixo para criar um novo utilizador</seg>
+			</tuv>
 		</tu>
 		<tu tuid="CreateUserPage.UI.name.caption">
-			<tuv lang="en"> <seg>Name</seg> </tuv>
-			<tuv lang="pt"> <seg>Nome</seg> </tuv>
+			<tuv lang="en">
+				<seg>Name</seg>
+			</tuv>
+			<tuv lang="pt">
+				<seg>Nome</seg>
+			</tuv>
 		</tu>
 		<tu tuid="CreateUserPage.UI.firstName.caption">
-			<tuv lang="en"> <seg>First Name</seg> </tuv>
-			<tuv lang="pt"> <seg>Nome Próprio</seg> </tuv>
+			<tuv lang="en">
+				<seg>First Name</seg>
+			</tuv>
+			<tuv lang="pt">
+				<seg>Nome Próprio</seg>
+			</tuv>
 		</tu>
 		<tu tuid="CreateUserPage.UI.surname.caption">
-			<tuv lang="en"> <seg>Surname</seg> </tuv>
-			<tuv lang="pt"> <seg>Apelido</seg> </tuv>
+			<tuv lang="en">
+				<seg>Surname</seg>
+			</tuv>
+			<tuv lang="pt">
+				<seg>Apelido</seg>
+			</tuv>
 		</tu>
 		<tu tuid="CreateUserPage.UI.email.caption">
-			<tuv lang="en"> <seg>E-mail</seg> </tuv>
-			<tuv lang="pt"> <seg>E-mail</seg> </tuv>
+			<tuv lang="en">
+				<seg>E-mail</seg>
+			</tuv>
+			<tuv lang="pt">
+				<seg>E-mail</seg>
+			</tuv>
 		</tu>
 		<tu tuid="CreateUserPage.UI.picture.caption">
-			<tuv lang="en"> <seg>Picture</seg> </tuv>
-			<tuv lang="pt"> <seg>Foto</seg> </tuv>
-		</tu>				
+			<tuv lang="en">
+				<seg>Picture</seg>
+			</tuv>
+			<tuv lang="pt">
+				<seg>Foto</seg>
+			</tuv>
+		</tu>
 	</body>
 </tmx>

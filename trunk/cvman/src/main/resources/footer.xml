@@ -3,27 +3,27 @@
 	<body>
 		<tu tuid="Footer.guest.caption">
 			<tuv lang="en">
-		    	<seg>FOOTER for a GUEST.</seg>
+				<seg>FOOTER for a GUEST.</seg>
 			</tuv>
 			<tuv lang="pt">
-		    	<seg>Rodapé para CONVIDADO.</seg>
+				<seg>Rodapé para CONVIDADO.</seg>
 			</tuv>
 		</tu>
 		<tu tuid="Footer.authenticated.caption">
 			<tuv lang="en">
-		    	<seg>FOOTER for an AUTHENTICATED USER.</seg>
+				<seg>FOOTER for an AUTHENTICATED USER.</seg>
 			</tuv>
 			<tuv lang="pt">
-		    	<seg>Rodapé para UTILIZADOR AUTENTICADO.</seg>
+				<seg>Rodapé para UTILIZADOR AUTENTICADO.</seg>
 			</tuv>
-		</tu>	
+		</tu>
 		<tu tuid="Footer.copyright">
 			<tuv lang="en">
-		    	<seg>"Copyright Glintt - TIS 2011."</seg>
+				<seg>"Copyright Glintt - TIS 2011."</seg>
 			</tuv>
 			<tuv lang="pt">
-		    	<seg>"Copyright Glintt - TIS 2011."</seg>
+				<seg>"Copyright Glintt - TIS 2011."</seg>
 			</tuv>
-		</tu>	
+		</tu>
 	</body>
 </tmx>

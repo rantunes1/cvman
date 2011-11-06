@@ -11,7 +11,10 @@ import org.vaadin.navigator7.interceptor.PageChangeListenersInterceptor.PageChan
 import org.vaadin.navigator7.window.HeaderFooterFluidAppLevelWindow;
 
 import com.glintt.cvm.CVApplication;
+import com.glintt.cvm.model.CVUserInfo;
 import com.glintt.cvm.ui.pages.LoginPage;
+import com.glintt.cvm.util.AppConfig;
+import com.glintt.cvm.util.AppProperties;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.Alignment;
@@ -39,8 +42,10 @@ public class CVLevelWindow extends HeaderFooterFluidAppLevelWindow {
 		header.setWidth("100%");
 		header.setHeight(6, Component.UNITS_EM);
 
-		if (CVApplication.getCurrent().getUserInfo().isUserLogged()) {
-			header.addComponent(new Label(Lang.getMessage("Header.authenticated.caption")));
+		CVUserInfo userInfo = CVApplication.getCurrent().getUserInfo();
+
+		if (userInfo.isUserLogged()) {
+			header.addComponent(new Label(Lang.getMessage("Header.authenticated.caption", userInfo.getUser().getName())));
 			header.addComponent(new ParamPageLink(Lang.getMessage("Header.logout"), LoginPage.class).addParam("exit", ""));
 		} else {
 			header.addComponent(new Label(Lang.getMessage("Header.guest.caption")));
@@ -115,6 +120,8 @@ public class CVLevelWindow extends HeaderFooterFluidAppLevelWindow {
 
 	@Override
 	protected ComponentContainer createComponents() {
+		setTheme(AppConfig.getString(AppProperties.THEME.getKey()));
+
 		VerticalLayout windowContentLayout = (VerticalLayout) getContent();
 
 		this.header = createHeader();

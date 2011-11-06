@@ -22,6 +22,8 @@ import com.glintt.cvm.model.Person;
 import com.glintt.cvm.security.ApplicationResources;
 import com.glintt.cvm.security.ApplicationRoles;
 import com.glintt.cvm.security.CVSecurityContext;
+import com.glintt.cvm.security.SecurityContext;
+import com.glintt.cvm.security.UserInfo;
 import com.glintt.cvm.ui.pages.HomePage;
 import com.glintt.cvm.ui.pages.LoginPage;
 import com.glintt.cvm.util.AppConfig;
@@ -48,13 +50,29 @@ public class CVApplication extends NavigableApplication implements HttpServletRe
 	// @todo inject value
 	private transient LuceneFacade luceneFacade;
 
+	@SuppressWarnings("unchecked")
 	@Required
-	public void setSecurityContext(CVSecurityContext authContext) {
+	public void setSecurityContext(SecurityContext<? extends CVUser, ? extends UserInfo<CVUser>> authContext) {
+		if (authContext == null) {
+
+		}
+
 		CVApplication app = CVApplication.getCurrent();
 		if (app == null) {
 			app = this;
 		}
-		app.secContext = authContext;
+
+		if (!CVSecurityContext.class.isAssignableFrom(authContext.getClass())) {
+			try {
+				app.secContext = new CVSecurityContext((SecurityContext<CVUser, CVUserInfo>) authContext);
+			} catch (Exception ignored) {
+				throw new IllegalArgumentException(
+						"Invalid security context. Expected subclass of 'SecurityContext<CVUser, CVUserInfo>' but got "
+								+ ((authContext == null) ? "null" : authContext.getClass().getName()));
+			}
+		} else {
+			app.secContext = (CVSecurityContext) authContext;
+		}
 	}
 
 	private CVSecurityContext getSecurityContext() {
@@ -62,7 +80,12 @@ public class CVApplication extends NavigableApplication implements HttpServletRe
 		if (app == null) {
 			app = this;
 		}
-		return app.secContext;
+		CVSecurityContext secContext = app.secContext;
+		if (secContext == null) {
+			app.close();
+			return null;
+		}
+		return secContext;
 	}
 
 	public static CVApplication getCurrent() {
@@ -191,6 +214,10 @@ public class CVApplication extends NavigableApplication implements HttpServletRe
 
 	@Override
 	public void terminalError(Terminal.ErrorEvent event) {
+		if (event == null) {
+			return;
+		}
+
 		super.terminalError(event);
 
 		Window mainWindow = getMainWindow();
@@ -202,7 +229,7 @@ public class CVApplication extends NavigableApplication implements HttpServletRe
 
 	@Override
 	public void onRequestStart(HttpServletRequest request, HttpServletResponse response) {
-		if (!isVaadinAjaxRequest(request)) {
+		if (request != null && !isVaadinAjaxRequest(request)) {
 			setRequest(request);
 			System.out.println("------> REQUEST START! " + request.getPathInfo() + " - " + request.getQueryString());
 		}
@@ -217,6 +244,11 @@ public class CVApplication extends NavigableApplication implements HttpServletRe
 		CVSecurityContext secContext = getSecurityContext();
 		CVUserInfo userInfo = getUserInfo();
 		setUserInfo(secContext.authenticateForm(userInfo, username, password));
+	}
+
+	public void authenticateNewUser(CVUser newUser) throws ApplicationException {
+		CVUserInfo userInfo = getUserInfo();
+		setUserInfo(this.secContext.authenticateNewUser(userInfo, newUser));
 	}
 
 	public void requestOAuthAuthentication(String providerId, Class<? extends Component> callbackPage) throws ApplicationException {
@@ -250,7 +282,7 @@ public class CVApplication extends NavigableApplication implements HttpServletRe
 	}
 
 	private boolean isVaadinAjaxRequest(HttpServletRequest request) {
-		return request != null && "/UIDL".equals(request.getPathInfo());
+		return "/UIDL".equals(request.getPathInfo());
 	}
 
 }

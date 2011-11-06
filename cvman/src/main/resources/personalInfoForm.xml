@@ -2,8 +2,12 @@
 <tmx version="1.4">
 	<body>
 		<tu tuid="PersonalInfoForm.UI.picture.caption">
-			<tuv lang="en"> <seg>Picture</seg> </tuv>
-			<tuv lang="pt"> <seg>Foto</seg> </tuv>
-		</tu>				
+			<tuv lang="en">
+				<seg>Picture</seg>
+			</tuv>
+			<tuv lang="pt">
+				<seg>Foto</seg>
+			</tuv>
+		</tu>
 	</body>
 </tmx>

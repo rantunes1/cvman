@@ -3,10 +3,10 @@
 	<body>
 		<tu tuid="HomePage.UI.caption">
 			<tuv lang="en">
-		    	<seg>Welcome to CV application</seg>
+				<seg>Welcome to CV application</seg>
 			</tuv>
 			<tuv lang="pt">
-		    	<seg>Benvindo à aplicação de gestão de CVs</seg>
+				<seg>Benvindo à aplicação de gestão de CVs</seg>
 			</tuv>
 		</tu>
 	</body>

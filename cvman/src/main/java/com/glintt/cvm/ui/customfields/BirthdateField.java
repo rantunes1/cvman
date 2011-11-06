@@ -7,7 +7,12 @@ import com.vaadin.ui.PopupDateField;
 
 public class BirthdateField extends AbstractItemField {
 
-    public BirthdateField(Item item, Object propertyId) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4086207825102448423L;
+
+	public BirthdateField(Item item, Object propertyId) {
         super(item, propertyId);
         BirthInfo birthInfo = (BirthInfo) item.getItemProperty(propertyId).getValue();
 

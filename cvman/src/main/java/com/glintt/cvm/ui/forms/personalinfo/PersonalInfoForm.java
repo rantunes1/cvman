@@ -1,20 +1,24 @@
 package com.glintt.cvm.ui.forms.personalinfo;
 
 import com.glintt.cvm.model.PersonalInfo;
-import com.glintt.cvm.ui.api.XXX_AbstractBeanItemAdapter;
-import com.glintt.cvm.ui.api.XXX_BeanItemForm;
-import com.glintt.cvm.ui.api.XXX_BuildableObjectProperty;
-import com.glintt.cvm.ui.api.XXX_BuildableObjectProperty.FieldPosition;
+import com.glintt.cvm.ui.api.AbstractBeanItemAdapter;
+import com.glintt.cvm.ui.api.BeanItemForm;
+import com.glintt.cvm.ui.api.BuildableObjectProperty;
+import com.glintt.cvm.ui.api.BuildableObjectProperty.FieldPosition;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Layout;
 
-public class XXX_PersonalInfoForm extends XXX_BeanItemForm<XXX_AbstractBeanItemAdapter<PersonalInfo>> {
+public class PersonalInfoForm extends BeanItemForm<AbstractBeanItemAdapter<PersonalInfo>> {
 
-    private GridLayout formLayout;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 371346525386793036L;
+	private GridLayout formLayout;
 
-    public XXX_PersonalInfoForm(PersonalInfo personalInfo) {
-        super(new XXX_PersonalInfoAdapter(personalInfo));
+    public PersonalInfoForm(PersonalInfo personalInfo) {
+        super(new PersonalInfoFormAdapter(personalInfo));
     }
 
     @Override
@@ -36,7 +40,7 @@ public class XXX_PersonalInfoForm extends XXX_BeanItemForm<XXX_AbstractBeanItemA
 
     @Override
     protected void attachField(Object propertyId, Field field) {
-        XXX_BuildableObjectProperty property = getAdapter().getItemProperty(propertyId);
+        BuildableObjectProperty property = getAdapter().getItemProperty(propertyId);
         if (property != null) {
             FieldPosition position = property.getPosition();
             if (position != null) {

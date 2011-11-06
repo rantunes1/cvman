@@ -60,7 +60,12 @@ public class BirthInfoField extends AbstractItemField {
 
     protected static class BirthInfoFieldFormFactory extends AbstractFormFieldFactory {
 
-        protected BirthInfoFieldFormFactory(Form ownerForm) {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1232885743926110813L;
+
+		protected BirthInfoFieldFormFactory(Form ownerForm) {
             super(ownerForm);
         }
 

@@ -2,10 +2,8 @@ package com.glintt.cvm.ui.pages;
 
 import org.vaadin.appfoundation.i18n.Lang;
 import org.vaadin.navigator7.NavigableApplication;
-import org.vaadin.navigator7.Navigator.NavigationEvent;
 import org.vaadin.navigator7.Page;
 import org.vaadin.navigator7.PageLink;
-import org.vaadin.navigator7.ParamChangeListener;
 import org.vaadin.navigator7.uri.Param;
 
 import com.glintt.cvm.CVApplication;
@@ -15,31 +13,38 @@ import com.glintt.cvm.web.CVLevelWindow;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.LoginForm;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Window.Notification;
 
 @Page
-public class LoginPage extends CustomComponent implements ParamChangeListener {
+public class LoginPage extends CustomComponent {
 
 	private static final long serialVersionUID = 6289195975689211422L;
 
-	@Param(name = "exit")
-	private String exit;
+	@Param
+	private transient String exit;
 
 	public LoginPage() {
-		VerticalLayout layout = new VerticalLayout();
+		HorizontalLayout layout = new HorizontalLayout();
 		layout.setMargin(true);
 		layout.setSizeFull();
 
+		// 1st column
 		LoginForm loginForm = new CVLoginForm();
+		Panel loginPanel = new Panel((Lang.getMessage("Login.UI.caption")));
+		loginPanel.setStyleName("loginPanel");
+		loginPanel.addComponent(loginForm);
 
-		PageLink createUserLink = new PageLink(Lang.getMessage("Login.UI.create_new_account"), CreateUserPage.class);
+		layout.addComponent(loginPanel);
+		layout.setComponentAlignment(loginPanel, Alignment.MIDDLE_CENTER);
 
+		// 2nd column
 		// @todo move label strings to message resources / use image
 		Button signinLinkedInBtn = new Button("linkedin");
+		signinLinkedInBtn.setDisableOnClick(true);
 		signinLinkedInBtn.addListener(new Button.ClickListener() {
 			private static final long serialVersionUID = -2275826009530243265L;
 
@@ -48,24 +53,21 @@ public class LoginPage extends CustomComponent implements ParamChangeListener {
 				LoginPage.this.authenticate();
 			}
 		});
+		Panel socialPanel = new Panel((Lang.getMessage("Login.UI.caption")));
+		socialPanel.setStyleName("loginPanel");
+		socialPanel.addComponent(signinLinkedInBtn);
+		layout.addComponent(socialPanel);
+		layout.setComponentAlignment(socialPanel, Alignment.MIDDLE_CENTER);
 
-		Panel loginPanel = new Panel(Lang.getMessage("Login.UI.caption"));
-		loginPanel.setStyleName("loginPanel");
-		loginPanel.addComponent(loginForm);
-		loginPanel.addComponent(createUserLink);
-
-		layout.addComponent(loginPanel);
-		layout.addComponent(signinLinkedInBtn);
-		layout.setComponentAlignment(loginPanel, Alignment.MIDDLE_CENTER);
+		// 3rd column
+		PageLink createUserLink = new PageLink(Lang.getMessage("Login.UI.create_new_account"), CreateUserPage.class);
+		Panel newUserPanel = new Panel((Lang.getMessage("Login.UI.caption")));
+		newUserPanel.setStyleName("loginPanel");
+		newUserPanel.addComponent(createUserLink);
+		layout.addComponent(newUserPanel);
+		layout.setComponentAlignment(newUserPanel, Alignment.MIDDLE_CENTER);
 
 		setCompositionRoot(layout);
-	}
-
-	@Override
-	public void paramChanged(NavigationEvent navigationEvent) {
-		if (this.exit != null) {
-			logout();
-		}
 	}
 
 	private void authenticate() {
@@ -109,12 +111,6 @@ public class LoginPage extends CustomComponent implements ParamChangeListener {
 			((CVLevelWindow) NavigableApplication.getCurrentNavigableAppLevelWindow()).refresh();
 			NavigableApplication.getCurrentNavigableAppLevelWindow().getNavigator().navigateTo(HomePage.class);
 		}
-	}
-
-	private void logout() {
-		this.exit = null;
-		CVApplication.getCurrent().logout();
-		((CVLevelWindow) NavigableApplication.getCurrentNavigableAppLevelWindow()).refresh();
 	}
 
 	private class CVLoginForm extends LoginForm {

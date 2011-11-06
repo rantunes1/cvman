@@ -29,7 +29,7 @@ public class LinkedInProfileMixin {
 	private static class RequestUrlDeserializer extends JsonDeserializer<String> {
 		@Override
 		public String deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-			return jp.readValueAsTree().get("url").getValueAsText();
+			return jp.readValueAsTree().get("url").asText();
 		}
 	}
 }

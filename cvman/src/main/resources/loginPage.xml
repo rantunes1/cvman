@@ -3,34 +3,34 @@
 	<body>
 		<tu tuid="Login.UI.create_new_account">
 			<tuv lang="en">
-		    	<seg>Create new account</seg>
+				<seg>Create new account</seg>
 			</tuv>
 			<tuv lang="pt">
-		    	<seg>Registe-se</seg>
+				<seg>Registe-se</seg>
 			</tuv>
 		</tu>
 		<tu tuid="Login.UI.caption">
 			<tuv lang="en">
-		    	<seg>Login</seg>
+				<seg>Login</seg>
 			</tuv>
 			<tuv lang="pt">
-		    	<seg>Entrar na Applicação</seg>
+				<seg>Entrar na Applicação</seg>
 			</tuv>
 		</tu>
 		<tu tuid="Login.ErrorMessage.invalid_username_password">
 			<tuv lang="en">
-		    	<seg>Invalid username or password</seg>
+				<seg>Invalid username or password</seg>
 			</tuv>
 			<tuv lang="pt">
-		    	<seg>Nome de utilizador ou password inválidos</seg>
+				<seg>Nome de utilizador ou password inválidos</seg>
 			</tuv>
 		</tu>
 		<tu tuid="Login.ErrorMessage.authentication_failed">
 			<tuv lang="en">
-		    	<seg>Authentication failed!</seg>
+				<seg>Authentication failed!</seg>
 			</tuv>
 			<tuv lang="pt">
-		    	<seg>Não foi possivel proceder à autenticação!</seg>
+				<seg>Não foi possivel proceder à autenticação!</seg>
 			</tuv>
 		</tu>
 	</body>

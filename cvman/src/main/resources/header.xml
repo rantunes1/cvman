@@ -3,34 +3,34 @@
 	<body>
 		<tu tuid="Header.guest.caption">
 			<tuv lang="en">
-		    	<seg>HEADER for a GUEST.</seg>
+				<seg>Guest user</seg>
 			</tuv>
 			<tuv lang="pt">
-		    	<seg>Cabeçalho para CONVIDADO.</seg>
+				<seg>Utilizador convidado.</seg>
 			</tuv>
 		</tu>
 		<tu tuid="Header.authenticated.caption">
 			<tuv lang="en">
-		    	<seg>HEADER for an AUTHENTICATED USER.</seg>
+				<seg>Logged in as {0}</seg>
 			</tuv>
 			<tuv lang="pt">
-		    	<seg>Cabeçalho para UTILIZADOR AUTENTICADO.</seg>
+				<seg>Autenticado como {0}.</seg>
 			</tuv>
 		</tu>
 		<tu tuid="Header.lang">
 			<tuv lang="en">
-		    	<seg>Set language : </seg>
+				<seg>Set language : </seg>
 			</tuv>
 			<tuv lang="pt">
-		    	<seg>Mudar linguagem : </seg>
+				<seg>Mudar linguagem : </seg>
 			</tuv>
-		</tu>		
+		</tu>
 		<tu tuid="Header.logout">
 			<tuv lang="en">
-		    	<seg>Logout </seg>
+				<seg>Logout </seg>
 			</tuv>
 			<tuv lang="pt">
-		    	<seg>Sair</seg>
+				<seg>Sair</seg>
 			</tuv>
 		</tu>
 	</body>

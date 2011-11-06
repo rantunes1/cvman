@@ -2,7 +2,6 @@ package com.glintt.cvm;
 
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.apache.lucene.util.Version;
 import org.springframework.beans.factory.annotation.Required;
 import org.vaadin.appfoundation.authentication.SessionHandler;
@@ -25,18 +24,18 @@ import com.glintt.cvm.security.CVSecurityContext;
 import com.glintt.cvm.security.SecurityContext;
 import com.glintt.cvm.security.UserInfo;
 import com.glintt.cvm.ui.pages.HomePage;
-import com.glintt.cvm.ui.pages.LoginPage;
 import com.glintt.cvm.util.AppConfig;
 import com.glintt.cvm.util.AppProperties;
+import com.glintt.cvm.web.CVLevelWindow;
 import com.glintt.cvm.web.SpringWebApplication;
+import com.vaadin.Application;
 import com.vaadin.terminal.Terminal;
-import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.Notification;
 
-public class CVApplication extends NavigableApplication implements HttpServletRequestListener {
+public class CVApplication extends NavigableApplication {
 	private static final long serialVersionUID = 5614209556433681287L;
 
 	// @todo inject value?
@@ -44,7 +43,7 @@ public class CVApplication extends NavigableApplication implements HttpServletRe
 	private static final String[] FIELD_NAMES = { "personalInfo", "professionalInfo" };
 
 	private transient CVSecurityContext secContext;
-	private transient HttpServletRequest request;
+	private transient String baseURL;
 	private transient CVUserInfo userInfo;
 
 	// @todo inject value
@@ -92,20 +91,32 @@ public class CVApplication extends NavigableApplication implements HttpServletRe
 		return (CVApplication) NavigableApplication.getCurrent();
 	}
 
-	private void setRequest(HttpServletRequest request) {
+	private void setBaseUrl(HttpServletRequest request) {
 		CVApplication app = CVApplication.getCurrent();
 		if (app == null) {
 			app = this;
 		}
-		app.request = request;
+		if (request != null && app.baseURL == null) {
+			StringBuffer requestURLSB = null;
+			try {
+				requestURLSB = request.getRequestURL();
+			} catch (Exception ignored) {
+			}
+			// @todo remove commented lines (?)
+			// String requestURL = requestURLSB.toString();
+			// app.baseURL = requestURL.substring(0,
+			// requestURL.indexOf(request.getPathInfo()));
+			app.baseURL = requestURLSB.toString();
+			System.out.println("Setting base url to : " + app.baseURL);
+		}
 	}
 
-	private HttpServletRequest getRequest() {
+	private String getBaseUrl() {
 		CVApplication app = CVApplication.getCurrent();
 		if (app == null) {
 			app = this;
 		}
-		return app.request;
+		return app.baseURL;
 	}
 
 	private void setUserInfo(CVUserInfo userInfo) {
@@ -228,22 +239,20 @@ public class CVApplication extends NavigableApplication implements HttpServletRe
 	}
 
 	@Override
-	public void onRequestStart(HttpServletRequest request, HttpServletResponse response) {
+	public void transactionStart(Application application, Object transactionData) {
+		HttpServletRequest request = (HttpServletRequest) transactionData;
 		if (request != null && !isVaadinAjaxRequest(request)) {
-			setRequest(request);
+			setBaseUrl(request);
 			System.out.println("------> REQUEST START! " + request.getPathInfo() + " - " + request.getQueryString());
 		}
-	}
-
-	@Override
-	public void onRequestEnd(HttpServletRequest request, HttpServletResponse response) {
-		System.out.println("------> REQUEST END! " + getRequest());
+		super.transactionStart(application, transactionData);
 	}
 
 	public void authenticateForm(String username, String password) throws ApplicationException {
 		CVSecurityContext secContext = getSecurityContext();
 		CVUserInfo userInfo = getUserInfo();
 		setUserInfo(secContext.authenticateForm(userInfo, username, password));
+		redirect(userInfo);
 	}
 
 	public void authenticateNewUser(CVUser newUser) throws ApplicationException {
@@ -251,26 +260,34 @@ public class CVApplication extends NavigableApplication implements HttpServletRe
 		setUserInfo(this.secContext.authenticateNewUser(userInfo, newUser));
 	}
 
-	public void requestOAuthAuthentication(String providerId, Class<? extends Component> callbackPage) throws ApplicationException {
+	public void authenticateOAuth(String oauthProviderId) throws ApplicationException {
 		CVSecurityContext authContext = getSecurityContext();
 		CVUserInfo userInfo = getUserInfo();
-		userInfo = authContext.authenticateOAuthProvider(userInfo, providerId, getRequest(), callbackPage);
+		String callbackURI = getBaseUrl() + new PageResource(HomePage.class).getURL();
+		userInfo = authContext.authenticateOAuthProvider(userInfo, oauthProviderId, callbackURI);
 		String authURL = (userInfo.getAuthenticationURL());
-		PageResource redirect;
-		if (authURL == null) {
-			redirect = new PageResource(HomePage.class);
-		} else {
-			redirect = new PageResource(authURL);
-		}
-		CVApplication.getCurrentNavigableAppLevelWindow().open(redirect);
+		CVApplication.getCurrentNavigableAppLevelWindow().open(new PageResource(authURL));
+		// redirect(userInfo);
 	}
 
 	public void completeOAuthAuthentication(String verifier, Class<? extends Component> callbackPage) throws ApplicationException {
 		CVSecurityContext authContext = getSecurityContext();
 		CVUserInfo userInfo = getUserInfo();
 		userInfo = authContext.signin(userInfo, verifier);
-		// @todo review
-		new LoginPage().redirect(userInfo);
+		redirect(userInfo);
+	}
+
+	public void redirect(CVUserInfo userInfo) {
+		if (!userInfo.isUserLogged() && !userInfo.isUserConnected()) {
+			Notification notification = new Notification(Lang.getMessage("Login.ErrorMessage.invalid_username_password"),
+					Notification.TYPE_WARNING_MESSAGE);
+			notification.setPosition(Notification.POSITION_CENTERED_TOP);
+			notification.setDelayMsec(1000);
+			((CVLevelWindow) NavigableApplication.getCurrentNavigableAppLevelWindow()).showNotification(notification);
+		} else {
+			((CVLevelWindow) NavigableApplication.getCurrentNavigableAppLevelWindow()).refresh();
+			NavigableApplication.getCurrentNavigableAppLevelWindow().getNavigator().navigateTo(HomePage.class, null);
+		}
 	}
 
 	public LuceneFacade getLuceneFacade() {

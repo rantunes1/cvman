@@ -32,7 +32,12 @@ public class CVLoginInterceptor implements Interceptor {
 				if (userInfo.isUserConnected()) {
 					System.out.println("USER IS LOGGED AND CONNECTED");
 					if (isUnauthenticatedOnlyPage(pageClass)) {
-						if (pageClass.equals(HomePage.class)) {
+						if (pageClass.equals(LoginPage.class) && params != null) {
+							// logout
+							CVApplication.getCurrent().logout();
+							((CVLevelWindow) NavigableApplication.getCurrentNavigableAppLevelWindow()).refresh();
+							navigator.navigateTo(HomePage.class);
+						} else if (pageClass.equals(HomePage.class)) {
 							pageInvocation.invoke();
 						} else {
 							navigator.navigateTo(HomePage.class, params);
@@ -48,7 +53,7 @@ public class CVLoginInterceptor implements Interceptor {
 							// logout
 							CVApplication.getCurrent().logout();
 							((CVLevelWindow) NavigableApplication.getCurrentNavigableAppLevelWindow()).refresh();
-							navigator.navigateTo(HomePage.class, params);
+							navigator.navigateTo(HomePage.class);
 						} else if (pageClass.equals(HomePage.class)) {
 							pageInvocation.invoke();
 						} else {
@@ -61,7 +66,7 @@ public class CVLoginInterceptor implements Interceptor {
 			} else {
 				System.out.println("USER IS *NOT* LOGGED");
 				if (userInfo.isUserConnected()) {
-					System.out.println("USER *NOT* LOGGED BUT IS CONNECTED");
+					System.out.println("USER IS *NOT* LOGGED BUT IS CONNECTED");
 					// @todo add params to be shown on page
 					if (pageClass.equals(ConnectUserPage.class)) {
 						pageInvocation.invoke();

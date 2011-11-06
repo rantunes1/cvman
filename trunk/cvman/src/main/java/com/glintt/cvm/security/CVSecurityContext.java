@@ -1,14 +1,11 @@
 package com.glintt.cvm.security;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.jasypt.util.password.PasswordEncryptor;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionData;
 import org.springframework.social.connect.ConnectionKey;
 import org.springframework.social.connect.UserProfile;
-import org.vaadin.appfoundation.authentication.data.User;
 import org.vaadin.appfoundation.persistence.facade.FacadeFactory;
 
 import com.glintt.cvm.exception.ApplicationException;
@@ -16,7 +13,6 @@ import com.glintt.cvm.model.CVUser;
 import com.glintt.cvm.model.CVUserInfo;
 import com.glintt.cvm.model.UserType;
 import com.glintt.cvm.service.UserServices;
-import com.vaadin.ui.Component;
 
 public class CVSecurityContext implements SecurityContext<CVUser, CVUserInfo> {
 
@@ -175,10 +171,10 @@ public class CVSecurityContext implements SecurityContext<CVUser, CVUserInfo> {
 	}
 
 	@Override
-	public CVUserInfo authenticateOAuthProvider(CVUserInfo userInfo, String providerId, HttpServletRequest request,
-			Class<? extends Component> callbackPage) throws ApplicationException {
+	public CVUserInfo authenticateOAuthProvider(CVUserInfo userInfo, String providerId, String callbackURI)
+			throws ApplicationException {
 		if (this.requestAuthenticator != null && userInfo != null) {
-			userInfo.setOAuthRequest(this.requestAuthenticator.authenticate(providerId, request, callbackPage));
+			userInfo.setOAuthRequest(this.requestAuthenticator.authenticate(providerId, callbackURI));
 		}
 		return userInfo;
 	}
@@ -214,7 +210,7 @@ public class CVSecurityContext implements SecurityContext<CVUser, CVUserInfo> {
 		}
 		userInfo.setUserConnection(userConnection);
 
-		User user = userInfo.getUser();
+		CVUser user = userInfo.getUser();
 		if (user == null) {
 			user = this.userServices.findUserByUserId(userConnection.getUserId());
 		}
@@ -230,6 +226,8 @@ public class CVSecurityContext implements SecurityContext<CVUser, CVUserInfo> {
 			// update userConnection with newly created userId
 			// store userConnection
 		}
+
+		userInfo.setUser(user);
 
 		return userInfo;
 

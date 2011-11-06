@@ -11,6 +11,7 @@ import org.vaadin.navigator7.interceptor.PageChangeListenersInterceptor.PageChan
 import org.vaadin.navigator7.window.HeaderFooterFluidAppLevelWindow;
 
 import com.glintt.cvm.CVApplication;
+import com.glintt.cvm.exception.ApplicationException;
 import com.glintt.cvm.model.CVUserInfo;
 import com.glintt.cvm.ui.pages.LoginPage;
 import com.glintt.cvm.util.AppConfig;
@@ -18,6 +19,7 @@ import com.glintt.cvm.util.AppProperties;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -26,6 +28,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Button.ClickEvent;
 
 public class CVLevelWindow extends HeaderFooterFluidAppLevelWindow {
 	private static final long serialVersionUID = -862665532709430539L;
@@ -47,6 +50,26 @@ public class CVLevelWindow extends HeaderFooterFluidAppLevelWindow {
 		if (userInfo.isUserLogged()) {
 			header.addComponent(new Label(Lang.getMessage("Header.authenticated.caption", userInfo.getUser().getName())));
 			header.addComponent(new ParamPageLink(Lang.getMessage("Header.logout"), LoginPage.class).addParam("exit", ""));
+			if (!userInfo.isUserConnected()) {
+				Button signinLinkedInBtn = new Button("linkedin");
+				signinLinkedInBtn.setDisableOnClick(true);
+				signinLinkedInBtn.addListener(new Button.ClickListener() {
+					private static final long serialVersionUID = -2275826009530243265L;
+
+					@Override
+					public void buttonClick(ClickEvent event) {
+						try {
+							CVApplication.getCurrent().authenticateOAuth("linkedin");
+						} catch (ApplicationException aex) {
+							getWindow().showNotification(aex.getMessage(), Notification.TYPE_ERROR_MESSAGE);
+							return;
+						}
+
+					}
+				});
+
+				header.addComponent(signinLinkedInBtn);
+			}
 		} else {
 			header.addComponent(new Label(Lang.getMessage("Header.guest.caption")));
 		}

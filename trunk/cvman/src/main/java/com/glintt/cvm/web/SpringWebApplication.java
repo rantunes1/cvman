@@ -57,5 +57,4 @@ public class SpringWebApplication extends WebApplication {
 			final ServletContext servletContext) throws ServletException, IOException {
 		WebApplication.afterService(request, response, servletContext);
 	}
-
 }

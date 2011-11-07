@@ -22,45 +22,56 @@ import com.glintt.cvm.model.ProfessionalInfo;
 import com.glintt.cvm.model.TestPerson;
 import com.glintt.cvm.security.ApplicationResources;
 import com.glintt.cvm.security.ApplicationRoles;
+import com.vaadin.ui.Accordion;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.Tab;
-import com.vaadin.ui.VerticalLayout;
 
 @Page
 public class HomePage extends CustomComponent {
 	private static final long serialVersionUID = -5058252876771209123L;
 
 	public HomePage() {
-		VerticalLayout contentLayout = new VerticalLayout();
-		contentLayout.setStyleName("content");
-		contentLayout.setMargin(true);
-		contentLayout.setSizeFull();
+
+		HorizontalLayout baseLayout = new HorizontalLayout();
+		baseLayout.setCaption(Lang.getMessage("HomePage.UI.caption"));
+
+		Accordion accordion = new Accordion();
+		accordion.setWidth("200px");
 
 		TabSheet tabs = new TabSheet();
 		tabs.setSizeFull();
 
-		CVUser user = (CVUser) CVApplication.getCurrent().getUser();
+		CVUser user = CVApplication.getCurrent().getUserInfo().getUser();
 		Person person = getPerson(user);
-
-		Tab t1 = tabs.addTab(new UserTab(person), "#My CV#", null);
 
 		// Role userRole = user.getRole();
 		// @todo uncomment previous line to revert to using real role
 		Role userRole = ApplicationRoles.ADMINISTRATOR;
 
+		Component userTab = new UserTab(person);
+		Tab t1t = tabs.addTab(userTab, "#My CV#", null);
+		Tab t1a = accordion.addTab(new Label("aaaaaa"), "#My CV#", null);
+
 		if (Permissions.hasAccess(userRole, null, ApplicationResources.MANAGEMENT)) {
-			Tab t2 = tabs.addTab(new ManagerTab(), "#Explore CVs#", null);
+			Component managerTab = new ManagerTab();
+			Tab t2t = tabs.addTab(managerTab, "#Explore CVs#", null);
+			Tab t2a = accordion.addTab(new Label("bbbbb"), "#Explore CVs#", null);
 		}
 
 		if (Permissions.hasAccess(userRole, null, ApplicationResources.ADMINISTRATION)) {
-			Tab t3 = tabs.addTab(new AdministratorTab(), "#Administration#", null);
+			Component administrationTab = new AdministratorTab();
+			Tab t3t = tabs.addTab(administrationTab, "#Administration#", null);
+			Tab t3a = accordion.addTab(new Label("ccccc"), "#Administration#", null);
 		}
 
-		contentLayout.addComponent(tabs);
-		contentLayout.setCaption(Lang.getMessage("HomePage.UI.caption"));
+		baseLayout.addComponent(accordion);
+		baseLayout.addComponent(tabs);
 
-		setCompositionRoot(contentLayout);
+		setCompositionRoot(baseLayout);
 	}
 
 	private Person getPerson(CVUser user) {

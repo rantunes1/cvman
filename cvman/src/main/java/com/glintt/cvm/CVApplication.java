@@ -79,12 +79,7 @@ public class CVApplication extends NavigableApplication {
 		if (app == null) {
 			app = this;
 		}
-		CVSecurityContext secContext = app.secContext;
-		if (secContext == null) {
-			app.close();
-			return null;
-		}
-		return secContext;
+		return app.secContext;
 	}
 
 	public static CVApplication getCurrent() {
@@ -142,14 +137,23 @@ public class CVApplication extends NavigableApplication {
 
 	public void logout() {
 		setUserInfo(null);
+		close();
 	}
 
+	/**
+	 * @deprecated use {@link #getUserInfo()}
+	 */
 	@Override
+	@Deprecated
 	public Object getUser() {
 		return getUserInfo().getUser();
 	}
 
+	/**
+	 * @deprecated use use {@link #setUserInfo()}
+	 */
 	@Override
+	@Deprecated
 	public void setUser(Object user) {
 		if (user != null && CVUser.class.isAssignableFrom(user.getClass())) {
 			getUserInfo().setUser((CVUser) user);
@@ -251,8 +255,14 @@ public class CVApplication extends NavigableApplication {
 	public void authenticateForm(String username, String password) throws ApplicationException {
 		CVSecurityContext secContext = getSecurityContext();
 		CVUserInfo userInfo = getUserInfo();
-		setUserInfo(secContext.authenticateForm(userInfo, username, password));
-		redirect(userInfo);
+		if (secContext != null) {
+			setUserInfo(secContext.authenticateForm(userInfo, username, password));
+			redirect(userInfo);
+		} else {
+			// initialization error
+			logout();
+			NavigableApplication.getCurrentNavigableAppLevelWindow().getNavigator().navigateTo(HomePage.class, null);
+		}
 	}
 
 	public void authenticateNewUser(CVUser newUser) throws ApplicationException {
@@ -263,11 +273,13 @@ public class CVApplication extends NavigableApplication {
 	public void authenticateOAuth(String oauthProviderId) throws ApplicationException {
 		CVSecurityContext authContext = getSecurityContext();
 		CVUserInfo userInfo = getUserInfo();
+		// @todo instead of always redirecting to home page, this should allow
+		// to redirect
+		// directly to the resource user is asking
 		String callbackURI = getBaseUrl() + new PageResource(HomePage.class).getURL();
 		userInfo = authContext.authenticateOAuthProvider(userInfo, oauthProviderId, callbackURI);
-		String authURL = (userInfo.getAuthenticationURL());
+		String authURL = userInfo.getAuthenticationURL();
 		CVApplication.getCurrentNavigableAppLevelWindow().open(new PageResource(authURL));
-		// redirect(userInfo);
 	}
 
 	public void completeOAuthAuthentication(String verifier, Class<? extends Component> callbackPage) throws ApplicationException {

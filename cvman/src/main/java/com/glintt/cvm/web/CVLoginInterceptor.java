@@ -1,6 +1,5 @@
 package com.glintt.cvm.web;
 
-import org.vaadin.navigator7.NavigableApplication;
 import org.vaadin.navigator7.Navigator;
 import org.vaadin.navigator7.interceptor.ExceptionPage;
 import org.vaadin.navigator7.interceptor.Interceptor;
@@ -35,8 +34,7 @@ public class CVLoginInterceptor implements Interceptor {
 						if (pageClass.equals(LoginPage.class) && params != null) {
 							// logout
 							CVApplication.getCurrent().logout();
-							((CVLevelWindow) NavigableApplication.getCurrentNavigableAppLevelWindow()).refresh();
-							navigator.navigateTo(HomePage.class);
+							navigator.navigateTo(HomePage.class, null);
 						} else if (pageClass.equals(HomePage.class)) {
 							pageInvocation.invoke();
 						} else {
@@ -52,8 +50,6 @@ public class CVLoginInterceptor implements Interceptor {
 						if (pageClass.equals(LoginPage.class) && params != null) {
 							// logout
 							CVApplication.getCurrent().logout();
-							((CVLevelWindow) NavigableApplication.getCurrentNavigableAppLevelWindow()).refresh();
-							navigator.navigateTo(HomePage.class);
 						} else if (pageClass.equals(HomePage.class)) {
 							pageInvocation.invoke();
 						} else {
@@ -95,6 +91,7 @@ public class CVLoginInterceptor implements Interceptor {
 					} else {
 						System.out.println("USER IS *NOT* LOGGED AND *NOT* CONNECTED AND HAS *NOT* AN AUTH REQUEST");
 						if (isUnauthenticatedOnlyPage(pageClass)) {
+							pageInvocation.setParams(null);
 							pageInvocation.invoke();
 						} else {
 							if (pageClass.equals(LoginPage.class)) {

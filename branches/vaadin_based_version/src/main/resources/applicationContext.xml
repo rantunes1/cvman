@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       					   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+                           http://www.springframework.org/schema/util    http://www.springframework.org/schema/util/spring-util-2.5.xsd"
+	default-lazy-init="true">
+
+	<context:annotation-config />
+
+	<!-- Vaadin application definition -->
+	<bean id="application" class="com.glintt.cvm.CVApplication" scope="prototype">
+		<property name="securityContext" ref="securityContext" />
+	</bean>
+
+	<!-- Navigator7 WebApplication definition -->
+	<bean id="webapp" class="com.glintt.cvm.web.CVWebApplication"
+		scope="prototype">
+		<property name="interceptors" ref="interceptors" />
+		<property name="pages" ref="pages" />
+	</bean>
+
+	<!-- Authentication -->
+	<bean id="securityContext" class="com.glintt.cvm.security.CVSecurityContext"
+		scope="prototype">
+		<property name="lDAPAuthenticator" ref="authenticator_ldap" />
+		<property name="requestAuthenticator" ref="authenticator_oauth" />
+		<property name="passwordEncryptor" ref="passwordEncryptor" />
+		<property name="userServices" ref="userServices" />
+	</bean>
+	<bean id="authenticator_ldap" class="com.glintt.cvm.security.CVLDAPAuthenticator" />
+	<bean id="authenticator_oauth" class="com.glintt.cvm.security.OAuthAuthenticator" />
+	<bean id="passwordEncryptor" class="org.jasypt.util.password.StrongPasswordEncryptor" />
+
+	<!-- Navigator7 WebApplicationLevel definition -->
+	<bean id="appLevelWindow" class="com.glintt.cvm.web.CVLevelWindow"
+		scope="prototype" />
+
+	<!-- Services -->
+	<bean id="userServices" class="com.glintt.cvm.service.CVUserServices" />
+
+	<!-- Interceptors list -->
+	<util:set id="interceptors">
+		<bean id="loginInterceptor" class="com.glintt.cvm.web.CVLoginInterceptor"
+			scope="prototype" />
+	</util:set>
+
+	<!-- Pages list -->
+	<util:set id="pages">
+		<value>com.glintt.cvm.ui.pages.HomePage</value>
+		<value>com.glintt.cvm.ui.pages.LoginPage</value>
+		<value>com.glintt.cvm.ui.pages.CreateUserPage</value>
+		<value>com.glintt.cvm.ui.pages.ConnectUserPage</value>
+	</util:set>
+
+
+
+</beans>

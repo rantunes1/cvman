@@ -1,0 +1,62 @@
+<jxb:bindings version="2.1" 
+              xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+              xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+              xmlns:annox="http://annox.dev.java.net"
+              xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
+              jxb:extensionBindingPrefixes="inheritance">
+    
+    <jxb:bindings schemaLocation="../schemas/HR-XML-3_2/3_2/org_hr-xml/Developer/Nouns/Candidate.xsd" node="/xsd:schema">
+        <jxb:bindings node="//xsd:complexType[@name='CandidateType']">
+            <jxb:class name="Candidate"/>
+            
+            <!--
+                ... extends AbstractPojo
+            -->
+            <inheritance:extends>org.vaadin.appfoundation.persistence.data.AbstractPojo</inheritance:extends>
+            
+            <annox:annotate>
+                <!-- 
+                    @XmlRootElement(name = "Candidate")
+                -->
+                <annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="Candidate"/>                  
+
+                <!--
+                    @SuppressWarnings({"serial"})
+                -->
+                <annox:annotate annox:class="java.lang.SuppressWarnings" value="serial"/>  
+                
+                <!--
+                    @Entity
+                -->
+                <!--annox:annotate annox:class="javax.persistence.Entity"/-->
+        
+                <!--
+                    @Table(name = "candidate", uniqueConstraints = { @UniqueConstraint(columnNames = { "documentSequence" }) })
+                -->
+                <!--annox:annotate annox:class="javax.persistence.Table" name="candidate">
+					<annox:annotate annox:field="uniqueConstraints">
+						<annox:annotate annox:class="javax.persistence.UniqueConstraint" columnNames="documentSequence"/>
+					</annox:annotate>
+				</annox:annotate-->
+                
+                <!-- COMPLEX EXAMPLE @todo REMOVE
+                <annox:annotate annox:class="javax.persistence.AttributeOverrides">
+					<annox:annotate annox:field="value">
+						<annox:annotate annox:class="javax.persistence.AttributeOverride" name="c">
+							<annox:annotate annox:field="column">
+								<annox:annotate annox:class="javax.persistence.Column" name="B_TWO_C" length="998"/>
+							</annox:annotate>
+						</annox:annotate>
+						<annox:annotate annox:class="javax.persistence.AttributeOverride" name="d">
+							<annox:annotate annox:field="column">
+								<annox:annotate annox:class="javax.persistence.Column" name="B_TWO_D" precision="19" scale="9"/>
+							</annox:annotate>
+						</annox:annotate>
+					</annox:annotate>
+				</annox:annotate>
+                -->
+            </annox:annotate>            
+        </jxb:bindings>
+        
+    </jxb:bindings>    
+</jxb:bindings> 

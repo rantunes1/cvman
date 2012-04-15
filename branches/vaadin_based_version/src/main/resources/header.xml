@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="1.4">
+	<body>
+		<tu tuid="Header.guest.caption">
+			<tuv lang="en">
+				<seg>Guest user</seg>
+			</tuv>
+			<tuv lang="pt">
+				<seg>Utilizador convidado.</seg>
+			</tuv>
+		</tu>
+		<tu tuid="Header.authenticated.caption">
+			<tuv lang="en">
+				<seg>Logged in as {0}</seg>
+			</tuv>
+			<tuv lang="pt">
+				<seg>Autenticado como {0}.</seg>
+			</tuv>
+		</tu>
+		<tu tuid="Header.lang">
+			<tuv lang="en">
+				<seg>Set language : </seg>
+			</tuv>
+			<tuv lang="pt">
+				<seg>Mudar linguagem : </seg>
+			</tuv>
+		</tu>
+		<tu tuid="Header.logout">
+			<tuv lang="en">
+				<seg>Logout </seg>
+			</tuv>
+			<tuv lang="pt">
+				<seg>Sair</seg>
+			</tuv>
+		</tu>
+	</body>
+</tmx>

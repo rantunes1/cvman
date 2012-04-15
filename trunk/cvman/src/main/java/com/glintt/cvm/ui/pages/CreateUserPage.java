@@ -8,7 +8,6 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Form;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
@@ -24,11 +23,9 @@ public class CreateUserPage extends CustomComponent {
 		layout.setSizeFull();
 
 		Form form = new CreateUserForm();
-		layout.addComponent(new Label("--- Form starting---"));
 		this.container = new Panel();
 		this.container.addComponent(form);
 		layout.addComponent(this.container);
-		layout.addComponent(new Label("--- Form ending---"));
 
 		setCompositionRoot(layout);
 	}

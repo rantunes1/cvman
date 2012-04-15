@@ -8,6 +8,9 @@ import org.vaadin.navigator7.uri.Param;
 import com.glintt.cvm.CVApplication;
 import com.glintt.cvm.exception.ApplicationException;
 import com.glintt.cvm.ui.forms.createuser.CVLoginForm;
+import com.glintt.cvm.util.AppConfig;
+import com.glintt.cvm.util.AppProperties;
+import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
@@ -35,6 +38,7 @@ public class LoginPage extends CustomComponent {
 		LoginForm loginForm = new CVLoginForm();
 		Panel loginPanel = new Panel((Lang.getMessage("Login.UI.caption")));
 		loginPanel.setStyleName("loginPanel");
+		loginPanel.setDescription("Login with your existing account");
 		loginPanel.addComponent(loginForm);
 
 		layout.addComponent(loginPanel);
@@ -42,8 +46,10 @@ public class LoginPage extends CustomComponent {
 
 		// 2nd column
 		// @todo move label strings to message resources / use image
-		Button signinLinkedInBtn = new Button("linkedin");
+		Button signinLinkedInBtn = new Button();
 		signinLinkedInBtn.setDisableOnClick(true);
+		signinLinkedInBtn.setIcon(new ThemeResource(AppConfig.getString(AppProperties.LINKEDIN_CONNECT_ICON_URI.getKey())));
+		signinLinkedInBtn.setStyleName("linkedin_btn");
 		signinLinkedInBtn.addListener(new Button.ClickListener() {
 			private static final long serialVersionUID = -2275826009530243265L;
 
@@ -60,6 +66,7 @@ public class LoginPage extends CustomComponent {
 		});
 		Panel socialPanel = new Panel((Lang.getMessage("Login.UI.caption")));
 		socialPanel.setStyleName("loginPanel");
+		socialPanel.setDescription("Connect with your LinkedIn account");
 		socialPanel.addComponent(signinLinkedInBtn);
 		layout.addComponent(socialPanel);
 		layout.setComponentAlignment(socialPanel, Alignment.MIDDLE_CENTER);
@@ -68,6 +75,7 @@ public class LoginPage extends CustomComponent {
 		PageLink createUserLink = new PageLink(Lang.getMessage("Login.UI.create_new_account"), CreateUserPage.class);
 		Panel newUserPanel = new Panel((Lang.getMessage("Login.UI.caption")));
 		newUserPanel.setStyleName("loginPanel");
+		loginPanel.setDescription("Create a new account");
 		newUserPanel.addComponent(createUserLink);
 		layout.addComponent(newUserPanel);
 		layout.setComponentAlignment(newUserPanel, Alignment.MIDDLE_CENTER);

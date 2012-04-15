@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd"
+default-lazy-init="true">	
+	
+	<import resource="classpath*:/context/service-context.xml"/>
+	
+	<mvc:resources mapping="/images/**" location="/images/" cache-period="31556926"/>
+	<mvc:resources mapping="/theme/**" location="/theme/" cache-period="31556926"/>
+	<mvc:resources mapping="/js/**" location="/js/" cache-period="31556926"/>
+		  	   	
+   	<bean id="jsonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+   		<property name="supportedMediaTypes" value="application/json"/>   	
+   	</bean>
+   	
+   	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+	    <property name="messageConverters">
+	    	<list>
+	        	<ref bean="jsonHttpMessageConverter"/>
+	      	</list>
+	    </property>
+  	</bean>
+   	
+	
+	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <property name="ignoreAcceptHeader" value="false" />
+        <property name="favorPathExtension" value="true"/>
+        <property name="mediaTypes">
+            <map>
+            	<entry key="html" value="text/html"/>
+            	<entry key="js" value="application/javascript"/>
+                <entry key="json" value="application/json;charset=UTF-8"/>
+                <entry key="xml" value="application/xml"/>
+            </map>
+        </property>
+        <property name="defaultViews">
+            <list>
+                <bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView"/>
+                <bean class="org.springframework.web.servlet.view.xml.MarshallingView">
+			    	<constructor-arg>
+		  				<bean class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+							<property name="contextPath" value="com.glintt.cvm.model"/>
+		  				</bean>
+					</constructor-arg>
+		      	</bean>
+            </list>
+        </property>        
+        <property name="viewResolvers">
+        	<list>
+        		<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        			<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        			<property name="prefix" value="/WEB-INF/jsp/"/>
+        			<property name="suffix" value=".jsp"/>        
+    			</bean>
+            	<bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+                	<property name="cache" value="true" />
+                  	<property name="prefix" value="" />
+                  	<property name="suffix" value=".ftl" />
+                  	<property name="contentType" value="application/javascript"/>
+                  	<property name="exposeSpringMacroHelpers" value="true" />
+                  	<property name="requestContextAttribute" value="rc" />
+                  	<property name="exposeSessionAttributes" value="true" />
+              	</bean>
+              	<bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>          	                  	
+          	</list>
+      	</property>
+    </bean>
+
+	<bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+  		<property name="templateLoaderPath" value="/WEB-INF/js/"/>
+	</bean>
+	
+	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+		<property name="interceptors">
+			<ref bean="localeChangeInterceptor" />
+		</property>
+	</bean>
+	
+	<bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+		<property name="paramName" value="lang" />
+	</bean>
+
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+		<property name="defaultLocale" value="en"/>
+	</bean>
+	
+</beans>

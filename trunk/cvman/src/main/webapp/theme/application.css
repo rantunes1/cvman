@@ -1,0 +1,45 @@
+#container{
+	width:auto; height:100%; background-color: transparent;
+}		
+#header {
+	width:25%; min-width:25%; float:left; height:auto; clear:both; margin:0.5em; 		
+} 		
+#details{
+	width:98%; height:auto; float:left; clear:both; padding:0.2em; margin:0.5em;		
+}
+div.ui-jqdialog[id^='editmod']{
+	width:1000px !important;
+}
+div.ui-jqdialog[id^='delmod']{
+	width:700px !important;
+}
+
+h3.ui-widget-header { 
+	text-align: center; 
+	margin: 0 0 0.5em 0.1em; 
+	padding: 0.1em;
+	white-space: nowrap;
+	width:auto;
+}
+
+.ui-jqgrid-htable { height:40px; } 		 		
+.ui-jqgrid .ui-jqgrid-bdiv {
+	 overflow-x:hidden; 
+	 overflow-y:auto; 
+}
+.ui-jqgrid .ui-paging-info{
+	color: #3383BB;
+	margin-top: 0;
+}
+div[role=dialog]{
+	z-index: 9999 !important;
+}
+div.listtitle{
+	font-size:1.1em;
+	font-weight: bold;
+	text-align: center;
+	white-space: nowrap;
+}
+img {
+	border:0;
+}

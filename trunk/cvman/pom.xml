@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.glintt</groupId>
+		<artifactId>parent-2012</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>pom</relativePath>
+	</parent>
+
+	<artifactId>cvmanager</artifactId>
+	<packaging>war</packaging>
+	
+	<properties>
+		<app.database.provider>MYSQL</app.database.provider>
+		
+		<app.database.hsqldb.url>jdbc:hsqldb:file:CVMAN2012</app.database.hsqldb.url>
+		<app.database.hsqldb.username>sa</app.database.hsqldb.username>
+		<app.database.hsqldb.password></app.database.hsqldb.password>
+		
+		<app.database.mysql.url>jdbc:mysql://localhost:3309/cvman2012</app.database.mysql.url>
+		<app.database.mysql.username>root</app.database.mysql.username>
+		<app.database.mysql.password></app.database.mysql.password>
+		
+		<app.persistence.ddl.generation.mode>create-tables</app.persistence.ddl.generation.mode>
+		<app.persistence.ddl.generation.output>both</app.persistence.ddl.generation.output>
+		<app.persistence.ddl.location>${basedir}</app.persistence.ddl.location>
+		
+		<linkedin.consumer.key>kmzlmdz3rmfs</linkedin.consumer.key>
+		<linkedin.consumer.secret>nk6OOeG07l40DsTi</linkedin.consumer.secret>
+	</properties>
+
+	<name>CV Manager</name>
+
+	<scm>
+		<connection>scm:svn:${server.distribution.https}/svn/trunk/cvman</connection>
+		<developerConnection>scm:svn:${server.distribution.https}/svn/trunk/cvman</developerConnection>
+		<url>http://code.google.com/p/cvman/source/browse/trunk/cvman/</url>
+	</scm>
+
+	<dependencies>
+		<dependency>
+		    <groupId>ch.qos.logback</groupId>
+		    <artifactId>logback-classic</artifactId>
+		</dependency>
+		<dependency>
+		  <groupId>org.slf4j</groupId>
+		  <artifactId>jcl-over-slf4j</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+		</dependency>
+		<dependency>
+           <groupId>javax.servlet.jsp</groupId>
+           <artifactId>jsp-api</artifactId>
+       	</dependency>
+       
+       	<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+       	<dependency>
+		    <groupId>com.googlecode.flyway</groupId>
+		    <artifactId>flyway-core</artifactId>
+		</dependency>
+       	<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.persistence</groupId>
+			<artifactId>org.eclipse.persistence.jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.persistence</groupId>
+			<artifactId>org.eclipse.persistence.core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.persistence</groupId>
+			<artifactId>org.eclipse.persistence.antlr</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.persistence</groupId>
+			<artifactId>org.eclipse.persistence.asm</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.persistence</groupId>
+			<artifactId>javax.persistence</artifactId>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+		</dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+        <dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-oxm</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+		</dependency>
+				
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-ldap</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+		</dependency>
+		<dependency> <!-- required for oauth by spring-social -->
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-crypto</artifactId>
+		</dependency>
+        
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-web</artifactId>
+		</dependency>
+		
+
+		<dependency> <!-- internal password encrypt -->
+			<groupId>org.jasypt</groupId>
+			<artifactId>jasypt</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.freemarker</groupId>
+		    <artifactId>freemarker</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jmock</groupId>
+			<artifactId>jmock-junit4</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jmock</groupId>
+			<artifactId>jmock-legacy</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>${project.artifactId}</finalName>
+		
+		<resources>   			
+			<resource>   				
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>application.properties</include>
+				</includes>					
+			</resource>
+			<resource>   								
+				<directory>src/main/resources/</directory>
+				<filtering>false</filtering>
+				<includes>
+					<include>**/*.xml</include>
+				</includes>				                               
+			</resource>					
+		</resources>
+		
+		<plugins>
+			<plugin>
+				<groupId>org.jvnet.jaxb2.maven2</groupId>
+				<artifactId>maven-jaxb2-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<extension>true</extension>
+					<args>
+						<arg>-Xannotate</arg>
+						<arg>-Xinheritance</arg>
+					</args>
+					<plugins>
+						<plugin>
+							<groupId>org.jvnet.jaxb2_commons</groupId>
+							<artifactId>jaxb2-basics</artifactId>
+							<version>${jaxb2.basics.version}</version>
+						</plugin>
+						<plugin>
+							<groupId>org.jvnet.jaxb2_commons</groupId>
+							<artifactId>jaxb2-basics-annotate</artifactId>
+							<version>${jaxb2.basics.version}</version>
+						</plugin>
+
+					</plugins>
+					<schemaDirectory>src/schemas/HR-XML-3_2/3_2/org_hr-xml/Developer/Nouns</schemaDirectory>
+					<schemaExcludes>
+						<exclude>CreditResult.xsd</exclude>
+					</schemaExcludes>
+					<bindingDirectory>src/bindings</bindingDirectory>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.eclipse.persistence</groupId>
+						<artifactId>javax.persistence</artifactId>
+						<version>${javax.persistence.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			
+			<!-- plugin>
+			    <groupId>com.googlecode.flyway</groupId>
+			    <artifactId>flyway-maven-plugin</artifactId>
+			    <version>1.6</version>
+			    <configuration>
+				    <user>${app.database.mysql.username}</user>
+				    <password>${app.database.mysql.password}</password>			  
+				    <driver>com.mysql.jdbc.Driver</driver>
+    				<url>${app.database.hsqldb.url}</url>
+    				<table>schema_history</table>
+    				<serverId>localhost</serverId>				      	
+			    </configuration>
+			    <dependencies>
+			    	<dependency>
+						<groupId>mysql</groupId>
+						<artifactId>mysql-connector-java</artifactId>
+						<version>${mysql.connector.version}</version>
+					</dependency>
+			    </dependencies>
+			</plugin-->
+
+
+		</plugins>
+	</build>
+</project>

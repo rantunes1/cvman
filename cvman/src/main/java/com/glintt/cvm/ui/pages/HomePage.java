@@ -12,7 +12,11 @@ import org.vaadin.appfoundation.authorization.Permissions;
 import org.vaadin.appfoundation.authorization.Role;
 import org.vaadin.appfoundation.i18n.Lang;
 import org.vaadin.appfoundation.persistence.facade.FacadeFactory;
+import org.vaadin.navigator7.Navigator.NavigationEvent;
 import org.vaadin.navigator7.Page;
+import org.vaadin.navigator7.ParamChangeListener;
+import org.vaadin.navigator7.ParamPageLink;
+import org.vaadin.navigator7.uri.Param;
 
 import com.glintt.cvm.CVApplication;
 import com.glintt.cvm.model.CVUser;
@@ -27,12 +31,21 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Link;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.Tab;
+import com.vaadin.ui.VerticalLayout;
 
 @Page
-public class HomePage extends CustomComponent {
+public class HomePage extends CustomComponent implements ParamChangeListener {
 	private static final long serialVersionUID = -5058252876771209123L;
+
+	public enum Action {
+		USER_ACCOUNT, USER_CV
+	}
+
+	@Param
+	private Action action;
 
 	public HomePage() {
 
@@ -54,7 +67,18 @@ public class HomePage extends CustomComponent {
 
 		Component userTab = new UserTab(person);
 		Tab t1t = tabs.addTab(userTab, "#My CV#", null);
-		Tab t1a = accordion.addTab(new Label("aaaaaa"), "#My CV#", null);
+
+		Link myUserAccount = new ParamPageLink("#My User Account#", this.getClass()).addParam("action", Action.USER_ACCOUNT);
+		myUserAccount.setDescription("#Manage your user account#");
+
+		Link myCV = new ParamPageLink("#My CV#", this.getClass()).addParam("action", Action.USER_CV);
+		myCV.setDescription("#manage your C.V.#");
+
+		VerticalLayout personalInfoLayout = new VerticalLayout();
+		personalInfoLayout.addComponent(myUserAccount);
+		personalInfoLayout.addComponent(myCV);
+
+		Tab t1a = accordion.addTab(personalInfoLayout, "#Personal Information", null);
 
 		if (Permissions.hasAccess(userRole, null, ApplicationResources.MANAGEMENT)) {
 			Component managerTab = new ManagerTab();
@@ -137,6 +161,20 @@ public class HomePage extends CustomComponent {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public void paramChanged(NavigationEvent navigationEvent) {
+		if (this.action == null) {
+			System.out.println("NO ACTION SELECTED");
+			return;
+		}
+		switch (this.action) {
+		case USER_ACCOUNT:
+			System.out.println("SELECTED USER ACCOUNT ");
+		default:
+			System.out.println(this.action);
+		}
 	}
 
 }

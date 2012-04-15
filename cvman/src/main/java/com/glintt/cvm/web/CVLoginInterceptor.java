@@ -78,12 +78,21 @@ public class CVLoginInterceptor implements Interceptor {
 							params = null;
 							for (String parsedParam : parsedParams) {
 								if ("oauth_verifier".equals(parsedParam.split("=")[0])) {
-									try {
-										CVApplication.getCurrent()
-												.completeOAuthAuthentication(parsedParam.split("=")[1], pageClass);
-										break;
-									} catch (ApplicationException ignored) {
-										ignored.printStackTrace();
+									String[] splittedParsedParams = parsedParam.split("=");
+									if (splittedParsedParams.length == 2) {
+										try {
+											CVApplication.getCurrent().completeOAuthAuthentication(parsedParam.split("=")[1],
+													pageClass);
+											break;
+										} catch (ApplicationException ignored) {
+											ignored.printStackTrace();
+										}
+									} else {
+										// user cancelled the request
+										userInfo.setOAuthRequest(null); // invalidate
+																		// request
+										navigator.navigateTo(HomePage.class);
+
 									}
 								}
 							}

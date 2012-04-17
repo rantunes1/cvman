@@ -1,9 +1,9 @@
-<%@ page language="java" contentType="text/html" pageEncoding="utf-8"%>
+<%@ page language="java" contentType="text/html" pageEncoding="utf-8" session="false"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <html>
 <head>
-	<%@ include file="header.jsp" %>
+	<%@ include file="head.jsp" %>
 	<title>CVManager</title>
 	
 	<style>
@@ -17,7 +17,8 @@
 	
 </head>
 <body>
-	<span style="float: right"><a href="?lang=en">en</a>|<a href="?lang=pt">pt</a></span>
+	<%@ include file="header.jsp" %>
+	
 	<div id="container">
 		<form id="signin" action="<c:url value="/signin/authenticate" />" method="post">
 			<div class="formInfo">
@@ -36,8 +37,8 @@
 			</div>
 	
 			<fieldset>
-				<label for="login"><spring:message code="UI.login.label.username"/></label>
-				<input id="login" name="j_username" type="text" size="25" <c:if test="${not empty signinErrorMessage}">value="${SPRING_SECURITY_LAST_USERNAME}"</c:if> />
+				<label for="username"><spring:message code="UI.login.label.username"/></label>
+				<input id="username" name="j_username" type="text" size="25" <c:if test="${not empty signinErrorMessage}">value="${SPRING_SECURITY_LAST_USERNAME}"</c:if> />
 				<label for="password"><spring:message code="UI.login.label.password"/></label>
 				<input id="password" name="j_password" type="password" size="25" />	
 			</fieldset>

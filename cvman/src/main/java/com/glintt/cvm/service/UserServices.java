@@ -10,7 +10,11 @@ public interface UserServices<U extends CVUser> {
 
 	void createUser(U user, Role distintRole);
 
+	void updateUserConnection(UserConnection userConnection);
+
 	UserConnection findUserConnectionByUsernamePassword(String username, String encodedPassword);
 
 	UserConnection findUserConnectionById(Long userConnectionId);
+
+	void connectUser(String username, String providerId, String providerUserId);
 }

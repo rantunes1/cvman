@@ -39,7 +39,7 @@ public class ApplicationAuthenticationProvider extends AbstractUserDetailsAuthen
 		return user;
 	}
 
-	protected CVUser retriveFromLDAP(String username, String rawPassword) {
+	public CVUser retriveFromLDAP(String username, String rawPassword) {
 		CVUser user = null;
 		try {
 			user = getLdapAuthenticator().authenticate(username, rawPassword);
@@ -104,10 +104,13 @@ public class ApplicationAuthenticationProvider extends AbstractUserDetailsAuthen
 			Long connectionUserId = userConnection.getUserId();
 			if (connectionUserId == null) {
 				userConnection.setUserId(user.getId());
-				// FacadeFactory.getFacade().store(userConnection);
+				this.userServices.updateUserConnection(userConnection);
 			} else if (connectionUserId != user.getId()) {
 				throw new SecurityException("user doesn't match user connection!");
 			}
+		}
+		if (user == null) {
+			throw new BadCredentialsException("invalid username or password");
 		}
 		return new User(username, rawPassword, true, true, true, true, user.getRoles());
 	}

@@ -93,6 +93,23 @@ public class UserServicesImpl extends AbstractService<CVUser> implements UserSer
 	}
 
 	@Override
+	@Transactional
+	public void updateUserConnection(UserConnection userConnection) {
+		Assert.notNull(userConnection, "user connection can not be null");
+		Assert.notNull(userConnection.getId(), "can not update a new user connection");
+
+		UserConnection existing = findUserConnectionById(userConnection.getId());
+		Assert.notNull(existing, "no user connection found with id " + userConnection.getId());
+
+		existing.setDisplayName(userConnection.getDisplayName());
+		existing.setProfileURL(userConnection.getProfileURL());
+		existing.setImageURL(userConnection.getImageURL());
+		existing.setUserId(userConnection.getUserId());
+
+		this.em.merge(existing);
+	}
+
+	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		CVUser user = findByUsername(username);
 
@@ -167,6 +184,12 @@ public class UserServicesImpl extends AbstractService<CVUser> implements UserSer
 		}
 
 		return users;
+	}
+
+	@Override
+	public void connectUser(String username, String providerId, String providerUserId) {
+		// todo Auto-generated method stub
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

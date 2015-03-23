@@ -1,0 +1,1 @@
+Spring MVC based project aimed to manage CVs and CV information
